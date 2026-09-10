@@ -15,7 +15,7 @@ import type { Questionnaire } from './Questionnaire'
 
 type QuestionAssociations = 'questionnaire'
 
-export type QuestionType = 'multiple_choice' | 'text' | 'rating_scale' | 'checkbox' | 'dropdown'
+export type QuestionType = 'multiple_choice' | 'text' | 'rating_scale' | 'checkbox' | 'dropdown' | 'closed' | 'mixed' | 'likert' | 'filter'
 export type ScaleType = 'likert_5' | 'likert_7' | 'guttman' | 'custom'
 export type QuestionSource = 'ai_generated' | 'manual'
 
@@ -154,7 +154,7 @@ export class Question extends Model<
                 field: 'question_text'
             },
             questionType: {
-                type: DataTypes.ENUM('multiple_choice', 'text', 'rating_scale', 'checkbox', 'dropdown'),
+                type: DataTypes.ENUM('multiple_choice', 'text', 'rating_scale', 'checkbox', 'dropdown', 'closed', 'mixed', 'likert', 'filter'),
                 allowNull: false,
                 field: 'question_type'
             },

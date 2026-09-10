@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <LayoutPrivateLayout :user="userProfile" active-item="projects" @logout="handleSignOut">
     <div class="row justify-content-center">
       <div class="col-md-8">
         <h1 class="mb-4">Buat Proyek Penelitian Baru</h1>
@@ -44,11 +44,27 @@
         </form>
       </div>
     </div>
-  </div>
+  </LayoutPrivateLayout>
 </template>
 
 <script setup lang="ts">
 const router = useRouter()
+const { data: session, signOut } = useAuth()
+
+const userProfile = computed(() => {
+  if (!session.value?.user) return null
+  return {
+    id: session.value.user.id,
+    name: session.value.user.name || '',
+    email: session.value.user.email || '',
+    image: session.value.user.image,
+    role: session.value.user.role
+  }
+})
+
+const handleSignOut = async () => {
+  await signOut({ callbackUrl: '/login' })
+}
 
 const form = ref({
   title: '',

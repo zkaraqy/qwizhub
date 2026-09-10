@@ -264,6 +264,7 @@ export default NuxtAuthHandler({
         const dbUser = await User.findByPk(token.sub);
 
         if (dbUser) {
+          session.user.id = dbUser.id;
           session.user.name = dbUser.name;
           session.user.email = dbUser.email;
           session.user.image = dbUser.image;

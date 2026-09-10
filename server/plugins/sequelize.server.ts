@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 import { initModels } from "../models";
-import { NitroApp } from "nitropack";
+import type { NitroApp } from "nitropack";
 import { config } from 'dotenv'
 config();
 

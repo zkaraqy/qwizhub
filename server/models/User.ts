@@ -1,28 +1,32 @@
 import {
     Association,
-    CreationOptional,
+    type CreationOptional,
     DataTypes,
-    HasManyGetAssociationsMixin,
-    HasManySetAssociationsMixin,
-    HasManyAddAssociationMixin,
-    HasManyAddAssociationsMixin,
-    HasManyCreateAssociationMixin,
-    HasManyRemoveAssociationMixin,
-    HasManyRemoveAssociationsMixin,
-    HasManyHasAssociationMixin,
-    HasManyHasAssociationsMixin,
-    HasManyCountAssociationsMixin,
-    InferCreationAttributes,
-    InferAttributes,
+    type HasManyGetAssociationsMixin,
+    type HasManySetAssociationsMixin,
+    type HasManyAddAssociationMixin,
+    type HasManyAddAssociationsMixin,
+    type HasManyCreateAssociationMixin,
+    type HasManyRemoveAssociationMixin,
+    type HasManyRemoveAssociationsMixin,
+    type HasManyHasAssociationMixin,
+    type HasManyHasAssociationsMixin,
+    type HasManyCountAssociationsMixin,
+    type HasOneGetAssociationMixin,
+    type HasOneSetAssociationMixin,
+    type HasOneCreateAssociationMixin,
+    type InferCreationAttributes,
+    type InferAttributes,
     Model,
-    NonAttribute,
+    type NonAttribute,
     Sequelize
 } from 'sequelize'
 import type { Account } from './Account'
 import type { Session } from './Session'
 import type { VerificationToken } from './VerificationToken'
+import type { RespondentProfile } from './RespondentProfile'
 
-type UserAssociations = 'accounts' | 'sessions' | 'verificationTokens'
+type UserAssociations = 'accounts' | 'sessions' | 'verificationTokens' | 'respondentProfile'
 
 export class User extends Model<
     InferAttributes<User, { omit: UserAssociations }>,
@@ -34,6 +38,8 @@ export class User extends Model<
     declare emailVerified: Date | null
     declare image: string | null
     declare password: string | null
+    declare role: CreationOptional<'peneliti' | 'responden'>
+    declare verificationStatus: CreationOptional<'unverified' | 'pending' | 'verified'>
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 
@@ -76,10 +82,17 @@ export class User extends Model<
     declare hasVerificationTokens: HasManyHasAssociationsMixin<VerificationToken, string>
     declare countVerificationTokens: HasManyCountAssociationsMixin
 
+    // User hasOne RespondentProfile
+    declare respondentProfile?: NonAttribute<RespondentProfile>
+    declare getRespondentProfile: HasOneGetAssociationMixin<RespondentProfile>
+    declare setRespondentProfile: HasOneSetAssociationMixin<RespondentProfile, string>
+    declare createRespondentProfile: HasOneCreateAssociationMixin<RespondentProfile>
+
     declare static associations: {
         accounts: Association<User, Account>,
         sessions: Association<User, Session>,
-        verificationTokens: Association<User, VerificationToken>
+        verificationTokens: Association<User, VerificationToken>,
+        respondentProfile: Association<User, RespondentProfile>
     }
 
     static initModel(sequelize: Sequelize): typeof User {
@@ -106,6 +119,17 @@ export class User extends Model<
             password: {
                 type: DataTypes.TEXT,
                 allowNull: true
+            },
+            role: {
+                type: DataTypes.ENUM('peneliti', 'responden'),
+                allowNull: false,
+                defaultValue: 'responden'
+            },
+            verificationStatus: {
+                type: DataTypes.ENUM('unverified', 'pending', 'verified'),
+                allowNull: false,
+                defaultValue: 'unverified',
+                field: 'verification_status'
             },
             createdAt: {
                 type: DataTypes.DATE,

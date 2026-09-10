@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  auth: { unauthenticatedOnly: true, navigateAuthenticatedTo: '/' }
+  auth: { unauthenticatedOnly: true, navigateAuthenticatedTo: '/dashboard' }
 })
 
 const { signIn } = useAuth()
@@ -14,7 +14,7 @@ const signInWithProvider = async (provider: string) => {
   error.value = null
   loading.value = true
   try {
-    await signIn(provider, { callbackUrl: '/' })
+    await signIn(provider, { callbackUrl: '/dashboard' })
   } catch (err: any) {
     error.value = err?.message ?? 'Sign-in failed'
   } finally {
@@ -42,8 +42,8 @@ const signInWithCredentials = async () => {
     if (result?.error) {
       error.value = 'Invalid email or password'
     } else {
-      // Redirect ke home jika berhasil
-      await navigateTo('/')
+      // Redirect ke dashboard jika berhasil
+      await navigateTo('/dashboard')
     }
   } catch (err: any) {
     error.value = err?.message ?? 'Sign-in failed'
@@ -54,264 +54,141 @@ const signInWithCredentials = async () => {
 </script>
 
 <template>
-  <main class="page">
-    <section class="card" role="region" aria-labelledby="signin-heading">
-      <header class="card__header">
-        <h1 id="signin-heading" class="title">Welcome back</h1>
-        <p class="subtitle">Sign in with Google OAuth or credentials</p>
-      </header>
+  <div class="min-vh-100 d-flex align-items-center bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="card shadow-lg border-0 rounded-4">
+            <div class="row g-0">
+              <!-- Form Section (Left) -->
+              <div class="col-md-6 p-5">
+                <div class="mb-4">
+                  <NuxtLink to="/" class="text-decoration-none">
+                    <h2 class="text-primary fw-bold">QwizHub</h2>
+                  </NuxtLink>
+                </div>
+                
+                <h3 class="fw-bold mb-2">Welcome back</h3>
+                <p class="text-muted mb-4">Sign in to your account to continue</p>
 
-      <form class="form" @submit.prevent="signInWithCredentials" aria-describedby="signin-desc">
-        <div id="signin-desc" class="sr-only">
-          Choose Google or sign in with username and password.
-        </div>
+                <!-- Error Alert -->
+                <div v-if="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+                  {{ error }}
+                  <button type="button" class="btn-close" @click="error = null"></button>
+                </div>
 
-        <div class="socials">
-          <button type="button" class="btn btn--social" @click="signInWithProvider('google')" :disabled="loading"
-            aria-label="Sign in with Google">
-            <span>Continue with Google OAuth</span>
-          </button>
+                <!-- Google Sign In -->
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary w-100 mb-3 py-2"
+                  @click="signInWithProvider('google')" 
+                  :disabled="loading"
+                >
+                  <svg class="me-2" width="18" height="18" viewBox="0 0 18 18">
+                    <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/>
+                    <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.01c-.71.48-1.62.75-2.7.75-2.08 0-3.84-1.4-4.48-3.29H1.83v2.07A8 8 0 0 0 8.98 17z"/>
+                    <path fill="#FBBC05" d="M4.5 10.51a4.8 4.8 0 0 1 0-3.02V5.42H1.83a8 8 0 0 0 0 7.16l2.67-2.07z"/>
+                    <path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.42L4.5 7.49c.64-1.89 2.4-3.3 4.48-3.3z"/>
+                  </svg>
+                  Continue with Google
+                </button>
 
-          <div class="divider" aria-hidden="true">
-            <span>or</span>
+                <!-- Divider -->
+                <div class="d-flex align-items-center my-4">
+                  <hr class="flex-grow-1">
+                  <span class="px-3 text-muted small">OR</span>
+                  <hr class="flex-grow-1">
+                </div>
+
+                <!-- Credentials Form -->
+                <form @submit.prevent="signInWithCredentials">
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input 
+                      v-model="email"
+                      type="email" 
+                      class="form-control form-control-lg" 
+                      id="email"
+                      placeholder="Enter your email"
+                      required
+                      :disabled="loading"
+                    >
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input 
+                      v-model="password"
+                      type="password" 
+                      class="form-control form-control-lg" 
+                      id="password"
+                      placeholder="Enter your password"
+                      required
+                      :disabled="loading"
+                    >
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="remember">
+                      <label class="form-check-label small" for="remember">
+                        Remember me
+                      </label>
+                    </div>
+                    <NuxtLink to="/forgot-password" class="text-decoration-none small">
+                      Forgot password?
+                    </NuxtLink>
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary w-100 py-2 mb-3"
+                    :disabled="loading"
+                  >
+                    <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ loading ? 'Signing in...' : 'Sign in' }}
+                  </button>
+                </form>
+
+                <p class="text-center text-muted mt-4">
+                  Don't have an account? 
+                  <NuxtLink to="/register" class="text-primary text-decoration-none fw-semibold">
+                    Sign up
+                  </NuxtLink>
+                </p>
+              </div>
+
+              <!-- Illustration Section (Right) -->
+              <div class="col-md-6 d-none d-md-block bg-primary bg-gradient p-5 rounded-end-4 position-relative">
+                <div class="d-flex flex-column justify-content-center align-items-center h-100 text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" class="mb-4" style="max-width: 320px;">
+                    <circle cx="200" cy="150" r="120" fill="#ffffff" opacity="0.1"/>
+                    <rect x="120" y="80" width="160" height="140" rx="8" fill="#ffffff" opacity="0.9"/>
+                    <circle cx="160" cy="120" r="20" fill="#0d6efd"/>
+                    <rect x="190" y="110" width="80" height="8" rx="4" fill="#0d6efd" opacity="0.6"/>
+                    <rect x="190" y="130" width="60" height="8" rx="4" fill="#0d6efd" opacity="0.4"/>
+                    <rect x="140" y="160" width="120" height="40" rx="6" fill="#0d6efd" opacity="0.3"/>
+                  </svg>
+                  <h4 class="fw-bold mb-3">Welcome to QwizHub</h4>
+                  <p class="text-center opacity-75">Access your surveys and insights with a single sign-in</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div class="fields">
-          <label class="field">
-            <span class="label-text">Email</span>
-            <input v-model="email" class="input" type="email" name="email" autocomplete="email" required
-              :disabled="loading" placeholder="Enter your email" />
-          </label>
-
-          <label class="field">
-            <span class="label-text">Password</span>
-            <input v-model="password" class="input" type="password" name="password" autocomplete="current-password"
-              required :disabled="loading" placeholder="Enter your password" />
-          </label>
-
-          <button type="submit" class="btn btn--primary" :aria-busy="loading" :disabled="loading">
-            <span v-if="!loading">Sign in</span>
-            <span v-else class="loader" aria-hidden="true"></span>
-          </button>
-
-          <p v-if="error" class="error" role="alert">{{ error }}</p>
-        </div>
-      </form>
-
-      <footer class="card__footer">
-        <p class="meta">Need an account? <a href="/register">Sign up</a></p>
-      </footer>
-    </section>
-  </main>
+      </div>
+    </div>
+  </div>
 </template>
 
-<style>
-:root {
-  --bg-1: #0b1220;
-  --bg-2: #071026;
-  --card-bg: rgba(255, 255, 255, 0.03);
-  --muted: #9aa4b2;
-  --accent-start: #7c3aed;
-  --accent-end: #06b6d4;
-  --radius: 12px;
-  --max-w: 760px;
-  /* not full width */
+<style scoped>
+.rounded-4 {
+  border-radius: 1rem !important;
 }
 
-/* Layout */
-.page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 20px;
-  background: linear-gradient(180deg, var(--bg-1), var(--bg-2) 60%);
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color: #e6eef8;
-}
-
-/* Card */
-.card {
-  width: 100%;
-  max-width: var(--max-w);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-  border-radius: var(--radius);
-  padding: 28px;
-  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.45);
-  /* subtle */
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-/* Header */
-.card__header {
-  text-align: left;
-}
-
-.title {
-  margin: 0;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #eef6ff;
-}
-
-.subtitle {
-  margin-top: 6px;
-  font-size: 0.92rem;
-  color: var(--muted);
-}
-
-/* Socials */
-.socials {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: stretch;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform .08s ease, box-shadow .12s ease;
-  width: 100%;
-  justify-content: center;
-}
-
-.btn:disabled {
-  opacity: 0.75;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn--social {
-  background: rgba(255, 255, 255, 0.04);
-  color: #f8fafc;
-  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);
-}
-
-.btn--social:hover {
-  transform: translateY(-2px);
-}
-
-.icon {
-  width: 18px;
-  height: 18px;
-  display: inline-block;
-}
-
-/* Divider small */
-.divider {
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin-top: 2px;
-}
-
-/* Fields */
-.fields {
-  display: grid;
-  gap: 12px;
-  margin-top: 6px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.label-text {
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-/* Inputs balanced */
-.input {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  background: rgba(255, 255, 255, 0.02);
-  color: #e6eef8;
-  outline: none;
-  transition: box-shadow .12s ease, transform .08s ease;
-}
-
-.input::placeholder {
-  color: rgba(230, 238, 248, 0.28);
-}
-
-.input:focus {
-  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.08);
-  transform: translateY(-1px);
-  border-color: rgba(124, 58, 237, 0.6);
-}
-
-/* Primary */
-.btn--primary {
-  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
-  color: #041022;
-  padding: 11px 14px;
-  border-radius: 10px;
-  box-shadow: 0 8px 22px rgba(7, 9, 25, 0.38);
-  justify-content: center;
-}
-
-.btn--primary:hover {
-  transform: translateY(-2px);
-}
-
-/* Loader */
-.loader {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.14);
-  border-top-color: white;
-  animation: spin .9s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Error & footer */
-.error {
-  color: #ff6b6b;
-  font-size: 0.92rem;
-  margin-top: 6px;
-}
-
-.card__footer {
-  display: flex;
-  justify-content: center;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-.card__footer a {
-  color: #cfefff;
-  text-decoration: underline;
-}
-
-/* Small screens */
-@media (max-width: 560px) {
-  .card {
-    padding: 18px;
-    border-radius: 10px;
-  }
-
-  .title {
-    font-size: 1.15rem;
-  }
+.rounded-end-4 {
+  border-top-right-radius: 1rem !important;
+  border-bottom-right-radius: 1rem !important;
 }
 </style>
+

@@ -1,14 +1,14 @@
 import {
     Association,
-    BelongsToGetAssociationMixin,
-    BelongsToSetAssociationMixin,
-    BelongsToCreateAssociationMixin,
-    CreationOptional,
+    type BelongsToGetAssociationMixin,
+    type BelongsToSetAssociationMixin,
+    type BelongsToCreateAssociationMixin,
+    type CreationOptional,
     DataTypes,
-    InferCreationAttributes,
-    InferAttributes,
+    type InferCreationAttributes,
+    type InferAttributes,
     Model,
-    NonAttribute,
+    type NonAttribute,
     Sequelize
 } from 'sequelize'
 import type { User } from './User'

@@ -5,13 +5,21 @@ import { v4 as uuidv4 } from 'uuid'
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    const { name, email, password } = body
+    const { name, email, password, role } = body
 
     // Validasi input
     if (!name || !email || !password) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Name, email, and password are required'
+      })
+    }
+
+    // Validasi role (harus peneliti atau responden)
+    if (role && role !== 'peneliti' && role !== 'responden') {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Role must be either "peneliti" or "responden"'
       })
     }
 
@@ -47,14 +55,16 @@ export default defineEventHandler(async (event) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Buat user baru
+    // Buat user baru dengan role
     const newUser = await User.create({
       id: uuidv4(),
       name,
       email,
       password: hashedPassword,
       emailVerified: null,
-      image: null
+      image: null,
+      role: role || 'responden', // default responden
+      verificationStatus: 'unverified' // default unverified
     })
 
     // Return user tanpa password
@@ -64,7 +74,9 @@ export default defineEventHandler(async (event) => {
       user: {
         id: newUser.id,
         name: newUser.name,
-        email: newUser.email
+        email: newUser.email,
+        role: newUser.role,
+        verificationStatus: newUser.verificationStatus
       }
     }
   } catch (error: any) {

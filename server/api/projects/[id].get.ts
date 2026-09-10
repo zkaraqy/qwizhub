@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
                 {
                     model: Questionnaire,
                     as: 'questionnaires',
-                    attributes: ['id', 'topic', 'status', 'createdAt', 'updatedAt']
+                    attributes: ['id', 'topic', 'researchObjective', 'status', 'createdAt', 'updatedAt']
                 }
             ]
         })
@@ -53,9 +53,10 @@ export default defineEventHandler(async (event) => {
                 questionnaires: project.questionnaires?.map(q => ({
                     id: q.id,
                     topic: q.topic,
+                    researchObjective: q.researchObjective,
                     status: q.status,
                     createdAt: q.createdAt,
-                    updatedAt: q.updatedAt
+                    updatedAt: q.updatedAt,
                 })) || []
             }
         }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <LayoutPrivateLayout :user="userProfile" active-item="projects" @logout="handleSignOut">
     <div class="row justify-content-center">
       <div class="col-md-10">
         <h1 class="mb-4">Generate Kuesioner dengan AI</h1>
@@ -138,12 +138,28 @@
         </div>
       </div>
     </div>
-  </div>
+  </LayoutPrivateLayout>
 </template>
 
 <script setup lang="ts">
 const route = useRoute()
 const projectId = route.params.id as string
+const { data: session, signOut } = useAuth()
+
+const userProfile = computed(() => {
+  if (!session.value?.user) return null
+  return {
+    id: session.value.user.id,
+    name: session.value.user.name || '',
+    email: session.value.user.email || '',
+    image: session.value.user.image,
+    role: session.value.user.role
+  }
+})
+
+const handleSignOut = async () => {
+  await signOut({ callbackUrl: '/login' })
+}
 
 const form = ref({
   topic: '',

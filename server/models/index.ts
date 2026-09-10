@@ -9,6 +9,7 @@ import { Project } from './Project'
 import { Questionnaire } from './Questionnaire'
 import { Question } from './Question'
 import { AIGenerationLog } from './AIGenerationLog'
+import { Transaction } from './Transaction'
 
 export {
   User,
@@ -20,7 +21,8 @@ export {
   Project,
   Questionnaire,
   Question,
-  AIGenerationLog
+  AIGenerationLog,
+  Transaction
 }
 
 export function initModels(sequelize: Sequelize) {
@@ -34,6 +36,7 @@ export function initModels(sequelize: Sequelize) {
   Questionnaire.initModel(sequelize)
   Question.initModel(sequelize)
   AIGenerationLog.initModel(sequelize)
+  Transaction.initModel(sequelize)
 
   User.hasMany(Account, {
     as: 'accounts',
@@ -125,6 +128,24 @@ export function initModels(sequelize: Sequelize) {
     foreignKey: 'questionnaire_id'
   })
 
+  // Transaction associations
+  User.hasMany(Transaction, {
+    as: 'transactions',
+    foreignKey: 'user_id'
+  })
+  Transaction.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id'
+  })
+  Questionnaire.hasMany(Transaction, {
+    as: 'transactions',
+    foreignKey: 'questionnaire_id'
+  })
+  Transaction.belongsTo(Questionnaire, {
+    as: 'questionnaire',
+    foreignKey: 'questionnaire_id'
+  })
+
   return {
     User,
     Account,
@@ -135,6 +156,7 @@ export function initModels(sequelize: Sequelize) {
     Project,
     Questionnaire,
     Question,
-    AIGenerationLog
+    AIGenerationLog,
+    Transaction
   }
 }

@@ -8,6 +8,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@sidebase/nuxt-auth', '@nuxt/image'],
   
+  css: [
+    '~/assets/css/modern-saas.css'
+  ],
+  
   app: {
     head: {
       link: [
@@ -16,6 +20,10 @@ export default defineNuxtConfig({
           href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
           integrity: 'sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH',
           crossorigin: 'anonymous'
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'
         }
       ],
       script: [

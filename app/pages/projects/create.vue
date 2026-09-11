@@ -93,7 +93,7 @@ async function createProject() {
     })
 
     // Redirect to questionnaire generation
-    router.push(`/projects/${response.project.id}/questionnaire/generate`)
+    router.push(`/projects/manage/${response.project.id}`)
   } catch (err: any) {
     error.value = err.data?.statusMessage || 'Gagal membuat proyek'
     submitting.value = false

@@ -2,7 +2,7 @@
   <LayoutPrivateLayout :user="userProfile" active-item="surveys" @logout="handleSignOut">
     <div class="row mb-4">
       <div class="col">
-        <h1 class="h3 mb-3">Kuesioner Tersedia</h1>
+        <h1 class="fw-bold h3 mb-3">Kuesioner Tersedia</h1>
         <p class="text-muted">Pilih kuesioner yang ingin Anda kerjakan dan dapatkan honor</p>
       </div>
     </div>
@@ -11,13 +11,8 @@
     <div class="row mb-4">
       <div class="col-md-6">
         <div class="input-group">
-          <input
-            v-model="searchQuery"
-            type="text"
-            class="form-control"
-            placeholder="Cari kuesioner..."
-            @input="debouncedSearch"
-          />
+          <input v-model="searchQuery" type="text" class="form-control" placeholder="Cari kuesioner..."
+            @input="debouncedSearch" />
           <button class="btn btn-outline-secondary" type="button" @click="loadQuestionnaires">
             <i class="bi bi-search"></i>
           </button>
@@ -45,22 +40,13 @@
           <div class="card-body d-flex flex-column">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h5 class="card-title mb-0">{{ questionnaire.topic }}</h5>
-              <span 
-                v-if="questionnaire.hasResponded" 
-                class="badge bg-success"
-              >
+              <span v-if="questionnaire.hasResponded" class="badge bg-success">
                 <i class="bi bi-check-circle me-1"></i>Selesai
               </span>
-              <span 
-                v-else-if="!questionnaire.isAvailable" 
-                class="badge bg-secondary"
-              >
+              <span v-else-if="!questionnaire.isAvailable" class="badge bg-secondary">
                 Penuh
               </span>
-              <span 
-                v-else 
-                class="badge bg-primary"
-              >
+              <span v-else class="badge bg-primary">
                 Tersedia
               </span>
             </div>
@@ -75,11 +61,8 @@
                 </span>
               </div>
               <div class="progress" style="height: 6px;">
-                <div
-                  class="progress-bar"
-                  :class="questionnaire.isAvailable ? 'bg-primary' : 'bg-success'"
-                  :style="{ width: getProgressPercentage(questionnaire) + '%' }"
-                ></div>
+                <div class="progress-bar" :class="questionnaire.isAvailable ? 'bg-primary' : 'bg-success'"
+                  :style="{ width: getProgressPercentage(questionnaire) + '%' }"></div>
               </div>
               <small class="text-muted">
                 {{ questionnaire.remainingSlots }} slot tersisa
@@ -102,11 +85,8 @@
             </div>
 
             <div class="mt-auto">
-              <NuxtLink
-                :to="`/questionnaires/${questionnaire.id}/detail`"
-                class="btn btn-primary w-100"
-                :class="{ disabled: questionnaire.hasResponded }"
-              >
+              <NuxtLink :to="`/questionnaires/${questionnaire.id}/detail`" class="btn btn-primary w-100"
+                :class="{ disabled: questionnaire.hasResponded }">
                 <template v-if="questionnaire.hasResponded">
                   <i class="bi bi-check-circle me-2"></i>Sudah Dikerjakan
                 </template>
@@ -139,12 +119,7 @@
                 Previous
               </a>
             </li>
-            <li
-              v-for="page in totalPages"
-              :key="page"
-              class="page-item"
-              :class="{ active: page === currentPage }"
-            >
+            <li v-for="page in totalPages" :key="page" class="page-item" :class="{ active: page === currentPage }">
               <a class="page-link" href="#" @click.prevent="changePage(page)">
                 {{ page }}
               </a>

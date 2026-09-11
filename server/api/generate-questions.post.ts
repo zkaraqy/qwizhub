@@ -32,53 +32,43 @@ export default defineEventHandler(async (event) => {
             })
         }
 
+        // Get variables array
+        const variables = body.variables || []
+
         // Sanitize inputs
         const sanitizedTopic = sanitizePromptInput(body.topic)
         const sanitizedObjective = sanitizePromptInput(body.objective)
+        const sanitizedVariables = Array.isArray(variables) 
+            ? variables.map((v: string) => sanitizePromptInput(v)) 
+            : []
 
         // Initialize AI service
         const aiService = createAIService()
 
         try {
-            // Generate questions using AI
-            const prompt = `Generate ${count} research questionnaire questions for the following:
+            // Generate questions using AI with variables context
+            const variablesText = sanitizedVariables.length > 0 
+                ? sanitizedVariables.join(', ') 
+                : 'Not specified'
 
-Topic: ${sanitizedTopic}
-Research Objective: ${sanitizedObjective}
+            const input: any = {
+                topic: sanitizedTopic,
+                objective: sanitizedObjective,
+                variables: sanitizedVariables,
+                questionCount: count
+            }
 
-Requirements:
-- Generate diverse question types (multiple choice, text, rating scale, etc.)
-- Questions should be relevant to the research objective
-- Provide options for multiple choice and rating scale questions
-- Keep questions clear and unbiased
-
-Return a JSON array with this structure:
-[
-  {
-    "questionText": "Question text here",
-    "questionType": "multiple_choice" | "text" | "rating_scale" | "checkbox" | "likert",
-    "options": [{"value": "opt1", "label": "Option 1"}, ...] // Only for non-text questions
-  }
-]`
-
-            const aiResponse = await aiService.generateText(prompt)
+            // Use generateQuestionnaire method instead of generateText
+            const aiResult = await aiService.generateQuestionnaire(input)
+            const aiResponse = aiResult.response
             
-            // Parse AI response
+            // Parse AI response - get questions from response
             let questions: any[] = []
-            try {
-                // Extract JSON from response
-                const jsonMatch = aiResponse.match(/\[[\s\S]*\]/)
-                if (jsonMatch) {
-                    questions = JSON.parse(jsonMatch[0])
-                } else {
-                    throw new Error('No valid JSON found in AI response')
-                }
-            } catch (parseError) {
-                console.error('Failed to parse AI response:', parseError)
-                throw createError({
-                    statusCode: 500,
-                    statusMessage: 'Failed to parse AI generated questions'
-                })
+            
+            if (aiResponse.questions && Array.isArray(aiResponse.questions)) {
+                questions = aiResponse.questions
+            } else {
+                throw new Error('No questions returned from AI')
             }
 
             // Validate and format questions
@@ -107,7 +97,7 @@ Return a JSON array with this structure:
                 }
 
                 return {
-                    questionText: q.questionText || `Question ${index + 1}`,
+                    questionText: q.questionText || q.text || `Question ${index + 1}`,
                     questionType: questionType,
                     scaleType: (questionType === 'likert' || questionType === 'rating_scale') ? 'likert_5' : null,
                     options: options,
@@ -121,7 +111,7 @@ Return a JSON array with this structure:
                 questions: formattedQuestions,
                 metadata: {
                     count: formattedQuestions.length,
-                    provider: 'gemini'
+                    provider: aiResult.usedProvider || 'openrouter'
                 }
             }
         } catch (aiError: any) {

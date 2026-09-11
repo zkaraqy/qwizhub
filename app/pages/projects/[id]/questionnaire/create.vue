@@ -213,7 +213,6 @@
                 placeholder="Tuliskan pertanyaan..."
               ></textarea>
             </div>
-            
             <div v-if="requiresOptions(questionManager.questionForm.value.questionType)" class="mb-3">
               <label class="form-label fw-semibold">Opsi Jawaban (pisahkan dengan koma)</label>
               <input 

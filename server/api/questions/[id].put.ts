@@ -14,11 +14,16 @@ export default defineEventHandler(async (event) => {
             })
         }
 
+        const body = await readBody(event)
+
+        // Find question with questionnaire and project
         const question = await Question.findByPk(questionId, {
-            include: [{
-                model: Questionnaire,
-                as: 'questionnaire'
-            }]
+            include: [
+                {
+                    association: 'questionnaire',
+                    include: ['project']
+                }
+            ]
         })
 
         if (!question) {
@@ -28,37 +33,50 @@ export default defineEventHandler(async (event) => {
             })
         }
 
-        // Check ownership via questionnaire
-        if (!await question.questionnaire?.canEdit(user.id)) {
+        // Verify ownership through questionnaire -> project -> peneliti
+        const questionnaire = question.questionnaire as any
+        if (!questionnaire || !questionnaire.project) {
+            throw createError({
+                statusCode: 404,
+                statusMessage: 'Questionnaire or project not found'
+            })
+        }
+
+        if (questionnaire.project.peneliti_id !== user.id) {
             throw createError({
                 statusCode: 403,
                 statusMessage: 'You do not have permission to update this question'
             })
         }
 
-        if (!question.questionnaire?.isDraft()) {
+        // Check if questionnaire is still in draft
+        if (questionnaire.status !== 'draft') {
             throw createError({
                 statusCode: 400,
                 statusMessage: 'Cannot update questions in published questionnaire'
             })
         }
 
-        const body = await readBody(event)
-
-        // Update allowed fields
-        if (body.questionText !== undefined) {
-            question.questionText = body.questionText
+        // Update question text if provided
+        if (body.questionText !== undefined && body.questionText.trim().length > 0) {
+            question.questionText = body.questionText.trim()
         }
 
-        if (body.questionType !== undefined) {
-            question.questionType = body.questionType
-        }
+        // Update options if provided
+        if (body.options !== undefined && Array.isArray(body.options)) {
+            // Validate options structure
+            const validOptions = body.options.every((opt: any) => 
+                opt && typeof opt === 'object' && 
+                'label' in opt && 'value' in opt
+            )
 
-        if (body.scaleType !== undefined) {
-            question.scaleType = body.scaleType
-        }
+            if (!validOptions) {
+                throw createError({
+                    statusCode: 400,
+                    statusMessage: 'Invalid options format'
+                })
+            }
 
-        if (body.options !== undefined) {
             question.options = body.options
         }
 
@@ -71,10 +89,9 @@ export default defineEventHandler(async (event) => {
                 id: question.id,
                 questionText: question.questionText,
                 questionType: question.questionType,
-                scaleType: question.scaleType,
-                options: question.getFormattedOptions(),
+                options: question.options,
                 orderIndex: question.orderIndex,
-                updatedAt: question.updatedAt
+                source: question.source
             }
         }
     } catch (error: any) {
@@ -89,3 +106,4 @@ export default defineEventHandler(async (event) => {
         })
     }
 })
+

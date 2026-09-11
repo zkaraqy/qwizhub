@@ -28,6 +28,8 @@ export class Transaction extends Model<
     declare honorariumPerRespondent: number
     declare serviceFee: number
     declare status: CreationOptional<'pending' | 'success' | 'failed' | 'expired'>
+    declare transactionType: 'questionnaire_access' | 'questionnaire_publish'
+    declare metadata: CreationOptional<any>
     declare snapToken: CreationOptional<string | null>
     declare paymentUrl: CreationOptional<string | null>
     declare createdAt: CreationOptional<Date>
@@ -91,6 +93,16 @@ export class Transaction extends Model<
                 type: DataTypes.ENUM('pending', 'success', 'failed', 'expired'),
                 allowNull: false,
                 defaultValue: 'pending'
+            },
+            transactionType: {
+                type: DataTypes.ENUM('questionnaire_access', 'questionnaire_publish'),
+                allowNull: false,
+                field: 'transaction_type'
+            },
+            metadata: {
+                type: DataTypes.JSONB,
+                allowNull: true,
+                defaultValue: null
             },
             snapToken: {
                 type: DataTypes.TEXT,

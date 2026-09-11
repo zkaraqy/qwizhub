@@ -11,18 +11,16 @@ export default defineNuxtConfig({
   vite: {
     server: {
       allowedHosts: true 
-    }
-  },
-
-  experimental: {
-    appManifest: false
-  },
-  vite: {
+    },
     resolve: {
       alias: {
         '#app-manifest': 'defu'
       }
     }
+  },
+
+  experimental: {
+    appManifest: false
   },
   
   css: [

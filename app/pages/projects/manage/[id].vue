@@ -1,7 +1,7 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="projects">
     <!-- Hero Header -->
-    <div class="hero-section fade-in mb-5">
+    <div class="hero-section fade-in mb-2">
       <div class="position-relative" style="z-index: 1;">
         <div class="d-flex align-items-center mb-3">
           <button class="btn btn-light me-3" @click="router.push('/projects')">
@@ -9,7 +9,7 @@
           </button>
           <div>
             <h1 class="display-6 fw-bold mb-1">{{ project?.title || 'Loading...' }}</h1>
-            <p class="lead mb-0 opacity-90">Manage questionnaires for this research project</p>
+            <p class="lead mb-0 text-white opacity-90">Manage questionnaires for this research project</p>
           </div>
         </div>
         <button class="btn btn-light btn-lg px-4 fw-semibold shadow-sm" @click="createQuestionnaire">
@@ -22,7 +22,7 @@
       <div class="skeleton" style="height: 400px; border-radius: 20px;"></div>
     </div>
 
-    <div v-else-if="questionnaires.length === 0" class="text-center py-5 fade-in">
+    <div v-else-if="questionnaires.length === 0" class="text-center py-2 fade-in">
       <div class="glass-card p-5">
         <i class="bi bi-file-earmark-text display-1 text-muted opacity-25 mb-4 d-block"></i>
         <h4 class="fw-bold mb-3">No Questionnaires Yet</h4>
@@ -83,6 +83,42 @@
         </table>
       </div>
     </div>
+
+    <!-- Payment Modal for Questionnaire Access -->
+    <div v-if="showPaymentModal" class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,0.5)">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+          <div class="modal-header border-bottom-0 pb-0">
+            <h5 class="modal-title fw-bold">Akses Form Kuesioner AI</h5>
+            <button type="button" class="btn-close" @click="showPaymentModal = false" :disabled="processingPayment"></button>
+          </div>
+          <div class="modal-body p-4">
+            <p class="text-muted mb-3">Bayar Rp 5.000 untuk mengakses form kuesioner dengan fitur AI generator pertanyaan.</p>
+            <div class="alert alert-info bg-opacity-10 border-0 mb-4">
+              <i class="bi bi-robot me-2"></i>
+              <strong>Fitur AI membantu:</strong>
+              <ul class="mb-0 mt-2">
+                <li>Generate pertanyaan berkualitas</li>
+                <li>Berdasarkan topik & tujuan penelitian</li>
+                <li>Edit dan kustomisasi sesuka hati</li>
+              </ul>
+            </div>
+            <div class="text-center bg-light p-4 rounded-3">
+              <div class="text-muted small mb-1">Biaya Akses Form</div>
+              <h2 class="fw-bold mb-0 text-primary">Rp 5.000</h2>
+            </div>
+          </div>
+          <div class="modal-footer border-top-0 pt-0">
+            <button class="btn btn-light rounded-3" @click="showPaymentModal = false" :disabled="processingPayment">
+              Batal
+            </button>
+            <button class="btn btn-primary rounded-3 px-4 fw-semibold" @click="proceedPayment" :disabled="processingPayment">
+              <i class="bi bi-credit-card me-2"></i>{{ processingPayment ? 'Memproses...' : 'Bayar Sekarang' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </LayoutPrivateLayout>
 </template>
 
@@ -98,7 +134,18 @@ definePageMeta({
 const { data } = useAuth()
 const route = useRoute()
 const router = useRouter()
+const config = useRuntimeConfig()
 const projectId = route.params.id as string
+
+// Load Midtrans Snap.js script
+useHead({
+  script: [
+    {
+      src: config.public.midtransSnapUrl,
+      'data-client-key': config.public.midtransClientKey
+    }
+  ]
+})
 
 const userProfile = computed(() => {
   if (!data.value?.user) return null
@@ -114,6 +161,8 @@ const userProfile = computed(() => {
 const loading = ref(true)
 const project = ref<any>(null)
 const questionnaires = ref<any[]>([])
+const showPaymentModal = ref(false)
+const processingPayment = ref(false)
 
 const fetchProjectData = async () => {
   loading.value = true
@@ -134,7 +183,86 @@ onMounted(async () => {
 })
 
 const createQuestionnaire = () => {
-  router.push(`/projects/${projectId}/questionnaire/create`)
+  showPaymentModal.value = true
+}
+
+const proceedPayment = async () => {
+  processingPayment.value = true
+  try {
+    const response = await $fetch('/api/questionnaires/payment/access', {
+      method: 'POST',
+      body: { projectId }
+    }) as any
+
+    console.log('Payment access response:', response)
+    showPaymentModal.value = false
+
+    // Store questionnaireId for later use
+    const questionnaireId = response.questionnaireId
+
+    // Trigger Midtrans Snap
+    if (window.snap) {
+      window.snap.pay(response.snapToken, {
+        onSuccess: async function(result: any) {
+          console.log('Payment success:', result)
+          
+          // Wait a bit for webhook to process
+          await new Promise(resolve => setTimeout(resolve, 2000))
+          
+          await Swal.fire({
+            icon: 'success',
+            title: 'Pembayaran Berhasil!',
+            text: 'Anda akan diarahkan ke form kuesioner.',
+            confirmButtonText: 'OK',
+            timer: 3000
+          })
+          
+          // Redirect to edit form with questionnaireId from response
+          router.push(`/projects/${projectId}/questionnaire/${questionnaireId}/edit`)
+        },
+        onPending: function(result: any) {
+          console.log('Payment pending:', result)
+          Swal.fire({
+            icon: 'info',
+            title: 'Pembayaran Pending',
+            text: 'Menunggu konfirmasi pembayaran Anda.',
+            confirmButtonText: 'OK'
+          })
+        },
+        onError: function(result: any) {
+          console.error('Payment error:', result)
+          Swal.fire({
+            icon: 'error',
+            title: 'Pembayaran Gagal',
+            text: 'Pembayaran gagal. Silakan coba lagi.',
+            confirmButtonText: 'OK'
+          })
+        },
+        onClose: function() {
+          console.log('Payment popup closed')
+          Swal.fire({
+            icon: 'warning',
+            title: 'Pembayaran Dibatalkan',
+            text: 'Anda menutup popup tanpa menyelesaikan pembayaran.',
+            confirmButtonText: 'OK'
+          })
+        }
+      })
+    } else {
+      console.error('Midtrans Snap not loaded')
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Midtrans library tidak termuat. Silakan refresh halaman.',
+        confirmButtonText: 'OK'
+      })
+    }
+  } catch (error: any) {
+    console.error('Payment initiation error:', error)
+    Swal.fire('Error', error.data?.statusMessage || 'Gagal memproses pembayaran', 'error')
+  } finally {
+    processingPayment.value = false
+  }
 }
 
 const editQuestionnaire = (questionnaireId: string) => {

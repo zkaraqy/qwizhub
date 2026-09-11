@@ -2,7 +2,7 @@
   <LayoutPrivateLayout :user="userProfile" active-item="surveys" @logout="handleSignOut">
     <div class="row mb-4">
       <div class="col">
-        <h1 class="h3 mb-3">Kuesioner Tersedia</h1>
+        <h1 class="fw-bold h3 mb-3">Kuesioner Tersedia</h1>
         <p class="text-muted">Pilih kuesioner yang ingin Anda kerjakan dan dapatkan honor</p>
       </div>
     </div>

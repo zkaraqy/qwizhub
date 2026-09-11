@@ -109,8 +109,8 @@
       </template>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="row mb-4 fade-in stagger-2">
+    <!-- Quick Actions (Peneliti Only) -->
+    <div v-if="userProfile?.role === 'peneliti'" class="row mb-4 fade-in stagger-2">
       <div class="col-12">
         <div class="glass-card p-4">
           <h5 class="fw-bold mb-3">
@@ -131,8 +131,135 @@
       </div>
     </div>
 
-    <!-- Recent Activity -->
-    <div class="row fade-in stagger-3">
+    <!-- Kuesioner Tersedia (Responden Only) -->
+    <div v-if="userProfile?.role === 'responden'" class="row mb-4 fade-in stagger-2">
+      <div class="col-12">
+        <div class="glass-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0">
+              <i class="bi bi-clipboard-check text-primary me-2"></i>Kuesioner Tersedia
+            </h5>
+            <NuxtLink to="/questionnaires" class="btn btn-sm btn-outline-primary">
+              Lihat Semua
+            </NuxtLink>
+          </div>
+
+          <!-- Search and Filter -->
+          <div class="row mb-3">
+            <div class="col-md-6 mb-2">
+              <input
+                v-model="searchQuery"
+                type="text"
+                class="form-control"
+                placeholder="Cari kuesioner..."
+                @input="debouncedSearchQuestionnaires"
+              />
+            </div>
+            <div class="col-md-3 mb-2">
+              <select v-model="statusFilter" class="form-select" @change="loadQuestionnairesList">
+                <option value="all">Semua Status</option>
+                <option value="available">Tersedia</option>
+                <option value="full">Penuh</option>
+                <option value="completed">Sudah Dikerjakan</option>
+              </select>
+            </div>
+            <div class="col-md-3 mb-2">
+              <select v-model="sortBy" class="form-select" @change="loadQuestionnairesList">
+                <option value="newest">Terbaru</option>
+                <option value="oldest">Terlama</option>
+                <option value="honor">Honor Tertinggi</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div v-if="loadingQuestionnaires" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div v-else-if="questionnairesList.length > 0" class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th style="width: 5%;">No</th>
+                  <th style="width: 25%;">Topic</th>
+                  <th style="width: 15%;">Peneliti</th>
+                  <th style="width: 10%;">Target</th>
+                  <th style="width: 12%;">Honor</th>
+                  <th style="width: 13%;">Tanggal</th>
+                  <th style="width: 10%;">Status</th>
+                  <th style="width: 10%;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(q, index) in questionnairesList" :key="q.id">
+                  <td>{{ (currentPageQuestionnaires - 1) * limitQuestionnaires + index + 1 }}</td>
+                  <td>
+                    <div class="fw-semibold">{{ q.topic }}</div>
+                    <small class="text-muted">{{ truncateText(q.researchObjective, 50) }}</small>
+                  </td>
+                  <td>
+                    <small>{{ q.project?.peneliti?.name || '-' }}</small>
+                  </td>
+                  <td>
+                    <small>{{ q.currentResponses }}/{{ q.targetRespondents }}</small>
+                  </td>
+                  <td>
+                    <span class="badge bg-success">Rp {{ formatCurrency(q.honorariumPerRespondent) }}</span>
+                  </td>
+                  <td>
+                    <small>{{ formatDateShort(q.publishedAt) }}</small>
+                  </td>
+                  <td>
+                    <span v-if="q.hasResponded" class="badge bg-info">Selesai</span>
+                    <span v-else-if="!q.isAvailable" class="badge bg-secondary">Penuh</span>
+                    <span v-else class="badge bg-primary">Tersedia</span>
+                  </td>
+                  <td>
+                    <NuxtLink :to="`/questionnaires/${q.id}/detail`" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-eye"></i>
+                    </NuxtLink>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div v-else class="text-center py-4">
+            <i class="bi bi-inbox display-4 text-muted"></i>
+            <p class="text-muted mt-2">Tidak ada kuesioner tersedia</p>
+          </div>
+
+          <!-- Pagination -->
+          <div v-if="totalPagesQuestionnaires > 1" class="d-flex justify-content-center mt-3">
+            <nav>
+              <ul class="pagination mb-0">
+                <li class="page-item" :class="{ disabled: currentPageQuestionnaires === 1 }">
+                  <a class="page-link" href="#" @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires - 1)">
+                    <i class="bi bi-chevron-left"></i>
+                  </a>
+                </li>
+                <li v-for="page in totalPagesQuestionnaires" :key="page" class="page-item" :class="{ active: page === currentPageQuestionnaires }">
+                  <a class="page-link" href="#" @click.prevent="changeQuestionnaireePage(page)">{{ page }}</a>
+                </li>
+                <li class="page-item" :class="{ disabled: currentPageQuestionnaires === totalPagesQuestionnaires }">
+                  <a class="page-link" href="#" @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires + 1)">
+                    <i class="bi bi-chevron-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity (Peneliti Only) -->
+    <div v-if="userProfile?.role === 'peneliti'" class="row fade-in stagger-3">
       <div class="col-12">
         <div class="card glass-card border-0 shadow-sm rounded-4 overflow-hidden">
 
@@ -268,6 +395,90 @@ const recentActivities = ref<any[]>([])
 const loadingActivities = ref(false)
 const loadingDashboard = ref(true)
 
+// Questionnaires list for responden
+const questionnairesList = ref<any[]>([])
+const loadingQuestionnaires = ref(false)
+const searchQuery = ref('')
+const statusFilter = ref('all')
+const sortBy = ref('newest')
+const currentPageQuestionnaires = ref(1)
+const totalPagesQuestionnaires = ref(1)
+const limitQuestionnaires = 10
+
+// Load questionnaires for responden
+const loadQuestionnairesList = async () => {
+  if (userProfile.value?.role !== 'responden') return
+  
+  loadingQuestionnaires.value = true
+  try {
+    const { data: questData, error: questError } = await useFetch('/api/questionnaires/published', {
+      query: {
+        search: searchQuery.value,
+        status: statusFilter.value,
+        page: currentPageQuestionnaires.value,
+        limit: limitQuestionnaires
+      }
+    })
+    
+    if (!questError.value && questData.value?.success) {
+      let data = questData.value.data
+      
+      // Apply sorting
+      if (sortBy.value === 'newest') {
+        data = data.sort((a: any, b: any) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+      } else if (sortBy.value === 'oldest') {
+        data = data.sort((a: any, b: any) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime())
+      } else if (sortBy.value === 'honor') {
+        data = data.sort((a: any, b: any) => b.honorariumPerRespondent - a.honorariumPerRespondent)
+      }
+      
+      questionnairesList.value = data
+      totalPagesQuestionnaires.value = questData.value.pagination.totalPages
+    }
+  } catch (e) {
+    console.error('Failed to load questionnaires:', e)
+  } finally {
+    loadingQuestionnaires.value = false
+  }
+}
+
+// Debounced search for questionnaires
+let searchTimeout: NodeJS.Timeout
+const debouncedSearchQuestionnaires = () => {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    currentPageQuestionnaires.value = 1
+    loadQuestionnairesList()
+  }, 500)
+}
+
+// Change page for questionnaires
+const changeQuestionnaireePage = (page: number) => {
+  if (page >= 1 && page <= totalPagesQuestionnaires.value) {
+    currentPageQuestionnaires.value = page
+    loadQuestionnairesList()
+  }
+}
+
+// Helper functions
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('id-ID').format(amount)
+}
+
+const formatDateShort = (dateString: string) => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('id-ID', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
+const truncateText = (text: string, length: number) => {
+  if (!text) return ''
+  return text.length > length ? text.substring(0, length) + '...' : text
+}
+
 onMounted(async () => {
   await refresh()
   try {
@@ -289,6 +500,8 @@ onMounted(async () => {
         stats.value.totalQuestionnairesAnswered = statsData.value.stats.totalQuestionnairesAnswered
         stats.value.totalHonorEarned = statsData.value.stats.totalHonorEarned
       }
+      // Load questionnaires list for responden
+      await loadQuestionnairesList()
     }
   } catch (e) {
     console.error('Dashboard load error:', e)

@@ -7,7 +7,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   modules: ['@sidebase/nuxt-auth', '@nuxt/image'],
-  
+
+  vite: {
+    server: {
+      allowedHosts: true 
+    }
+  },
+
   css: [
     '~/assets/css/modern-saas.css'
   ],

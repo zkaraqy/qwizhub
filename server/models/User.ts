@@ -40,6 +40,8 @@ export class User extends Model<
     declare password: string | null
     declare role: CreationOptional<'peneliti' | 'responden'>
     declare verificationStatus: CreationOptional<'unverified' | 'pending' | 'verified'>
+    declare totalQuestionnairesAnswered: CreationOptional<number>
+    declare totalHonorEarned: CreationOptional<number>
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 
@@ -130,6 +132,18 @@ export class User extends Model<
                 allowNull: false,
                 defaultValue: 'unverified',
                 field: 'verification_status'
+            },
+            totalQuestionnairesAnswered: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+                field: 'total_questionnaires_answered'
+            },
+            totalHonorEarned: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+                field: 'total_honor_earned'
             },
             createdAt: {
                 type: DataTypes.DATE,

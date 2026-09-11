@@ -36,6 +36,8 @@ export class Questionnaire extends Model<
     declare researchObjective: string
     declare variables: CreationOptional<string[]>
     declare status: CreationOptional<'draft' | 'published'>
+    declare targetRespondents: CreationOptional<number>
+    declare currentResponses: CreationOptional<number>
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 
@@ -88,6 +90,35 @@ export class Questionnaire extends Model<
         return questionCount > 0 && this.isDraft()
     }
 
+    /**
+     * Check if questionnaire is accepting responses
+     */
+    isAcceptingResponses(): boolean {
+        return this.status === 'published' && this.currentResponses < this.targetRespondents
+    }
+
+    /**
+     * Check if questionnaire has reached target
+     */
+    hasReachedTarget(): boolean {
+        return this.currentResponses >= this.targetRespondents
+    }
+
+    /**
+     * Get remaining slots
+     */
+    getRemainingSlots(): number {
+        return Math.max(0, this.targetRespondents - this.currentResponses)
+    }
+
+    /**
+     * Increment current responses count
+     */
+    async incrementResponses(): Promise<void> {
+        this.currentResponses = (this.currentResponses || 0) + 1
+        await this.save()
+    }
+
     static initModel(sequelize: Sequelize): typeof Questionnaire {
         Questionnaire.init({
             id: {
@@ -119,6 +150,18 @@ export class Questionnaire extends Model<
                 type: DataTypes.ENUM('draft', 'published'),
                 allowNull: false,
                 defaultValue: 'draft'
+            },
+            targetRespondents: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+                field: 'target_respondents'
+            },
+            currentResponses: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+                field: 'current_responses'
             },
             createdAt: {
                 type: DataTypes.DATE,

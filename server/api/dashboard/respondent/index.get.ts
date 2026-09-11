@@ -1,34 +1,34 @@
 import { requireRole } from '~~/server/utils/auth'
-import { Transaction } from '~~/server/models/Transaction'
+import { Response } from '~~/server/models/Response'
 import type { H3Event } from 'h3'
 
 /**
  * GET /api/dashboard/respondent
  * Returns statistics for a logged‑in respondent.
- *   - totalQuestionnairesAnswered: number of distinct questionnaires the respondent has completed (i.e., has a successful transaction).
- *   - totalHonorEarned: total honorarium earned from those successful transactions.
+ *   - totalQuestionnairesAnswered: number of distinct questionnaires the respondent has completed.
+ *   - totalHonorEarned: total honorarium earned from those completed responses.
  */
 export default defineEventHandler(async (event: H3Event) => {
   try {
     // Ensure the caller is a respondent
     const user = await requireRole(event, 'responden')
 
-    // Fetch all successful transactions belonging to this respondent
-    const transactions = await Transaction.findAll({
+    // Fetch all completed responses belonging to this respondent
+    const responses = await Response.findAll({
       where: {
-        userId: user.id,
-        status: 'success'
+        respondentId: user.id,
+        status: 'completed'
       },
-      attributes: ['questionnaireId', 'honorariumPerRespondent']
+      attributes: ['questionnaireId', 'honorAmount']
     })
 
     // Count distinct questionnaire IDs
-    const distinctIds = new Set(transactions.map((t) => t.questionnaireId))
+    const distinctIds = new Set(responses.map((r) => r.questionnaireId))
     const totalQuestionnairesAnswered = distinctIds.size
 
-    // Sum the honorarium per respondent
-    const totalHonorEarned = transactions.reduce((sum, tx) => {
-      return sum + (tx.honorariumPerRespondent ?? 0)
+    // Sum the honor amounts
+    const totalHonorEarned = responses.reduce((sum, response) => {
+      return sum + (response.honorAmount ?? 0)
     }, 0)
 
     return {

@@ -1,9 +1,9 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="projects" @logout="handleSignOut">
     <!-- Hero Header with Gradient -->
-    <div class="hero-section fade-in mb-5">
+    <div class="hero-section fade-in mb-4">
       <div class="position-relative" style="z-index: 1;">
-        <h1 class="display-5 fw-bold mb-2">My Research Projects</h1>
+        <h1 class="display-6 fw-bold mb-2">My Research Projects</h1>
         <p class="lead mb-4 opacity-90">Manage and monitor all your research questionnaires</p>
         <button class="btn btn-light btn-lg px-4 fw-semibold shadow-sm" @click="router.push('/projects/create')">
           <i class="bi bi-plus-lg me-2"></i>Create New Project

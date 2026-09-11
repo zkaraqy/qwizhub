@@ -2,7 +2,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const { status, data } = useAuth()
 
   // List of protected routes that require authentication
-  const protectedRoutes = ['/dashboard', '/profile']
+  const protectedRoutes = ['/dashboard', '/profile', '/projects', '/questionnaires']
   
   // List of auth routes that should redirect to dashboard if already logged in
   const authRoutes = ['/login', '/register', '/forgot-password']

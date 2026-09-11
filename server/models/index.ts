@@ -10,6 +10,8 @@ import { Questionnaire } from './Questionnaire'
 import { Question } from './Question'
 import { AIGenerationLog } from './AIGenerationLog'
 import { Transaction } from './Transaction'
+import { Response } from './Response'
+import { HonorTransaction } from './HonorTransaction'
 
 export {
   User,
@@ -22,7 +24,9 @@ export {
   Questionnaire,
   Question,
   AIGenerationLog,
-  Transaction
+  Transaction,
+  Response,
+  HonorTransaction
 }
 
 export function initModels(sequelize: Sequelize) {
@@ -37,6 +41,8 @@ export function initModels(sequelize: Sequelize) {
   Question.initModel(sequelize)
   AIGenerationLog.initModel(sequelize)
   Transaction.initModel(sequelize)
+  Response.initModel(sequelize)
+  HonorTransaction.initModel(sequelize)
 
   User.hasMany(Account, {
     as: 'accounts',
@@ -146,6 +152,42 @@ export function initModels(sequelize: Sequelize) {
     foreignKey: 'questionnaire_id'
   })
 
+  // Response associations
+  User.hasMany(Response, {
+    as: 'responses',
+    foreignKey: 'respondent_id'
+  })
+  Response.belongsTo(User, {
+    as: 'respondent',
+    foreignKey: 'respondent_id'
+  })
+  Questionnaire.hasMany(Response, {
+    as: 'responses',
+    foreignKey: 'questionnaire_id'
+  })
+  Response.belongsTo(Questionnaire, {
+    as: 'questionnaire',
+    foreignKey: 'questionnaire_id'
+  })
+
+  // HonorTransaction associations
+  User.hasMany(HonorTransaction, {
+    as: 'honorTransactions',
+    foreignKey: 'respondent_id'
+  })
+  HonorTransaction.belongsTo(User, {
+    as: 'respondent',
+    foreignKey: 'respondent_id'
+  })
+  Response.hasOne(HonorTransaction, {
+    as: 'honorTransaction',
+    foreignKey: 'response_id'
+  })
+  HonorTransaction.belongsTo(Response, {
+    as: 'response',
+    foreignKey: 'response_id'
+  })
+
   return {
     User,
     Account,
@@ -157,6 +199,8 @@ export function initModels(sequelize: Sequelize) {
     Questionnaire,
     Question,
     AIGenerationLog,
-    Transaction
+    Transaction,
+    Response,
+    HonorTransaction
   }
 }

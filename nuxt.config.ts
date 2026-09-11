@@ -7,7 +7,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   modules: ['@sidebase/nuxt-auth', '@nuxt/image'],
-  
+
+  vite: {
+    server: {
+      allowedHosts: true 
+    }
+  },
+
   css: [
     '~/assets/css/modern-saas.css'
   ],
@@ -47,9 +53,16 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // The private keys which are only available within server-side
     authSecret: process.env.NEXTAUTH_SECRET,
+    midtransServerKey: process.env.MIDTRANS_SERVER_KEY,
+    midtransIsProduction: process.env.MIDTRANS_IS_PRODUCTION,
+    
     // Keys within public, will be also exposed to the client-side
     public: {
-      authUrl: process.env.NEXTAUTH_URL || "http://localhost:3000/api/auth"
+      authUrl: process.env.NEXTAUTH_URL || "http://localhost:3000/api/auth",
+      midtransClientKey: process.env.MIDTRANS_CLIENT_KEY,
+      midtransSnapUrl: process.env.MIDTRANS_IS_PRODUCTION === 'true' 
+        ? 'https://app.midtrans.com/snap/snap.js'
+        : 'https://app.sandbox.midtrans.com/snap/snap.js'
     }
   }
 })

@@ -1,7 +1,7 @@
 import { requireRole } from '~~/server/utils/auth'
 import { Project } from '~~/server/models/Project'
 import { Questionnaire } from '~~/server/models/Questionnaire'
-import { Transaction } from '~~/server/models/Transaction'
+import { Response } from '~~/server/models/Response'
 import type { H3Event } from 'h3'
 import { Op } from 'sequelize'
 
@@ -10,8 +10,8 @@ import { Op } from 'sequelize'
  * Returns aggregated statistics for the logged‑in researcher (peneliti).
  *   - total projects owned by the researcher
  *   - total questionnaires belonging to those projects
- *   - total published projects
- *   - total successful responses (proxied by successful transactions)
+ *   - total published questionnaires
+ *   - total completed responses from respondents
  */
 export default defineEventHandler(async (event: H3Event) => {
   try {
@@ -21,13 +21,8 @@ export default defineEventHandler(async (event: H3Event) => {
     // 1. Total projects
     const projectsCount = await Project.count({ where: { penelitiId: user.id } })
 
-    // 2. Total published projects
-    const publishedCount = await Project.count({
-      where: { penelitiId: user.id, status: 'published' }
-    })
 
-    // 3. Total questionnaires belonging to the researcher's projects
-    const questionnairesCount = await Questionnaire.count({
+    const userQuestionnaires = await Questionnaire.findAll({
       include: [
         {
           model: Project,
@@ -35,35 +30,38 @@ export default defineEventHandler(async (event: H3Event) => {
           attributes: [], // we only need the join, no columns
           as: 'project'
         }
-      ]
+      ],
+      attributes: ['id', 'status']
     })
 
-    // 4. Total responses – we treat each successful transaction as a response
-    const responsesCount = await Transaction.count({
-      where: { status: 'success' },
-      include: [
-        {
-          model: Questionnaire,
-          include: [
-            {
-              model: Project,
-              where: { penelitiId: user.id },
-              attributes: [],
-              as: 'project'
-            }
-          ],
-          attributes: [],
-          as: 'questionnaire'
-        }
-      ]
-    })
+    // 2. Total published questionnaires
+    const publishedQuestionnairesCount = userQuestionnaires.filter(q => q.status === 'published').length
+
+    // 3. Total questionnaires belonging to the researcher's projects
+    const questionnairesCount = userQuestionnaires.length
+
+    // 4. Total responses – count completed responses for published questionnaires
+    const publishedQuestionnaireIds = userQuestionnaires
+      .filter(q => q.status === 'published')
+      .map(q => q.id)
+
+    const responsesCount = publishedQuestionnaireIds.length > 0
+      ? await Response.count({
+          where: {
+            questionnaireId: {
+              [Op.in]: publishedQuestionnaireIds
+            },
+            status: 'completed'
+          }
+        })
+      : 0
 
     return {
       success: true,
       stats: {
         projects: projectsCount,
         questionnaires: questionnairesCount,
-        published: publishedCount,
+        published: publishedQuestionnairesCount,
         responses: responsesCount
       }
     }

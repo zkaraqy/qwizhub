@@ -65,6 +65,7 @@ export default defineEventHandler(async (event) => {
         // Get snap token
         const midtransResponse = await snap.createTransaction(parameter)
 
+        // Create transaction
         const transaction = await Transaction.create({
             id: transactionId,
             questionnaireId,
@@ -77,6 +78,11 @@ export default defineEventHandler(async (event) => {
             snapToken: midtransResponse.token,
             paymentUrl: midtransResponse.redirect_url
         })
+
+        // Update questionnaire with target respondents (will be published after payment success)
+        questionnaire.targetRespondents = targetRespondents
+        questionnaire.currentResponses = 0
+        await questionnaire.save()
 
         return {
             success: true,

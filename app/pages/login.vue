@@ -57,7 +57,7 @@ const signInWithCredentials = async () => {
   <div class="min-vh-100 d-flex align-items-center justify-content-center py-4 py-lg-5" style="background-color: #F8FAFA;">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
           <!-- Main Centered Login Card -->
           <div class="card border rounded-4 bg-white shadow-sm p-4 p-md-5" style="border-color: #E2E8F0;">
             <!-- Top Navigation & Brand -->
@@ -104,10 +104,10 @@ const signInWithCredentials = async () => {
             </button>
 
             <!-- Divider -->
-            <div class="d-flex align-items-center my-3">
-              <hr class="flex-grow-1 my-0" style="border-color: #E2E8F0;">
-              <span class="px-3 text-muted small" style="font-size: 0.75rem;">atau dengan email</span>
-              <hr class="flex-grow-1 my-0" style="border-color: #E2E8F0;">
+            <div class="d-flex align-items-center my-2">
+              <span class="flex-grow-1" style="height: 1px; background-color: #EEF2F6;"></span>
+              <span class="px-3 small" style="color: #94A3B8; font-size: 0.75rem;">atau dengan email</span>
+              <span class="flex-grow-1" style="height: 1px; background-color: #EEF2F6;"></span>
             </div>
 
             <!-- Credentials Form -->

@@ -197,13 +197,14 @@ const projectId = route.params.id as string
 const questionnaireId = route.params.questionnaireId as string
 
 const { data: session, signOut } = useAuth()
+const config = useRuntimeConfig()
 
 // Load Midtrans Snap.js script
 useHead({
   script: [
     {
-      src: 'https://app.sandbox.midtrans.com/snap/snap.js',
-      'data-client-key': process.env.MIDTRANS_CLIENT_KEY || 'SB-Mid-client-YOUR_CLIENT_KEY'
+      src: config.public.midtransSnapUrl,
+      'data-client-key': config.public.midtransClientKey
     }
   ]
 })
@@ -414,31 +415,68 @@ async function proceedPublish() {
       }
     }) as any
 
+    console.log('Publish response:', response)
     showPublishModal.value = false
 
     // Trigger Midtrans Snap
     if (window.snap) {
       window.snap.pay(response.snapToken, {
-        onSuccess: function(result: any){
-          // Will be handled by webhook, but we can update UI optimistically
-          questionnaire.value.status = 'published'
-          Swal.fire('Sukses', 'Pembayaran berhasil dan Kuesioner dipublikasikan!', 'success')
+        onSuccess: async function(result: any){
+          console.log('Payment success:', result)
+          // Refresh questionnaire data to get updated status from webhook
+          await fetchQuestionnaire()
+          await Swal.fire({
+            icon: 'success',
+            title: 'Pembayaran Berhasil!',
+            text: 'Kuesioner Anda sedang diproses untuk dipublikasikan.',
+            confirmButtonText: 'OK'
+          })
         },
         onPending: function(result: any){
-          Swal.fire('Pending', 'Menunggu pembayaran Anda.', 'info')
+          console.log('Payment pending:', result)
+          Swal.fire({
+            icon: 'info',
+            title: 'Pembayaran Pending',
+            text: 'Menunggu pembayaran Anda. Kami akan memproses setelah pembayaran dikonfirmasi.',
+            confirmButtonText: 'OK'
+          })
         },
         onError: function(result: any){
-          Swal.fire('Gagal', 'Pembayaran gagal. Silakan coba lagi.', 'error')
+          console.error('Payment error:', result)
+          Swal.fire({
+            icon: 'error',
+            title: 'Pembayaran Gagal',
+            text: 'Pembayaran gagal. Silakan coba lagi.',
+            confirmButtonText: 'OK'
+          })
         },
         onClose: function(){
-          Swal.fire('Batal', 'Anda menutup popup tanpa menyelesaikan pembayaran.', 'warning')
+          console.log('Payment popup closed')
+          Swal.fire({
+            icon: 'warning',
+            title: 'Pembayaran Dibatalkan',
+            text: 'Anda menutup popup tanpa menyelesaikan pembayaran.',
+            confirmButtonText: 'OK'
+          })
         }
       })
     } else {
-      Swal.fire('Error', 'Midtrans library tidak termuat', 'error')
+      console.error('Midtrans Snap not loaded')
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Midtrans library tidak termuat. Silakan refresh halaman dan coba lagi.',
+        confirmButtonText: 'OK'
+      })
     }
   } catch (err: any) {
-    Swal.fire('Error', err.data?.statusMessage || 'Gagal memproses pembayaran', 'error')
+    console.error('Publish error:', err)
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: err.data?.statusMessage || 'Gagal memproses pembayaran',
+      confirmButtonText: 'OK'
+    })
   } finally {
     publishing.value = false
   }

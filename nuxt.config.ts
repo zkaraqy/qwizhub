@@ -14,13 +14,44 @@ export default defineNuxtConfig({
     }
   },
 
+  experimental: {
+    appManifest: false
+  },
+  vite: {
+    resolve: {
+      alias: {
+        '#app-manifest': 'defu'
+      }
+    }
+  },
+  
   css: [
+    '~/assets/css/main.css',
     '~/assets/css/modern-saas.css'
   ],
   
   app: {
     head: {
+      title: 'QwizHub — Platform Riset & Instrumen Penelitian dengan AI',
+      meta: [
+        { name: 'description', content: 'QwizHub membantu mahasiswa dan peneliti menyusun instrumen penelitian dengan bantuan AI, mengevaluasi kualitas pertanyaan, dan menemukan responden yang sesuai.' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { charset: 'utf-8' }
+      ],
       link: [
+        {
+          rel: 'preconnect',
+          href: 'https://fonts.googleapis.com'
+        },
+        {
+          rel: 'preconnect',
+          href: 'https://fonts.gstatic.com',
+          crossorigin: ''
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap'
+        },
         {
           rel: 'stylesheet',
           href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',

@@ -1,7 +1,9 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="surveys" @logout="handleSignOut">
     <div class="row mb-4">
-      <div class="col"><h1 class="h3 mb-3">Riwayat Jawaban Saya</h1></div>
+      <div class="col">
+        <h1 class="h3 mb-3">Riwayat Jawaban Saya</h1>
+      </div>
     </div>
     <div class="row mb-4">
       <div class="col-md-4">
@@ -165,4 +167,3 @@ const formatTime = (seconds: number) => {
 
 onMounted(() => loadResponses())
 </script>
-

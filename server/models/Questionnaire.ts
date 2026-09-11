@@ -38,6 +38,9 @@ export class Questionnaire extends Model<
     declare status: CreationOptional<'draft' | 'published'>
     declare targetRespondents: CreationOptional<number>
     declare currentResponses: CreationOptional<number>
+    declare paidForAccess: CreationOptional<boolean>
+    declare accessPaymentId: string | null
+    declare accessPaymentDate: CreationOptional<Date | null>
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 
@@ -162,6 +165,22 @@ export class Questionnaire extends Model<
                 allowNull: false,
                 defaultValue: 0,
                 field: 'current_responses'
+            },
+            paidForAccess: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+                field: 'paid_for_access'
+            },
+            accessPaymentId: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+                field: 'access_payment_id'
+            },
+            accessPaymentDate: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                field: 'access_payment_date'
             },
             createdAt: {
                 type: DataTypes.DATE,

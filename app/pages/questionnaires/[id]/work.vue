@@ -8,7 +8,7 @@
         <div class="card shadow-sm mb-4">
           <div class="card-header bg-primary text-white">
             <div class="d-flex justify-content-between align-items-center">
-              <h5 class="mb-0">{{ questionnaire.topic }}</h5>
+              <h5 class="mb-0 text-white">{{ questionnaire.topic }}</h5>
               <span class="badge bg-light text-dark">
                 {{ currentQuestionIndex + 1 }} / {{ questions.length }}
               </span>
@@ -18,21 +18,15 @@
             <div class="progress mb-4" style="height: 10px;">
               <div class="progress-bar" :style="{ width: progressPercentage + '%' }"></div>
             </div>
-            
+
             <div v-if="currentQuestion" class="mb-4">
               <h5 class="mb-3">{{ currentQuestion.questionText }}</h5>
-              
+
               <!-- Multiple Choice / Radio -->
               <div v-if="currentQuestion.questionType === 'multiple_choice'" class="options-list">
                 <div v-for="option in currentQuestion.options" :key="option.value" class="form-check mb-2">
-                  <input 
-                    class="form-check-input" 
-                    type="radio" 
-                    :name="`question-${currentQuestion.id}`"
-                    :id="`option-${option.value}`"
-                    :value="option.value"
-                    v-model="answers[currentQuestion.id]"
-                  />
+                  <input class="form-check-input" type="radio" :name="`question-${currentQuestion.id}`"
+                    :id="`option-${option.value}`" :value="option.value" v-model="answers[currentQuestion.id]" />
                   <label class="form-check-label" :for="`option-${option.value}`">
                     {{ option.label }}
                   </label>
@@ -42,14 +36,9 @@
               <!-- Checkbox -->
               <div v-else-if="currentQuestion.questionType === 'checkbox'" class="options-list">
                 <div v-for="option in currentQuestion.options" :key="option.value" class="form-check mb-2">
-                  <input 
-                    class="form-check-input" 
-                    type="checkbox" 
-                    :id="`option-${option.value}`"
-                    :value="option.value"
+                  <input class="form-check-input" type="checkbox" :id="`option-${option.value}`" :value="option.value"
                     @change="toggleCheckbox(currentQuestion.id, option.value)"
-                    :checked="isChecked(currentQuestion.id, option.value)"
-                  />
+                    :checked="isChecked(currentQuestion.id, option.value)" />
                   <label class="form-check-label" :for="`option-${option.value}`">
                     {{ option.label }}
                   </label>
@@ -58,25 +47,17 @@
 
               <!-- Text -->
               <div v-else-if="currentQuestion.questionType === 'text'">
-                <textarea 
-                  class="form-control" 
-                  rows="4" 
-                  v-model="answers[currentQuestion.id]"
-                  placeholder="Tulis jawaban Anda..."
-                ></textarea>
+                <textarea class="form-control" rows="4" v-model="answers[currentQuestion.id]"
+                  placeholder="Tulis jawaban Anda..."></textarea>
               </div>
 
               <!-- Rating Scale / Likert -->
-              <div v-else-if="currentQuestion.questionType === 'rating_scale' || currentQuestion.questionType === 'likert'" class="options-list">
+              <div
+                v-else-if="currentQuestion.questionType === 'rating_scale' || currentQuestion.questionType === 'likert'"
+                class="options-list">
                 <div v-for="option in currentQuestion.options" :key="option.value" class="form-check mb-2">
-                  <input 
-                    class="form-check-input" 
-                    type="radio" 
-                    :name="`question-${currentQuestion.id}`"
-                    :id="`option-${option.value}`"
-                    :value="option.value"
-                    v-model="answers[currentQuestion.id]"
-                  />
+                  <input class="form-check-input" type="radio" :name="`question-${currentQuestion.id}`"
+                    :id="`option-${option.value}`" :value="option.value" v-model="answers[currentQuestion.id]" />
                   <label class="form-check-label" :for="`option-${option.value}`">
                     {{ option.label }}
                   </label>
@@ -95,28 +76,16 @@
             </div>
 
             <div class="d-flex justify-content-between mt-4">
-              <button 
-                @click="previousQuestion" 
-                class="btn btn-outline-secondary"
-                :disabled="currentQuestionIndex === 0"
-              >
+              <button @click="previousQuestion" class="btn btn-outline-secondary"
+                :disabled="currentQuestionIndex === 0">
                 <i class="bi bi-arrow-left me-2"></i>Sebelumnya
               </button>
-              
-              <button 
-                v-if="currentQuestionIndex < questions.length - 1"
-                @click="nextQuestion" 
-                class="btn btn-primary"
-              >
+
+              <button v-if="currentQuestionIndex < questions.length - 1" @click="nextQuestion" class="btn btn-primary">
                 Selanjutnya<i class="bi bi-arrow-right ms-2"></i>
               </button>
-              
-              <button 
-                v-else
-                @click="submitResponse" 
-                class="btn btn-success"
-                :disabled="submitting"
-              >
+
+              <button v-else @click="submitResponse" class="btn btn-success" :disabled="submitting">
                 <span v-if="submitting" class="spinner-border spinner-border-sm me-2"></span>
                 <i v-else class="bi bi-check-circle me-2"></i>
                 Submit
@@ -124,7 +93,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="text-center text-muted small">
           <i class="bi bi-info-circle me-1"></i>
           Progress otomatis tersimpan setiap 30 detik
@@ -183,7 +152,7 @@ const loadQuestionnaire = async () => {
     questionnaire.value = data.questionnaire
     response.value = data.response
     questions.value = data.questionnaire.questions || []
-    
+
     // Load existing answers
     if (data.response.answers && Array.isArray(data.response.answers)) {
       data.response.answers.forEach((ans: any) => {
@@ -229,13 +198,13 @@ const isChecked = (questionId: string, value: string) => {
 
 const saveProgress = async () => {
   if (!response.value) return
-  
+
   const answersArray = Object.keys(answers.value).map(questionId => ({
     questionId,
     answer: answers.value[questionId],
     answeredAt: new Date()
   }))
-  
+
   try {
     await $fetch(`/api/responses/${response.value.id}/progress`, {
       method: 'PUT',
@@ -253,14 +222,14 @@ const submitResponse = async () => {
     alert(`Harap jawab semua pertanyaan. ${unansweredCount} pertanyaan belum dijawab.`)
     return
   }
-  
+
   submitting.value = true
   const answersArray = Object.keys(answers.value).map(questionId => ({
     questionId,
     answer: answers.value[questionId],
     answeredAt: new Date()
   }))
-  
+
   try {
     const result = await $fetch(`/api/responses/${response.value.id}/submit`, {
       method: 'POST',
@@ -276,7 +245,7 @@ const submitResponse = async () => {
 
 onMounted(() => {
   loadQuestionnaire()
-  
+
   // Auto-save every 30 seconds
   autoSaveInterval = setInterval(() => {
     saveProgress()
@@ -303,8 +272,7 @@ onUnmounted(() => {
   border-color: #0d6efd;
 }
 
-.options-list .form-check-input:checked + .form-check-label {
+.options-list .form-check-input:checked+.form-check-label {
   font-weight: 600;
 }
 </style>
-

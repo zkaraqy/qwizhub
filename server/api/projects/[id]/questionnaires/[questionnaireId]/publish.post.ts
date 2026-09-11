@@ -76,7 +76,8 @@ export default defineEventHandler(async (event) => {
             serviceFee,
             status: 'pending',
             snapToken: midtransResponse.token,
-            paymentUrl: midtransResponse.redirect_url
+            paymentUrl: midtransResponse.redirect_url,
+            transactionType: 'questionnaire_publish'
         })
 
         // Update questionnaire with target respondents (will be published after payment success)

@@ -72,11 +72,31 @@ export class OpenRouterProvider extends BaseAIProvider {
 
                 const data = await response.json()
 
+                // Log response structure for debugging
+                console.log('[OpenRouterProvider] Response received:', {
+                    hasChoices: !!data.choices,
+                    choicesLength: data.choices?.length,
+                    hasMessage: !!data.choices?.[0]?.message,
+                    hasContent: !!data.choices?.[0]?.message?.content,
+                    contentType: typeof data.choices?.[0]?.message?.content
+                })
+
                 if (!data.choices?.[0]?.message?.content) {
                     throw new Error('Empty response from OpenRouter API')
                 }
 
-                let content = data.choices[0].message.content.trim()
+                let content = data.choices[0].message.content
+                
+                // Validate content is a string
+                if (typeof content !== 'string') {
+                    throw new Error('Invalid response format: content is not a string')
+                }
+                
+                content = content.trim()
+                
+                if (!content) {
+                    throw new Error('Empty content after trimming')
+                }
                 
                 // Remove <think> tags if present (for reasoning models)
                 content = content.replace(/<think>[\s\S]*?<\/think>\s*/g, '')

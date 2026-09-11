@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, readBody, createError } from 'h3'
 import crypto from 'crypto'
 import { Transaction, Questionnaire } from '~~/server/models'
 
@@ -47,6 +47,7 @@ export default defineEventHandler(async (event) => {
         }
 
         console.log('Current transaction status:', transaction.status)
+        console.log('Transaction type:', transaction.transactionType)
         console.log('Midtrans transaction status:', transactionStatus)
 
         // Determine new status based on Midtrans response
@@ -77,19 +78,43 @@ export default defineEventHandler(async (event) => {
             await transaction.save()
             console.log('✓ Transaction updated to:', newStatus)
 
-            // If payment successful, publish the questionnaire
+            // Process based on transaction type
             if (newStatus === 'success') {
-                const questionnaire = await Questionnaire.findByPk(transaction.questionnaireId)
-                if (questionnaire) {
-                    if (questionnaire.status !== 'published') {
-                        questionnaire.status = 'published'
-                        await questionnaire.save()
-                        console.log('✅ Questionnaire published:', questionnaire.id)
-                    } else {
-                        console.log('ℹ️ Questionnaire already published')
+                if (transaction.transactionType === 'questionnaire_access') {
+                    // PAYMENT FOR QUESTIONNAIRE ACCESS - Update existing questionnaire
+                    console.log('→ Processing questionnaire access payment...')
+                    
+                    const questionnaire = await Questionnaire.findByPk(transaction.questionnaireId)
+                    
+                    if (!questionnaire) {
+                        console.error('❌ Questionnaire not found:', transaction.questionnaireId)
+                        return { status: 'error', message: 'Questionnaire not found' }
                     }
-                } else {
-                    console.error('❌ Questionnaire not found:', transaction.questionnaireId)
+
+                    // Update questionnaire to mark as paid
+                    questionnaire.paidForAccess = true
+                    questionnaire.accessPaymentId = transaction.id
+                    questionnaire.accessPaymentDate = new Date()
+                    await questionnaire.save()
+
+                    console.log('✅ Questionnaire access payment completed:', questionnaire.id)
+
+                } else if (transaction.transactionType === 'questionnaire_publish') {
+                    // PAYMENT FOR QUESTIONNAIRE PUBLISH
+                    console.log('→ Processing questionnaire publish payment...')
+                    const questionnaire = await Questionnaire.findByPk(transaction.questionnaireId)
+                    
+                    if (questionnaire) {
+                        if (questionnaire.status !== 'published') {
+                            questionnaire.status = 'published'
+                            await questionnaire.save()
+                            console.log('✅ Questionnaire published:', questionnaire.id)
+                        } else {
+                            console.log('ℹ️ Questionnaire already published')
+                        }
+                    } else {
+                        console.error('❌ Questionnaire not found:', transaction.questionnaireId)
+                    }
                 }
             }
         } else {
@@ -101,6 +126,7 @@ export default defineEventHandler(async (event) => {
             status: 'ok',
             message: 'Webhook processed successfully',
             transactionId: orderId,
+            transactionType: transaction.transactionType,
             oldStatus: transaction.status,
             newStatus: newStatus
         }

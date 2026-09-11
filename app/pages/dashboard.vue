@@ -4,7 +4,7 @@
     <div class="hero-section fade-in mb-4">
       <div class="position-relative" style="z-index: 1;">
         <h1 class="display-6 fw-bold mb-2">Welcome back, {{ userProfile?.name || 'User' }}! 👋</h1>
-        <p v-if="userProfile?.role === 'peneliti'" class="lead mb-4 opacity-90">Here's what's happening with your research projects today.</p>
+        <p v-if="userProfile?.role === 'peneliti'" class="lead mb-4 text-white opacity-90">Here's what's happening with your research projects today.</p>
         <button v-if="userProfile?.role === 'peneliti'" class="btn btn-light btn-lg px-4 fw-semibold shadow-sm"
           @click="handleCreateSurvey">
           <i class="bi bi-plus-lg me-2"></i>New Project

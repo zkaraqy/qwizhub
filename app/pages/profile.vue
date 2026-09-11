@@ -102,6 +102,7 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label">Verification Status</label>
+                <br/>
                 <span
                   :class="['badge fs-6', profile.user.verificationStatus === 'verified' ? 'bg-success' : 'bg-warning text-dark']">
                   {{ profile.user.verificationStatus === 'verified' ? '✓ Verified' : '⚠ Pending Verification' }}

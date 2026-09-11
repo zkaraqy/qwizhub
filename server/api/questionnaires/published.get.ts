@@ -57,10 +57,10 @@ export default defineEventHandler(async (event) => {
                 {
                     model: Transaction,
                     as: 'transactions',
-                    where: { status: 'success' },
+                    where: { status: 'success', transactionType: 'questionnaire_publish' },
                     required: false,
                     limit: 1,
-                    attributes: ['honorariumPerRespondent', 'createdAt']
+                    attributes: ['id', 'honorariumPerRespondent', 'createdAt']
                 }
             ],
             order: [['createdAt', 'DESC']],
@@ -81,7 +81,7 @@ export default defineEventHandler(async (event) => {
                         respondentId: userId
                     }
                 })
-
+                console.log(`[Transaction] Questionnaire ID: ${q.topic}, Trx: ${JSON.stringify(q.dataValues)}`)
                 const honorarium = q.transactions?.[0]?.honorariumPerRespondent || 0
                 const publishedAt = q.transactions?.[0]?.createdAt || q.createdAt
 

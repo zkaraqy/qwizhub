@@ -22,8 +22,10 @@ export interface AIGenerationResponse {
 
 export interface AIGenerationInput {
     topic: string
-    researchObjective: string
+    objective?: string
+    researchObjective?: string
     variables: string[]
+    questionCount?: number
 }
 
 export abstract class BaseAIProvider {
@@ -55,10 +57,15 @@ export abstract class BaseAIProvider {
      * Validate and sanitize input to prevent prompt injection
      */
     protected sanitizeInput(input: AIGenerationInput): AIGenerationInput {
+        // Support both objective and researchObjective field names
+        const objectiveText = input.objective || input.researchObjective || ''
+        
         return {
             topic: this.sanitizeText(input.topic),
-            researchObjective: this.sanitizeText(input.researchObjective),
-            variables: input.variables.map(v => this.sanitizeText(v))
+            objective: this.sanitizeText(objectiveText),
+            researchObjective: this.sanitizeText(objectiveText),
+            variables: input.variables.map(v => this.sanitizeText(v)),
+            questionCount: input.questionCount
         }
     }
 
@@ -66,6 +73,11 @@ export abstract class BaseAIProvider {
      * Basic text sanitization
      */
     protected sanitizeText(text: string): string {
+        // Handle null/undefined
+        if (!text || typeof text !== 'string') {
+            return ''
+        }
+        
         // Remove potential prompt injection patterns
         return text
             .replace(/system\s*:/gi, '')
@@ -80,6 +92,8 @@ export abstract class BaseAIProvider {
      * Build prompt template that forces JSON output
      */
     protected buildPrompt(input: AIGenerationInput): string {
+        const objective = input.objective || input.researchObjective || ''
+        
         return `Anda adalah asisten AI yang membantu peneliti membuat kuesioner penelitian yang valid dan tidak bias.
 
 TUGAS: Buatlah draf pertanyaan kuesioner berdasarkan informasi berikut:
@@ -88,7 +102,7 @@ TOPIK PENELITIAN:
 ${input.topic}
 
 TUJUAN PENELITIAN:
-${input.researchObjective}
+${objective}
 
 VARIABEL YANG AKAN DIUKUR:
 ${input.variables.map((v, i) => `${i + 1}. ${v}`).join('\n')}

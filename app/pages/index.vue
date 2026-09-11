@@ -300,22 +300,22 @@
     </section>
 
     <!-- 3 Features Section (Susun Instrumen, AI Review, Cari Responden) -->
-    <section class="py-4 py-lg-5" id="features">
+    <section class="py-5" id="features">
       <div class="container">
         <div class="row g-4">
           <!-- Card 1 -->
           <div class="col-md-4">
-            <div class="card border rounded-4 p-4 h-100 bg-white shadow-xs transition-hover" style="border-color: #E4E9E7;">
-              <div class="d-flex justify-content-between align-items-start">
-                <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px; background-color: #EBF5F3; color: #137A7F;">
+            <div class="card border rounded-4 p-4 p-lg-4 h-100 bg-white shadow-sm qh-feature-card">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="qh-icon-box">
                   <i class="bi bi-file-earmark-text fs-4"></i>
                 </div>
-                <div class="rounded-circle border d-inline-flex align-items-center justify-content-center text-secondary" style="width: 38px; height: 38px; border-color: #E2E8F0;">
+                <div class="qh-circle-arrow">
                   <i class="bi bi-arrow-right"></i>
                 </div>
               </div>
               <h5 class="fw-bold text-dark mb-2">Susun Instrumen</h5>
-              <p class="text-secondary small mb-0" style="line-height: 1.6;">
+              <p class="text-secondary small mb-0 lh-base">
                 Mulai dari topik, tujuan penelitian, hingga variabel dan indikator dengan panduan yang terstruktur.
               </p>
             </div>
@@ -323,17 +323,17 @@
 
           <!-- Card 2 -->
           <div class="col-md-4">
-            <div class="card border rounded-4 p-4 h-100 bg-white shadow-xs transition-hover" style="border-color: #E4E9E7;">
-              <div class="d-flex justify-content-between align-items-start">
-                <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px; background-color: #EBF5F3; color: #137A7F;">
+            <div class="card border rounded-4 p-4 p-lg-4 h-100 bg-white shadow-sm qh-feature-card">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="qh-icon-box">
                   <i class="bi bi-stars fs-4"></i>
                 </div>
-                <div class="rounded-circle border d-inline-flex align-items-center justify-content-center text-secondary" style="width: 38px; height: 38px; border-color: #E2E8F0;">
+                <div class="qh-circle-arrow">
                   <i class="bi bi-arrow-right"></i>
                 </div>
               </div>
               <h5 class="fw-bold text-dark mb-2">AI Review</h5>
-              <p class="text-secondary small mb-0" style="line-height: 1.6;">
+              <p class="text-secondary small mb-0 lh-base">
                 Deteksi potensi bias, kalimat ambigu, dan dapatkan saran skala yang sesuai dengan teori penelitian.
               </p>
             </div>
@@ -341,17 +341,17 @@
 
           <!-- Card 3 -->
           <div class="col-md-4">
-            <div class="card border rounded-4 p-4 h-100 bg-white shadow-xs transition-hover" style="border-color: #E4E9E7;">
-              <div class="d-flex justify-content-between align-items-start">
-                <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px; background-color: #EBF5F3; color: #137A7F;">
+            <div class="card border rounded-4 p-4 p-lg-4 h-100 bg-white shadow-sm qh-feature-card">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="qh-icon-box">
                   <i class="bi bi-people fs-4"></i>
                 </div>
-                <div class="rounded-circle border d-inline-flex align-items-center justify-content-center text-secondary" style="width: 38px; height: 38px; border-color: #E2E8F0;">
+                <div class="qh-circle-arrow">
                   <i class="bi bi-arrow-right"></i>
                 </div>
               </div>
               <h5 class="fw-bold text-dark mb-2">Cari Responden</h5>
-              <p class="text-secondary small mb-0" style="line-height: 1.6;">
+              <p class="text-secondary small mb-0 lh-base">
                 Temukan responden yang sesuai dengan kriteria usia, domisili, dan pekerjaan secara mudah dan cepat.
               </p>
             </div>
@@ -360,107 +360,113 @@
       </div>
     </section>
 
-    <!-- 5-Step Process Section matching the bottom reference card -->
+    <!-- 5-Step Process Section -->
     <section class="py-4 py-lg-5" id="how-it-works">
       <div class="container">
-        <div class="card border rounded-4 p-4 p-lg-5 bg-white shadow-xs" style="border-color: #E4E9E7;">
+        <div class="card border rounded-4 p-4 p-lg-5 bg-white shadow-sm" style="border-color: #E2E8F0;">
           <!-- Card Header -->
-          <div class="row align-items-end mb-4">
+          <div class="row align-items-end mb-4 g-3">
             <div class="col-lg-7">
-              <p class="text-uppercase fw-bold small mb-1" style="color: #137A7F; letter-spacing: 0.08em; font-size: 0.775rem;">
+              <p class="text-uppercase fw-bold small mb-2" style="color: #137A7F; letter-spacing: 0.08em; font-size: 0.775rem;">
                 ALUR PENELITIAN BERSAMA QWIZHUB
               </p>
               <h2 class="display-6 fw-bold mb-0 lh-sm" style="color: #0E3B43;">
                 Dari ide hingga data, dalam <span style="color: #137A7F;">lima langkah.</span>
               </h2>
             </div>
-            <div class="col-lg-5 text-lg-end mt-2 mt-lg-0">
-              <p class="text-secondary mb-0 small" style="line-height: 1.5;">
+            <div class="col-lg-5 text-lg-end">
+              <p class="text-secondary mb-0 small" style="line-height: 1.6;">
                 Proses penelitian yang kompleks,<br class="d-none d-lg-block">
                 sekarang jadi lebih sederhana.
               </p>
             </div>
           </div>
 
-          <!-- 5 Steps Flow in a row with arrows -->
-          <div class="d-flex flex-wrap flex-lg-nowrap align-items-start justify-content-between gap-3 mt-4 pt-2" id="steps">
+          <!-- 5 Steps Flow -->
+          <div class="row g-3 g-xl-4 align-items-center mt-3 pt-2" id="steps">
             <!-- Step 1 -->
-            <div class="d-flex align-items-start gap-2.5 flex-grow-1" style="min-width: 170px;">
-              <div class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; background-color: #EBF5F3; color: #137A7F;">
-                <i class="bi bi-lightbulb fs-5"></i>
-              </div>
-              <div>
-                <div class="fw-semibold text-secondary" style="font-size: 0.75rem;">1</div>
-                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.875rem;">Topik Penelitian</h6>
-                <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.4;">Tentukan topik dan tujuan penelitian Anda.</p>
+            <div class="col-12 col-md-6 col-lg">
+              <div class="d-flex align-items-start gap-3 p-2 rounded-3 qh-step-card">
+                <div class="qh-step-icon-circle flex-shrink-0">
+                  <i class="bi bi-lightbulb"></i>
+                </div>
+                <div>
+                  <span class="fw-bold text-secondary small d-block" style="font-size: 0.75rem;">1</span>
+                  <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">Topik Penelitian</h6>
+                  <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.45;">Tentukan topik dan tujuan penelitian Anda.</p>
+                </div>
               </div>
             </div>
 
-            <!-- Arrow 1 -->
-            <div class="d-none d-lg-flex align-items-center pt-3 text-secondary opacity-50">
-              <i class="bi bi-arrow-right fs-5"></i>
+            <div class="col-auto d-none d-lg-block text-secondary opacity-25 px-0">
+              <i class="bi bi-arrow-right fs-4"></i>
             </div>
 
             <!-- Step 2 -->
-            <div class="d-flex align-items-start gap-2.5 flex-grow-1" style="min-width: 170px;">
-              <div class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; background-color: #EBF5F3; color: #137A7F;">
-                <i class="bi bi-file-earmark-text fs-5"></i>
-              </div>
-              <div>
-                <div class="fw-semibold text-secondary" style="font-size: 0.75rem;">2</div>
-                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.875rem;">Variabel & Indikator</h6>
-                <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.4;">Susun variabel, indikator, dan definisi operasional.</p>
+            <div class="col-12 col-md-6 col-lg">
+              <div class="d-flex align-items-start gap-3 p-2 rounded-3 qh-step-card">
+                <div class="qh-step-icon-circle flex-shrink-0">
+                  <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div>
+                  <span class="fw-bold text-secondary small d-block" style="font-size: 0.75rem;">2</span>
+                  <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">Variabel & Indikator</h6>
+                  <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.45;">Susun variabel, indikator, dan definisi operasional.</p>
+                </div>
               </div>
             </div>
 
-            <!-- Arrow 2 -->
-            <div class="d-none d-lg-flex align-items-center pt-3 text-secondary opacity-50">
-              <i class="bi bi-arrow-right fs-5"></i>
+            <div class="col-auto d-none d-lg-block text-secondary opacity-25 px-0">
+              <i class="bi bi-arrow-right fs-4"></i>
             </div>
 
             <!-- Step 3 -->
-            <div class="d-flex align-items-start gap-2.5 flex-grow-1" style="min-width: 170px;">
-              <div class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; background-color: #EBF5F3; color: #137A7F;">
-                <i class="bi bi-list-check fs-5"></i>
-              </div>
-              <div>
-                <div class="fw-semibold text-secondary" style="font-size: 0.75rem;">3</div>
-                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.875rem;">Item Pertanyaan</h6>
-                <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.4;">Buat dan kembangkan item pertanyaan.</p>
+            <div class="col-12 col-md-6 col-lg">
+              <div class="d-flex align-items-start gap-3 p-2 rounded-3 qh-step-card">
+                <div class="qh-step-icon-circle flex-shrink-0">
+                  <i class="bi bi-list-check"></i>
+                </div>
+                <div>
+                  <span class="fw-bold text-secondary small d-block" style="font-size: 0.75rem;">3</span>
+                  <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">Item Pertanyaan</h6>
+                  <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.45;">Buat dan kembangkan butir pertanyaan kuesioner.</p>
+                </div>
               </div>
             </div>
 
-            <!-- Arrow 3 -->
-            <div class="d-none d-lg-flex align-items-center pt-3 text-secondary opacity-50">
-              <i class="bi bi-arrow-right fs-5"></i>
+            <div class="col-auto d-none d-lg-block text-secondary opacity-25 px-0">
+              <i class="bi bi-arrow-right fs-4"></i>
             </div>
 
             <!-- Step 4 -->
-            <div class="d-flex align-items-start gap-2.5 flex-grow-1" style="min-width: 170px;">
-              <div class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; background-color: #EBF5F3; color: #137A7F;">
-                <i class="bi bi-stars fs-5"></i>
-              </div>
-              <div>
-                <div class="fw-semibold text-secondary" style="font-size: 0.75rem;">4</div>
-                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.875rem;">AI Check</h6>
-                <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.4;">Evaluasi kualitas pertanyaan dengan bantuan AI.</p>
+            <div class="col-12 col-md-6 col-lg">
+              <div class="d-flex align-items-start gap-3 p-2 rounded-3 qh-step-card">
+                <div class="qh-step-icon-circle flex-shrink-0">
+                  <i class="bi bi-stars"></i>
+                </div>
+                <div>
+                  <span class="fw-bold text-secondary small d-block" style="font-size: 0.75rem;">4</span>
+                  <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">AI Check</h6>
+                  <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.45;">Evaluasi kualitas pertanyaan otomatis dengan AI.</p>
+                </div>
               </div>
             </div>
 
-            <!-- Arrow 4 -->
-            <div class="d-none d-lg-flex align-items-center pt-3 text-secondary opacity-50">
-              <i class="bi bi-arrow-right fs-5"></i>
+            <div class="col-auto d-none d-lg-block text-secondary opacity-25 px-0">
+              <i class="bi bi-arrow-right fs-4"></i>
             </div>
 
             <!-- Step 5 -->
-            <div class="d-flex align-items-start gap-2.5 flex-grow-1" style="min-width: 170px;">
-              <div class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px; background-color: #EBF5F3; color: #137A7F;">
-                <i class="bi bi-people fs-5"></i>
-              </div>
-              <div>
-                <div class="fw-semibold text-secondary" style="font-size: 0.75rem;">5</div>
-                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.875rem;">Matching Responden</h6>
-                <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.4;">Temukan responden yang paling sesuai.</p>
+            <div class="col-12 col-md-6 col-lg">
+              <div class="d-flex align-items-start gap-3 p-2 rounded-3 qh-step-card">
+                <div class="qh-step-icon-circle flex-shrink-0">
+                  <i class="bi bi-people"></i>
+                </div>
+                <div>
+                  <span class="fw-bold text-secondary small d-block" style="font-size: 0.75rem;">5</span>
+                  <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">Matching Responden</h6>
+                  <p class="text-secondary mb-0" style="font-size: 0.775rem; line-height: 1.45;">Temukan responden target yang paling sesuai.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -468,32 +474,220 @@
       </div>
     </section>
 
-    <!-- Optional CTA Section -->
-    <section class="py-5" id="cta" v-if="!data">
+    <!-- CTA Section matching clean reference design -->
+    <section class="py-4 py-lg-5" id="cta">
       <div class="container">
-        <div class="card border-0 rounded-4 p-5 text-center text-white shadow-sm" style="background-color: #0E3B43;">
-          <h2 class="display-6 fw-bold mb-3">Siap memulai penelitian Anda?</h2>
-          <p class="lead mb-4 opacity-75 mx-auto" style="max-width: 650px; font-size: 1rem;">
-            Bergabung bersama ribuan peneliti dan mahasiswa yang telah menggunakan QwizHub untuk menyusun instrumen penelitian berkualitas.
-          </p>
-          <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <NuxtLink to="/register" class="btn btn-light btn-lg px-4 py-2.5 fw-bold rounded-3 shadow-sm d-inline-flex align-items-center gap-2" style="color: #0E3B43;" id="cta-register">
-              <span>Mulai Gratis Sekarang</span>
-              <i class="bi bi-arrow-right"></i>
-            </NuxtLink>
+        <div class="card border rounded-4 p-4 p-lg-5 bg-white shadow-sm position-relative overflow-hidden" style="border-color: #E2E8F0;">
+          <!-- Subtle decorative radial background tint -->
+          <div class="position-absolute end-0 top-0 w-50 h-100 opacity-25 pe-none d-none d-lg-block" 
+               style="background: radial-gradient(circle at 80% 30%, #EBF5F3 0%, transparent 70%);">
+          </div>
+
+          <div class="row align-items-center g-4 position-relative" style="z-index: 1;">
+            <!-- Left: Value Proposition & Dual Action Buttons -->
+            <div class="col-lg-7">
+              <p class="text-uppercase fw-bold small mb-2" style="color: #137A7F; letter-spacing: 0.08em; font-size: 0.775rem;">
+                MULAI RISET BERSAMA QWIZHUB
+              </p>
+              <h2 class="display-6 fw-bold mb-3 lh-sm" style="color: #0E3B43;">
+                Dari instrumen penelitian hingga responden <span style="color: #137A7F;">yang sesuai.</span>
+              </h2>
+              <p class="text-secondary mb-4" style="max-width: 560px; font-size: 0.95rem; line-height: 1.65;">
+                QwizHub membantu mahasiswa dan peneliti menyusun instrumen penelitian dengan bantuan AI, mengevaluasi kualitas pertanyaan, dan menemukan responden yang sesuai dalam satu platform.
+              </p>
+
+              <!-- Buttons matching Hero style -->
+              <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
+                <template v-if="!data">
+                  <NuxtLink to="/register" class="btn text-white px-4 py-2.5 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2" style="background-color: #0E3B43;" id="cta-start-btn">
+                    <span>Mulai Penelitian</span>
+                    <i class="bi bi-arrow-right"></i>
+                  </NuxtLink>
+                  <NuxtLink to="/login" class="btn btn-outline-secondary px-3 py-2 fw-semibold rounded-pill bg-white d-inline-flex align-items-center gap-2" style="border-color: #D1D9D6; color: #17212B;" id="cta-login-btn">
+                    <span class="rounded-circle text-white d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; background-color: #0E3B43; font-size: 0.65rem;">
+                      <i class="bi bi-box-arrow-in-right"></i>
+                    </span>
+                    <span>Masuk ke Akun</span>
+                  </NuxtLink>
+                </template>
+                <template v-else>
+                  <NuxtLink to="/dashboard" class="btn text-white px-4 py-2.5 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2" style="background-color: #0E3B43;" id="cta-dashboard-btn">
+                    <span>Buka Dashboard Penelitian</span>
+                    <i class="bi bi-arrow-right"></i>
+                  </NuxtLink>
+                </template>
+              </div>
+
+              <!-- Feature Chips matching Hero Bottom -->
+              <div class="d-flex flex-wrap gap-3 pt-2 text-secondary small fw-medium">
+                <div class="d-inline-flex align-items-center gap-2">
+                  <i class="bi bi-file-earmark-text fs-5" style="color: #137A7F;"></i>
+                  <span>Instrument Builder</span>
+                </div>
+                <div class="d-inline-flex align-items-center gap-2">
+                  <i class="bi bi-stars fs-5" style="color: #137A7F;"></i>
+                  <span>AI Review</span>
+                </div>
+                <div class="d-inline-flex align-items-center gap-2">
+                  <i class="bi bi-people fs-5" style="color: #137A7F;"></i>
+                  <span>Verified Respondents</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Mini Preview Card echoing Instrument Builder UI -->
+            <div class="col-lg-5 mt-4 mt-lg-0">
+              <div class="card border rounded-4 p-3.5 p-lg-4 bg-white shadow-sm" style="border-color: #E2E8F0;">
+                <!-- Window Chrome Dots & Status -->
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom" style="border-color: #F1F5F9;">
+                  <div class="d-flex align-items-center gap-1.5">
+                    <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #EF4444;"></span>
+                    <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #F59E0B;"></span>
+                    <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #10B981;"></span>
+                  </div>
+                  <span class="badge rounded-pill text-white fw-medium d-inline-flex align-items-center gap-1" style="background-color: #10B981; font-size: 0.65rem;">
+                    <i class="bi bi-check-circle-fill"></i> Instrument Ready
+                  </span>
+                </div>
+
+                <!-- Instrument Title & Info -->
+                <div class="mb-3">
+                  <div class="text-secondary small" style="font-size: 0.7rem;">Contoh Riset Terstruktur</div>
+                  <div class="fw-bold text-dark" style="font-size: 0.875rem;">Pengaruh Kemudahan Penggunaan Aplikasi terhadap Kepuasan Pengguna</div>
+                  <div class="d-flex gap-2 text-secondary mt-1" style="font-size: 0.725rem;">
+                    <span>3 Variabel</span>
+                    <span>•</span>
+                    <span>8 Indikator</span>
+                    <span>•</span>
+                    <span>Skala Likert</span>
+                  </div>
+                </div>
+
+                <!-- Evaluated Question Snippet -->
+                <div class="border rounded-2 p-2.5 mb-2.5 bg-white" style="border-color: #E2E8F0;">
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <div class="d-flex align-items-center gap-1.5">
+                      <span class="badge rounded-1" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.65rem;">Q1</span>
+                      <span class="text-dark fw-medium" style="font-size: 0.75rem;">Saya merasa aplikasi mudah digunakan.</span>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-2 pt-1">
+                    <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.65rem;">Likert 1-5</span>
+                    <span class="badge rounded-pill text-white fw-medium d-inline-flex align-items-center gap-1" style="background-color: #10B981; font-size: 0.65rem;">
+                      <i class="bi bi-check-circle-fill"></i> All Check: Good
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Matching Responden Indicator -->
+                <div class="p-2.5 rounded-2" style="background-color: #F8FAFA; border: 1px solid #E2E8F0;">
+                  <div class="d-flex justify-content-between align-items-center mb-1.5" style="font-size: 0.75rem;">
+                    <span class="text-secondary d-flex align-items-center gap-1.5">
+                      <i class="bi bi-people-fill text-muted"></i>
+                      <span>Target Responden: Mahasiswa</span>
+                    </span>
+                    <span class="fw-bold" style="color: #137A7F;">150 / 150 Siap</span>
+                  </div>
+                  <div class="progress" style="height: 6px; background-color: #E2E8F0;">
+                    <div class="progress-bar rounded-pill" style="width: 100%; background-color: #137A7F;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-4 bg-white border-top mt-auto">
-      <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
-        <div class="d-flex align-items-center gap-2">
-          <span class="fw-bold fs-5" style="color: #0E3B43;">QwizHub</span>
-          <span class="small text-muted">| Platform riset dan instrumen penelitian terpercaya</span>
+    <!-- Footer matching reference aesthetic -->
+    <footer class="py-5 bg-white border-top mt-auto" style="border-color: #E2E8F0;">
+      <div class="container">
+        <div class="row g-4 g-lg-5 justify-content-between mb-5">
+          <!-- Brand Column -->
+          <div class="col-lg-4 col-md-12">
+            <div class="fw-bold fs-4 mb-2 d-flex align-items-center gap-2" style="color: #0E3B43;">
+              <span>QwizHub</span>
+              <span class="badge rounded-pill py-1 px-2 fw-medium" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.65rem;">
+                AI Powered
+              </span>
+            </div>
+            <p class="text-secondary small mb-3" style="line-height: 1.65; max-width: 330px;">
+              Platform riset terpadu untuk merancang instrumen kuesioner ilmiah, evaluasi kualitas butir pertanyaan dengan AI, hingga menemukan responden yang sesuai.
+            </p>
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill small fw-medium mb-3" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.75rem;">
+              <i class="bi bi-shield-check"></i>
+              <span>Platform Riset Berstandar Akademik</span>
+            </div>
+            <!-- Social Buttons -->
+            <div class="d-flex gap-2">
+              <a href="#" class="qh-social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+              <a href="#" class="qh-social-btn" aria-label="GitHub"><i class="bi bi-github"></i></a>
+              <a href="#" class="qh-social-btn" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+              <a href="#" class="qh-social-btn" aria-label="Email"><i class="bi bi-envelope-fill"></i></a>
+            </div>
+          </div>
+
+          <!-- Links Columns -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold small text-uppercase text-dark mb-3" style="letter-spacing: 0.05em; font-size: 0.775rem;">Fitur Riset</h6>
+            <ul class="list-unstyled mb-0 d-flex flex-column gap-2 small">
+              <li><a href="#features" class="text-decoration-none qh-footer-link">Susun Instrumen</a></li>
+              <li><a href="#features" class="text-decoration-none qh-footer-link">AI Review Kuesioner</a></li>
+              <li><a href="#features" class="text-decoration-none qh-footer-link">Cari Responden</a></li>
+              <li><a href="#how-it-works" class="text-decoration-none qh-footer-link">Uji Validitas</a></li>
+              <li><a href="#how-it-works" class="text-decoration-none qh-footer-link">Skala Likert</a></li>
+            </ul>
+          </div>
+
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold small text-uppercase text-dark mb-3" style="letter-spacing: 0.05em; font-size: 0.775rem;">Alur Penelitian</h6>
+            <ul class="list-unstyled mb-0 d-flex flex-column gap-2 small">
+              <li><a href="#steps" class="text-decoration-none qh-footer-link">1. Topik Penelitian</a></li>
+              <li><a href="#steps" class="text-decoration-none qh-footer-link">2. Variabel & Indikator</a></li>
+              <li><a href="#steps" class="text-decoration-none qh-footer-link">3. Item Pertanyaan</a></li>
+              <li><a href="#steps" class="text-decoration-none qh-footer-link">4. AI Quality Check</a></li>
+              <li><a href="#steps" class="text-decoration-none qh-footer-link">5. Matching Responden</a></li>
+            </ul>
+          </div>
+
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold small text-uppercase text-dark mb-3" style="letter-spacing: 0.05em; font-size: 0.775rem;">Pengguna</h6>
+            <ul class="list-unstyled mb-0 d-flex flex-column gap-2 small">
+              <li><a href="#cta" class="text-decoration-none qh-footer-link">Mahasiswa & Skripsi</a></li>
+              <li><a href="#cta" class="text-decoration-none qh-footer-link">Dosen & Peneliti</a></li>
+              <li><a href="#cta" class="text-decoration-none qh-footer-link">Lembaga Riset</a></li>
+              <li><a href="#cta" class="text-decoration-none qh-footer-link">Pricing & Paket</a></li>
+              <li><a href="#cta" class="text-decoration-none qh-footer-link">Panduan Metodologi</a></li>
+            </ul>
+          </div>
+
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold small text-uppercase text-dark mb-3" style="letter-spacing: 0.05em; font-size: 0.775rem;">Bantuan & Akun</h6>
+            <ul class="list-unstyled mb-0 d-flex flex-column gap-2 small">
+              <li><NuxtLink to="/login" class="text-decoration-none qh-footer-link">Sign In ke Akun</NuxtLink></li>
+              <li><NuxtLink to="/register" class="text-decoration-none qh-footer-link">Daftar Akun Baru</NuxtLink></li>
+              <li><NuxtLink to="/dashboard" class="text-decoration-none qh-footer-link">Dashboard Penelitian</NuxtLink></li>
+              <li><a href="#cta" class="text-decoration-none qh-footer-link">Pusat Bantuan & FAQ</a></li>
+              <li><a href="#cta" class="text-decoration-none qh-footer-link">Kontak Tim Kami</a></li>
+            </ul>
+          </div>
         </div>
-        <p class="small mb-0 text-muted">&copy; 2026 QwizHub. All rights reserved.</p>
+
+        <!-- Bottom Copyright & Legal Row -->
+        <div class="border-top pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 small text-secondary" style="border-color: #F1F5F9;">
+          <div>&copy; 2026 QwizHub. Hak cipta dilindungi undang-undang.</div>
+          <div class="d-flex gap-3">
+            <a href="#" class="text-decoration-none qh-footer-link">Kebijakan Privasi</a>
+            <span>•</span>
+            <a href="#" class="text-decoration-none qh-footer-link">Syarat & Ketentuan</a>
+            <span>•</span>
+            <a href="#" class="text-decoration-none qh-footer-link">Keamanan Data</a>
+          </div>
+          <div class="d-flex align-items-center gap-1.5 text-secondary">
+            <i class="bi bi-globe"></i>
+            <span>Indonesia (ID)</span>
+          </div>
+        </div>
       </div>
     </footer>
   </div>
@@ -515,16 +709,104 @@ const handleSignOut = async () => {
 </script>
 
 <style scoped>
-.transition-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.qh-feature-card {
+  border-color: #E2E8F0 !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.transition-hover:hover {
+.qh-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(14, 59, 67, 0.08) !important;
+  border-color: #137A7F !important;
+}
+
+.qh-icon-box {
+  width: 52px;
+  height: 52px;
+  background-color: #EBF5F3;
+  color: #137A7F;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qh-circle-arrow {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #E2E8F0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+  transition: all 0.2s ease;
+}
+
+.qh-feature-card:hover .qh-circle-arrow {
+  background-color: #137A7F;
+  border-color: #137A7F;
+  color: #FFFFFF;
+  transform: translateX(3px);
+}
+
+.qh-step-card {
+  transition: all 0.2s ease;
+}
+
+.qh-step-card:hover {
+  background-color: #F8FAFA;
+}
+
+.qh-step-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #EBF5F3;
+  color: #137A7F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: all 0.25s ease;
+}
+
+.qh-step-card:hover .qh-step-icon-circle {
+  background-color: #137A7F;
+  color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+.qh-footer-link {
+  color: #64748B;
+  transition: color 0.15s ease, transform 0.15s ease;
+  display: inline-block;
+}
+
+.qh-footer-link:hover {
+  color: #137A7F;
+  transform: translateX(2px);
+}
+
+.qh-social-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+  background-color: #FFFFFF;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.qh-social-btn:hover {
+  background-color: #EBF5F3;
+  border-color: #137A7F;
+  color: #137A7F;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(14, 59, 67, 0.08) !important;
-}
-
-.shadow-xs {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 </style>

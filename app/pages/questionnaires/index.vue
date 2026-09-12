@@ -40,10 +40,7 @@
           <div class="card-body d-flex flex-column">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h5 class="card-title mb-0">{{ questionnaire.topic }}</h5>
-              <span v-if="questionnaire.hasResponded" class="badge bg-success">
-                <i class="bi bi-check-circle me-1"></i>Selesai
-              </span>
-              <span v-else-if="!questionnaire.isAvailable" class="badge bg-secondary">
+              <span v-if="!questionnaire.isAvailable" class="badge bg-secondary">
                 Penuh
               </span>
               <span v-else class="badge bg-primary">
@@ -51,7 +48,7 @@
               </span>
             </div>
 
-            <p class="text-muted small mb-3">{{ questionnaire.researchObjective }}</p>
+            <!-- <p class="text-muted small mb-3">{{ questionnaire.researchObjective }}</p> -->
 
             <div class="mb-3">
               <div class="d-flex justify-content-between text-sm mb-1">
@@ -74,10 +71,10 @@
                 <i class="bi bi-person me-1"></i>
                 Peneliti: {{ questionnaire.project?.peneliti?.name }}
               </small>
-              <small class="text-muted d-block">
+              <!-- <small class="text-muted d-block">
                 <i class="bi bi-folder me-1"></i>
                 {{ questionnaire.project?.title }}
-              </small>
+              </small> -->
               <small class="text-muted d-block">
                 <i class="bi bi-calendar me-1"></i>
                 {{ formatDate(questionnaire.createdAt) }}
@@ -86,11 +83,8 @@
 
             <div class="mt-auto">
               <NuxtLink :to="`/questionnaires/${questionnaire.id}/detail`" class="btn btn-primary w-100"
-                :class="{ disabled: questionnaire.hasResponded }">
-                <template v-if="questionnaire.hasResponded">
-                  <i class="bi bi-check-circle me-2"></i>Sudah Dikerjakan
-                </template>
-                <template v-else-if="!questionnaire.isAvailable">
+                :class="{ disabled: !questionnaire.isAvailable }">
+                <template v-if="!questionnaire.isAvailable">
                   <i class="bi bi-lock me-2"></i>Tidak Tersedia
                 </template>
                 <template v-else>
@@ -239,8 +233,9 @@ const formatDate = (dateString: string) => {
   })
 }
 
-onMounted(() => {
-  loadQuestionnaires()
+onMounted(async () => {
+  await loadQuestionnaires()
+  console.log(questionnaires.value) // Debugging: Log the loaded questionnaires
 })
 </script>
 

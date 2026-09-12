@@ -4,7 +4,8 @@
     <div class="hero-section fade-in mb-4">
       <div class="position-relative" style="z-index: 1;">
         <h1 class="display-6 fw-bold mb-2">Welcome back, {{ userProfile?.name || 'User' }}! 👋</h1>
-        <p v-if="userProfile?.role === 'peneliti'" class="lead mb-4 text-white opacity-90">Here's what's happening with your research projects today.</p>
+        <p v-if="userProfile?.role === 'peneliti'" class="lead mb-4 text-white opacity-90">Here's what's happening with
+          your research projects today.</p>
         <button v-if="userProfile?.role === 'peneliti'" class="btn btn-light btn-lg px-4 fw-semibold shadow-sm"
           @click="handleCreateSurvey">
           <i class="bi bi-plus-lg me-2"></i>New Project
@@ -81,28 +82,52 @@
       <template v-else-if="userProfile?.role === 'responden'">
         <div class="col-md-6 col-sm-12 fade-in stagger-1">
           <div class="stat-card">
-            <div class="stat-icon primary">
-              <i class="bi bi-card-checklist"></i>
+            <div class="row">
+              <div class="col gap-2 align-items-center" style="max-width: max-content;">
+                <div class="stat-icon primary m-0">
+                  <i class="bi bi-card-checklist"></i>
+                </div>
+              </div>
+              <div class="col d-flex align-items-center">
+                <div class="text-muted fw-semibold text-uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">
+                  Total Questionnaires Answered</div>
+              </div>
             </div>
-            <div class="text-muted fw-semibold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">
-              Total Questionnaires Answered</div>
-            <h2 class="fw-bold mb-0 display-6">{{ stats.totalQuestionnairesAnswered }}</h2>
-            <div class="mt-2 text-success small">
-              <i class="bi bi-check2-all"></i> Completed
+            <div class="row">
+              <div class="col" style="max-width: max-content;">
+                <div class="stat-icon primary m-0 opacity-0">
+                  <i class="bi bi-card-checklist"></i>
+                </div>
+              </div>
+              <div class="col">
+                <h2 class="fw-bold mb-0 display-6">{{ stats.totalQuestionnairesAnswered }}</h2>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="col-md-6 col-sm-12 fade-in stagger-2">
+        <div class="col-md-6 col-sm-12 fade-in stagger-1">
           <div class="stat-card">
-            <div class="stat-icon success">
-              <i class="bi bi-cash-stack"></i>
+            <div class="row">
+              <div class="col gap-2 align-items-center" style="max-width: max-content;">
+                <div class="stat-icon success m-0">
+                  <i class="bi bi-cash-stack"></i>
+                </div>
+              </div>
+              <div class="col d-flex align-items-center">
+                <div class="text-muted fw-semibold text-uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">
+                  Total Honor Earned</div>
+              </div>
             </div>
-            <div class="text-muted fw-semibold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">
-              Total Honor Earned</div>
-            <h2 class="fw-bold mb-0 display-6">{{ stats.totalHonorEarned }}</h2>
-            <div class="mt-2 text-muted small">
-              <i class="bi bi-cash"></i> Earned
+            <div class="row">
+              <div class="col" style="max-width: max-content;">
+                <div class="stat-icon primary m-0 opacity-0">
+                  <i class="bi bi-cash-stack"></i>
+                </div>
+              </div>
+              <div class="col">
+                <h2 class="fw-bold mb-0 display-6">Rp {{ formatCurrency(stats.totalHonorEarned) }}</h2>
+              </div>
             </div>
           </div>
         </div>
@@ -147,13 +172,8 @@
           <!-- Search and Filter -->
           <div class="row mb-3">
             <div class="col-md-6 mb-2">
-              <input
-                v-model="searchQuery"
-                type="text"
-                class="form-control"
-                placeholder="Cari kuesioner..."
-                @input="debouncedSearchQuestionnaires"
-              />
+              <input v-model="searchQuery" type="text" class="form-control" placeholder="Cari kuesioner..."
+                @input="debouncedSearchQuestionnaires" />
             </div>
             <div class="col-md-3 mb-2">
               <select v-model="statusFilter" class="form-select" @change="loadQuestionnairesList">
@@ -239,15 +259,18 @@
             <nav>
               <ul class="pagination mb-0">
                 <li class="page-item" :class="{ disabled: currentPageQuestionnaires === 1 }">
-                  <a class="page-link" href="#" @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires - 1)">
+                  <a class="page-link" href="#"
+                    @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires - 1)">
                     <i class="bi bi-chevron-left"></i>
                   </a>
                 </li>
-                <li v-for="page in totalPagesQuestionnaires" :key="page" class="page-item" :class="{ active: page === currentPageQuestionnaires }">
+                <li v-for="page in totalPagesQuestionnaires" :key="page" class="page-item"
+                  :class="{ active: page === currentPageQuestionnaires }">
                   <a class="page-link" href="#" @click.prevent="changeQuestionnaireePage(page)">{{ page }}</a>
                 </li>
                 <li class="page-item" :class="{ disabled: currentPageQuestionnaires === totalPagesQuestionnaires }">
-                  <a class="page-link" href="#" @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires + 1)">
+                  <a class="page-link" href="#"
+                    @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires + 1)">
                     <i class="bi bi-chevron-right"></i>
                   </a>
                 </li>
@@ -408,7 +431,7 @@ const limitQuestionnaires = 10
 // Load questionnaires for responden
 const loadQuestionnairesList = async () => {
   if (userProfile.value?.role !== 'responden') return
-  
+
   loadingQuestionnaires.value = true
   try {
     const { data: questData, error: questError } = await useFetch('/api/questionnaires/published', {
@@ -419,10 +442,10 @@ const loadQuestionnairesList = async () => {
         limit: limitQuestionnaires
       }
     })
-    
+
     if (!questError.value && questData.value?.success) {
       let data = questData.value.data
-      
+
       // Apply sorting
       if (sortBy.value === 'newest') {
         data = data.sort((a: any, b: any) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
@@ -431,7 +454,7 @@ const loadQuestionnairesList = async () => {
       } else if (sortBy.value === 'honor') {
         data = data.sort((a: any, b: any) => b.honorariumPerRespondent - a.honorariumPerRespondent)
       }
-      
+
       questionnairesList.value = data
       totalPagesQuestionnaires.value = questData.value.pagination.totalPages
     }

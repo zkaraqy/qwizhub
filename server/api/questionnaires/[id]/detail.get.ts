@@ -83,6 +83,8 @@ export default defineEventHandler(async (event) => {
                 remainingSlots: questionnaire.getRemainingSlots(),
                 isAvailable: questionnaire.isAcceptingResponses(),
                 hasResponded: !!existingResponse,
+                responseStatus: existingResponse?.status || null,
+                responseId: existingResponse?.id || null,
                 questionCount: questionnaire.questions?.length || 0,
                 estimatedTime: Math.ceil((questionnaire.questions?.length || 0) * 0.5), // 30 seconds per question
                 honorarium,

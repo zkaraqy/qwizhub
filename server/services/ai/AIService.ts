@@ -53,6 +53,10 @@ export class AIService {
     getModel(): string {
         return process.env.OPENROUTER_MODEL || 'deepseek/deepseek-chat'
     }
+
+    getProvider(): OpenRouterProvider {
+        return this.openrouterProvider
+    }
 }
 
 /**

@@ -18,6 +18,8 @@ export type QuestionSource = 'manual' | 'ai_generated'
 export interface QuestionOption {
   label: string
   value: string
+  score?: number  // For Likert scale scoring (1-5, 1-7, etc)
+  order?: number
 }
 
 export interface Question {
@@ -31,6 +33,10 @@ export interface Question {
   source: QuestionSource
   biasDetected: boolean
   biasNotes?: string | null
+  variableId?: string | null
+  indicatorId?: string | null
+  aiReview?: any | null
+  aiSuggestions?: any | null
   createdAt: string
   updatedAt: string
 }
@@ -82,6 +88,13 @@ export interface CreateQuestionData {
   questionnaireId: string
   source: QuestionSource
   scaleType?: string
+}
+
+export interface UpdateQuestionData {
+  questionText?: string
+  questionType?: QuestionType
+  scaleType?: string | null
+  options?: QuestionOption[]
 }
 
 export const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {

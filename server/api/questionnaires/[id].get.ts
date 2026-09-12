@@ -25,10 +25,10 @@ export default defineEventHandler(async (event) => {
                 },
                 {
                     model: Question,
-                    as: 'questions',
-                    order: [['orderIndex', 'ASC']]
+                    as: 'questions'
                 }
-            ]
+            ],
+            order: [[{ model: Question, as: 'questions' }, 'orderIndex', 'ASC']]
         })
 
         if (!questionnaire) {
@@ -71,6 +71,10 @@ export default defineEventHandler(async (event) => {
                     source: q.source,
                     biasDetected: q.biasDetected,
                     biasNotes: q.biasNotes,
+                    variableId: q.variableId,
+                    indicatorId: q.indicatorId,
+                    aiReview: q.aiReview,
+                    aiSuggestions: q.aiSuggestions,
                     createdAt: q.createdAt,
                     updatedAt: q.updatedAt
                 })) || []

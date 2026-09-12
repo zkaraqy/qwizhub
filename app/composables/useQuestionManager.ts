@@ -4,7 +4,8 @@ import type {
   Question, 
   QuestionFormData, 
   CreateQuestionData,
-  QuestionOption 
+  QuestionOption, 
+  QuestionType
 } from '~/types/questionnaire'
 import { parseOptionsInput } from '~/types/questionnaire'
 
@@ -208,6 +209,44 @@ export const useQuestionManager = () => {
     resetForm()
   }
 
+  /**
+   * Update a question (text, type, options, scaleType)
+   */
+  const updateQuestion = async (
+    questionId: string, 
+    questionnaireId: string,
+    updates: {
+      questionText?: string
+      questionType?: QuestionType
+      scaleType?: string | null
+      options?: QuestionOption[]
+    }
+  ) => {
+    try {
+      await $fetch(`/api/questions/${questionId}`, {
+        method: 'PUT',
+        body: updates
+      })
+      
+      // Refresh questions list
+      await fetchQuestions(questionnaireId)
+      
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Pertanyaan berhasil diperbarui',
+        showConfirmButton: false,
+        timer: 2000
+      })
+      
+      return true
+    } catch (err: any) {
+      Swal.fire('Error', err.data?.statusMessage || 'Gagal memperbarui pertanyaan', 'error')
+      throw err
+    }
+  }
+
   return {
     // State
     questions,
@@ -220,6 +259,7 @@ export const useQuestionManager = () => {
     fetchQuestions,
     addQuestion,
     deleteQuestion,
+    updateQuestion,
     generateAIQuestions,
     resetForm,
     reset

@@ -12,8 +12,10 @@ import {
     Sequelize
 } from 'sequelize'
 import type { Questionnaire } from './Questionnaire'
+import type { ResearchVariable } from './ResearchVariable'
+import type { VariableIndicator } from './VariableIndicator'
 
-type QuestionAssociations = 'questionnaire'
+type QuestionAssociations = 'questionnaire' | 'variable' | 'indicator'
 
 export type QuestionType = 'multiple_choice' | 'text' | 'rating_scale' | 'checkbox' | 'dropdown' | 'closed' | 'mixed' | 'likert' | 'filter'
 export type ScaleType = 'likert_5' | 'likert_7' | 'guttman' | 'custom'
@@ -23,6 +25,37 @@ export interface QuestionOption {
     value: string
     label: string
     order?: number
+    score?: number  // For Likert scale scoring (1-5, 1-7, etc)
+}
+
+export interface AIReview {
+    hasIssues: boolean
+    issues: {
+        bias?: { detected: boolean; note: string | null }
+        ambiguity?: { detected: boolean; note: string | null }
+        doubleBarreled?: { detected: boolean; note: string | null }
+        redundancy?: { detected: boolean; note: string | null }
+        optionIssues?: { detected: boolean; note: string | null }
+    }
+    score: number
+    reviewedAt: string
+}
+
+export interface AIRewriteSuggestion {
+    version: string
+    questionText: string
+    questionType: QuestionType
+    scaleType?: ScaleType | null
+    options?: QuestionOption[]
+    rationale: string
+}
+
+export interface AISuggestions {
+    rewrites?: AIRewriteSuggestion[]
+    scaleRecommendation?: {
+        scaleType: ScaleType
+        rationale: string
+    }
 }
 
 export class Question extends Model<
@@ -39,6 +72,11 @@ export class Question extends Model<
     declare source: CreationOptional<QuestionSource>
     declare biasDetected: CreationOptional<boolean>
     declare biasNotes: string | null
+    declare variableId: string | null
+    declare indicatorId: string | null
+    declare aiReview: AIReview | null
+    declare aiSuggestions: AISuggestions | null
+    declare recommendedScaleType: string | null
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 
@@ -48,8 +86,57 @@ export class Question extends Model<
     declare setQuestionnaire: BelongsToSetAssociationMixin<Questionnaire, string>
     declare createQuestionnaire: BelongsToCreateAssociationMixin<Questionnaire>
 
+    // Question belongsTo ResearchVariable
+    declare variable?: NonAttribute<ResearchVariable>
+    declare getVariable: BelongsToGetAssociationMixin<ResearchVariable>
+    declare setVariable: BelongsToSetAssociationMixin<ResearchVariable, string>
+    declare createVariable: BelongsToCreateAssociationMixin<ResearchVariable>
+
+    // Question belongsTo VariableIndicator
+    declare indicator?: NonAttribute<VariableIndicator>
+    declare getIndicator: BelongsToGetAssociationMixin<VariableIndicator>
+    declare setIndicator: BelongsToSetAssociationMixin<VariableIndicator, string>
+    declare createIndicator: BelongsToCreateAssociationMixin<VariableIndicator>
+
     declare static associations: {
         questionnaire: Association<Question, Questionnaire>
+        variable: Association<Question, ResearchVariable>
+        indicator: Association<Question, VariableIndicator>
+    }
+
+    /**
+     * Check if question has AI review
+     */
+    hasAIReview(): boolean {
+        return this.aiReview !== null && this.aiReview !== undefined
+    }
+
+    /**
+     * Check if question has issues from AI review
+     */
+    hasIssues(): boolean {
+        return this.hasAIReview() && this.aiReview!.hasIssues
+    }
+
+    /**
+     * Get AI review score
+     */
+    getReviewScore(): number | null {
+        return this.hasAIReview() ? this.aiReview!.score : null
+    }
+
+    /**
+     * Check if question has AI suggestions
+     */
+    hasAISuggestions(): boolean {
+        return this.aiSuggestions !== null && this.aiSuggestions !== undefined
+    }
+
+    /**
+     * Check if question is mapped to variable and indicator
+     */
+    isMappedToIndicator(): boolean {
+        return this.variableId !== null && this.indicatorId !== null
     }
 
     /**
@@ -83,14 +170,8 @@ export class Question extends Model<
     }
 
     /**
-     * Check if this question requires scale type
-     */
-    requiresScaleType(): boolean {
-        return this.questionType === 'rating_scale'
-    }
-
-    /**
      * Get formatted options based on scale type
+     * If custom options exist, use them; otherwise return defaults with scores
      */
     getFormattedOptions(): QuestionOption[] {
         if (this.questionType === 'text') {
@@ -102,26 +183,26 @@ export class Question extends Model<
             return this.options
         }
 
-        // Generate default options based on scale type
+        // Generate default options based on scale type with scores
         if (this.scaleType === 'likert_5') {
             return [
-                { value: '1', label: 'Sangat Tidak Setuju' },
-                { value: '2', label: 'Tidak Setuju' },
-                { value: '3', label: 'Netral' },
-                { value: '4', label: 'Setuju' },
-                { value: '5', label: 'Sangat Setuju' }
+                { value: '1', label: 'Sangat Tidak Setuju', score: 1 },
+                { value: '2', label: 'Tidak Setuju', score: 2 },
+                { value: '3', label: 'Netral', score: 3 },
+                { value: '4', label: 'Setuju', score: 4 },
+                { value: '5', label: 'Sangat Setuju', score: 5 }
             ]
         }
 
         if (this.scaleType === 'likert_7') {
             return [
-                { value: '1', label: 'Sangat Tidak Setuju' },
-                { value: '2', label: 'Tidak Setuju' },
-                { value: '3', label: 'Agak Tidak Setuju' },
-                { value: '4', label: 'Netral' },
-                { value: '5', label: 'Agak Setuju' },
-                { value: '6', label: 'Setuju' },
-                { value: '7', label: 'Sangat Setuju' }
+                { value: '1', label: 'Sangat Tidak Setuju', score: 1 },
+                { value: '2', label: 'Tidak Setuju', score: 2 },
+                { value: '3', label: 'Agak Tidak Setuju', score: 3 },
+                { value: '4', label: 'Netral', score: 4 },
+                { value: '5', label: 'Agak Setuju', score: 5 },
+                { value: '6', label: 'Setuju', score: 6 },
+                { value: '7', label: 'Sangat Setuju', score: 7 }
             ]
         }
 
@@ -133,6 +214,59 @@ export class Question extends Model<
         }
 
         return this.options || []
+    }
+
+    /**
+     * Check if question type can have options
+     */
+    canHaveOptions(): boolean {
+        return ['multiple_choice', 'checkbox', 'dropdown', 'closed', 'mixed', 'filter'].includes(this.questionType)
+    }
+
+    /**
+     * Check if question type requires scale type
+     */
+    requiresScaleType(): boolean {
+        return this.questionType === 'rating_scale' || this.questionType === 'likert'
+    }
+
+    /**
+     * Validate if type change is allowed and get warnings
+     */
+    canChangeTypeTo(newType: QuestionType): { allowed: boolean; warning?: string } {
+        // Can't change if question type is the same
+        if (this.questionType === newType) {
+            return { allowed: false, warning: 'Tipe pertanyaan sudah ' + newType }
+        }
+
+        const fromHasOptions = this.canHaveOptions()
+        const toHasOptions = ['multiple_choice', 'checkbox', 'dropdown', 'closed', 'mixed', 'filter'].includes(newType)
+        
+        // Warn if changing from type with options to text (options will be lost)
+        if (fromHasOptions && newType === 'text') {
+            return { 
+                allowed: true, 
+                warning: 'Opsi jawaban akan dihapus saat mengubah ke Pertanyaan Terbuka'
+            }
+        }
+
+        // Warn if changing from scale types to text
+        if ((this.questionType === 'likert' || this.questionType === 'rating_scale') && newType === 'text') {
+            return {
+                allowed: true,
+                warning: 'Skala pengukuran dan opsi akan dihapus saat mengubah ke Pertanyaan Terbuka'
+            }
+        }
+
+        // Warn if changing from text to type with options (need to add options)
+        if (this.questionType === 'text' && toHasOptions) {
+            return {
+                allowed: true,
+                warning: 'Anda perlu menambahkan opsi jawaban setelah mengubah tipe'
+            }
+        }
+
+        return { allowed: true }
     }
 
     static initModel(sequelize: Sequelize): typeof Question {
@@ -189,6 +323,31 @@ export class Question extends Model<
                 type: DataTypes.TEXT,
                 allowNull: true,
                 field: 'bias_notes'
+            },
+            variableId: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+                field: 'variable_id'
+            },
+            indicatorId: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+                field: 'indicator_id'
+            },
+            aiReview: {
+                type: DataTypes.JSONB,
+                allowNull: true,
+                field: 'ai_review'
+            },
+            aiSuggestions: {
+                type: DataTypes.JSONB,
+                allowNull: true,
+                field: 'ai_suggestions'
+            },
+            recommendedScaleType: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+                field: 'recommended_scale_type'
             },
             createdAt: {
                 type: DataTypes.DATE,

@@ -23,8 +23,9 @@ import {
 } from 'sequelize'
 import type { Project } from './Project'
 import type { Question } from './Question'
+import type { ResearchVariable } from './ResearchVariable'
 
-type QuestionnaireAssociations = 'project' | 'questions'
+type QuestionnaireAssociations = 'project' | 'questions' | 'researchVariables'
 
 export class Questionnaire extends Model<
     InferAttributes<Questionnaire, { omit: QuestionnaireAssociations }>,
@@ -63,9 +64,23 @@ export class Questionnaire extends Model<
     declare hasQuestions: HasManyHasAssociationsMixin<Question, string>
     declare countQuestions: HasManyCountAssociationsMixin
 
+    // Questionnaire hasMany ResearchVariable
+    declare researchVariables?: NonAttribute<ResearchVariable[]>
+    declare getResearchVariables: HasManyGetAssociationsMixin<ResearchVariable>
+    declare setResearchVariables: HasManySetAssociationsMixin<ResearchVariable, string>
+    declare addResearchVariable: HasManyAddAssociationMixin<ResearchVariable, string>
+    declare addResearchVariables: HasManyAddAssociationsMixin<ResearchVariable, string>
+    declare createResearchVariable: HasManyCreateAssociationMixin<ResearchVariable, 'questionnaireId'>
+    declare removeResearchVariable: HasManyRemoveAssociationMixin<ResearchVariable, string>
+    declare removeResearchVariables: HasManyRemoveAssociationsMixin<ResearchVariable, string>
+    declare hasResearchVariable: HasManyHasAssociationMixin<ResearchVariable, string>
+    declare hasResearchVariables: HasManyHasAssociationsMixin<ResearchVariable, string>
+    declare countResearchVariables: HasManyCountAssociationsMixin
+
     declare static associations: {
         project: Association<Questionnaire, Project>,
-        questions: Association<Questionnaire, Question>
+        questions: Association<Questionnaire, Question>,
+        researchVariables: Association<Questionnaire, ResearchVariable>
     }
 
     /**

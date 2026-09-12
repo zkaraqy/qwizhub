@@ -54,6 +54,13 @@ export abstract class BaseAIProvider {
     abstract isAvailable(): boolean
 
     /**
+     * Generate text response from AI (for general use)
+     */
+    async generateText(prompt: string, signal?: AbortSignal): Promise<string> {
+        throw new Error('generateText must be implemented by subclass')
+    }
+
+    /**
      * Validate and sanitize input to prevent prompt injection
      */
     protected sanitizeInput(input: AIGenerationInput): AIGenerationInput {
@@ -108,12 +115,62 @@ VARIABEL YANG AKAN DIUKUR:
 ${input.variables.map((v, i) => `${i + 1}. ${v}`).join('\n')}
 
 INSTRUKSI:
-1. Buat 8-15 pertanyaan yang relevan dengan topik dan variabel penelitian
-2. Untuk setiap pertanyaan, tentukan tipe yang paling sesuai: multiple_choice, text, rating_scale, checkbox, atau dropdown
-3. Jika menggunakan rating_scale, rekomendasikan skala: likert_5, likert_7, guttman, atau custom
-4. Untuk pertanyaan multiple_choice/checkbox/dropdown, berikan 3-7 opsi jawaban yang sesuai
-5. DETEKSI BIAS: Identifikasi apakah pertanyaan mengandung bias (leading question, loaded question, double-barreled, bias gender/ras/agama, asumsi implisit). Jika ada bias, set biasDetected=true dan berikan catatan singkat.
-6. Gunakan bahasa Indonesia yang formal dan akademis
+1. Buat sejumlah pertanyaan penelitian yang relevan dengan topik, variabel, dan indikator penelitian.
+2. Tentukan jumlah pertanyaan berdasarkan kebutuhan pengukuran penelitian. Jumlah pertanyaan tidak dibatasi pada rentang tertentu dan dapat melebihi 15 pertanyaan apabila diperlukan untuk merepresentasikan seluruh variabel dan indikator secara memadai.
+3. Pastikan setiap variabel dan indikator penelitian memiliki minimal satu pertanyaan yang relevan dan representatif. Jangan membuat pertanyaan yang tidak memiliki keterkaitan jelas dengan variabel atau indikator penelitian.
+4. Setiap pertanyaan harus mengukur satu konsep atau satu aspek yang jelas dan spesifik.
+5. HINDARI BIAS:
+   - Jangan menggunakan pertanyaan yang mengarahkan responden pada jawaban tertentu (leading question).
+   - Jangan menggunakan kata atau pernyataan yang mengandung penilaian, tekanan, atau asumsi tertentu (loaded question).
+   - Jangan menggunakan pertanyaan yang mengandung kecenderungan terhadap gender, ras, suku, agama, usia, status sosial, atau kelompok tertentu.
+   - Jangan membuat asumsi implisit mengenai pengalaman, pengetahuan, perilaku, atau kondisi responden yang belum tentu dimiliki oleh responden.
+6. HINDARI AMBIGUITAS:
+   - Gunakan kalimat yang jelas, spesifik, dan mudah dipahami.
+   - Hindari istilah yang memiliki makna ganda atau dapat ditafsirkan berbeda oleh responden.
+   - Hindari penggunaan kata seperti "sering", "biasanya", "cukup", "baik", atau "efektif" apabila tidak terdapat konteks atau definisi yang jelas.
+   - Gunakan periode waktu atau konteks yang spesifik apabila diperlukan.
+7. HINDARI DOUBLE-BARRELED QUESTION:
+   - Setiap pertanyaan hanya boleh mengukur satu hal.
+   - Jangan menggabungkan dua atau lebih aspek dalam satu pertanyaan dengan kata seperti "dan", "atau", atau struktur kalimat yang menyebabkan responden harus memberikan satu jawaban untuk lebih dari satu konsep.
+   - Jika terdapat dua aspek yang berbeda, buat menjadi pertanyaan yang terpisah.
+8. HINDARI REDUNDANSI:
+   - Jangan membuat beberapa pertanyaan yang memiliki makna atau tujuan pengukuran yang sama.
+   - Setiap pertanyaan harus memberikan kontribusi pengukuran yang berbeda terhadap indikator atau variabel.
+   - Periksa kemiripan makna antarpertanyaan sebelum menghasilkan hasil akhir dan hapus atau ubah pertanyaan yang tumpang tindih.
+9. Gunakan bahasa Indonesia yang formal, akademis, objektif, dan mudah dipahami oleh responden sesuai dengan konteks penelitian.
+10. Hindari pertanyaan yang terlalu panjang, kompleks, atau menggunakan istilah teknis yang tidak diperlukan. Jika istilah teknis wajib digunakan karena berkaitan dengan topik penelitian, gunakan istilah yang umum atau berikan konteks yang cukup.
+11. Untuk setiap pertanyaan, tentukan tipe pertanyaan yang paling sesuai dari:
+    - multiple_choice
+    - text
+    - rating_scale
+    - checkbox
+    - dropdown
+12. Jika menggunakan rating_scale, tentukan skala yang paling sesuai:
+    - likert_5
+    - likert_7
+    - guttman
+    - custom
+13. Untuk pertanyaan multiple_choice, checkbox, atau dropdown, berikan 3-7 opsi jawaban yang relevan, mutually exclusive apabila hanya satu jawaban diperbolehkan, dan mencakup pilihan yang diperlukan untuk menjawab pertanyaan.
+14. Untuk pertanyaan rating_scale, pastikan pernyataan memiliki arah pengukuran yang jelas dan konsisten. Hindari penggunaan kalimat negatif atau reverse statement kecuali memang diperlukan secara metodologis.
+15. DETEKSI KUALITAS PERTANYAAN:
+    Untuk setiap pertanyaan, lakukan pemeriksaan terhadap:
+    - bias
+    - ambiguitas
+    - double-barreled
+    - redundansi
+    - relevansi terhadap indikator
+    - kejelasan
+    - kesesuaian tipe pertanyaan
+16. Jika pertanyaan mengandung salah satu masalah tersebut, jangan langsung memasukkannya ke hasil akhir. Perbaiki pertanyaan terlebih dahulu agar memenuhi kriteria kualitas.
+17. Setelah pertanyaan diperbaiki, sertakan status pemeriksaan:
+    - biasDetected: true/false
+    - ambiguityDetected: true/false
+    - doubleBarreledDetected: true/false
+    - redundancyDetected: true/false
+18. Jika salah satu status bernilai true, berikan catatan singkat mengenai masalah yang ditemukan dan jelaskan perbaikannya.
+19. Prioritaskan kualitas dan keterukuran pertanyaan dibandingkan jumlah pertanyaan. Jangan menambahkan pertanyaan hanya untuk memenuhi jumlah tertentu.
+20. Pastikan hasil akhir memiliki cakupan yang seimbang antarvariabel dan indikator serta tidak memiliki pertanyaan yang saling tumpang tindih.
+21. Sebelum menghasilkan hasil akhir, lakukan validasi internal terhadap seluruh pertanyaan untuk memastikan tidak terdapat bias, ambiguitas, double-barreled question, atau redundansi yang dapat dihindari.
 
 OUTPUT FORMAT (WAJIB JSON):
 Berikan output HANYA dalam format JSON berikut, tanpa penjelasan tambahan:

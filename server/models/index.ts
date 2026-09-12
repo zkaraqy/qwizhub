@@ -12,6 +12,8 @@ import { AIGenerationLog } from './AIGenerationLog'
 import { Transaction } from './Transaction'
 import { Response } from './Response'
 import { HonorTransaction } from './HonorTransaction'
+import { ResearchVariable } from './ResearchVariable'
+import { VariableIndicator } from './VariableIndicator'
 
 export {
   User,
@@ -26,7 +28,9 @@ export {
   AIGenerationLog,
   Transaction,
   Response,
-  HonorTransaction
+  HonorTransaction,
+  ResearchVariable,
+  VariableIndicator
 }
 
 export function initModels(sequelize: Sequelize) {
@@ -43,6 +47,8 @@ export function initModels(sequelize: Sequelize) {
   Transaction.initModel(sequelize)
   Response.initModel(sequelize)
   HonorTransaction.initModel(sequelize)
+  ResearchVariable.initModel(sequelize)
+  VariableIndicator.initModel(sequelize)
 
   User.hasMany(Account, {
     as: 'accounts',
@@ -114,6 +120,45 @@ export function initModels(sequelize: Sequelize) {
   Question.belongsTo(Questionnaire, {
     as: 'questionnaire',
     foreignKey: 'questionnaire_id'
+  })
+
+  // ResearchVariable associations
+  Questionnaire.hasMany(ResearchVariable, {
+    as: 'researchVariables',
+    foreignKey: 'questionnaire_id'
+  })
+  ResearchVariable.belongsTo(Questionnaire, {
+    as: 'questionnaire',
+    foreignKey: 'questionnaire_id'
+  })
+
+  // VariableIndicator associations
+  ResearchVariable.hasMany(VariableIndicator, {
+    as: 'indicators',
+    foreignKey: 'variable_id'
+  })
+  VariableIndicator.belongsTo(ResearchVariable, {
+    as: 'variable',
+    foreignKey: 'variable_id'
+  })
+
+  // Question to Variable/Indicator associations
+  ResearchVariable.hasMany(Question, {
+    as: 'questions',
+    foreignKey: 'variable_id'
+  })
+  Question.belongsTo(ResearchVariable, {
+    as: 'variable',
+    foreignKey: 'variable_id'
+  })
+
+  VariableIndicator.hasMany(Question, {
+    as: 'questions',
+    foreignKey: 'indicator_id'
+  })
+  Question.belongsTo(VariableIndicator, {
+    as: 'indicator',
+    foreignKey: 'indicator_id'
   })
 
   // AIGenerationLog associations
@@ -201,6 +246,8 @@ export function initModels(sequelize: Sequelize) {
     AIGenerationLog,
     Transaction,
     Response,
-    HonorTransaction
+    HonorTransaction,
+    ResearchVariable,
+    VariableIndicator
   }
 }

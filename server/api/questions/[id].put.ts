@@ -62,6 +62,57 @@ export default defineEventHandler(async (event) => {
             question.questionText = body.questionText.trim()
         }
 
+        // Update question type if provided
+        if (body.questionType !== undefined && body.questionType !== question.questionType) {
+            const validation = question.canChangeTypeTo(body.questionType)
+            
+            if (!validation.allowed) {
+                throw createError({
+                    statusCode: 400,
+                    statusMessage: validation.warning || 'Cannot change question type'
+                })
+            }
+
+            const oldType = question.questionType
+            question.questionType = body.questionType
+
+            // Handle options when changing types
+            const newTypeNeedsOptions = ['multiple_choice', 'checkbox', 'dropdown', 'closed', 'mixed', 'filter'].includes(body.questionType)
+            const oldTypeHadOptions = ['multiple_choice', 'checkbox', 'dropdown', 'closed', 'mixed', 'filter'].includes(oldType)
+
+            // Clear options if changing to text type
+            if (body.questionType === 'text') {
+                question.options = []
+                question.scaleType = null
+            }
+            // Preserve options if both types support options
+            else if (oldTypeHadOptions && newTypeNeedsOptions) {
+                // Keep existing options
+            }
+            // Clear options if old type didn't have options but new one does
+            else if (!oldTypeHadOptions && newTypeNeedsOptions) {
+                question.options = []
+            }
+
+            // Handle scale type for likert/rating_scale
+            if (body.questionType === 'likert' || body.questionType === 'rating_scale') {
+                // Set default scale type if not provided
+                if (!body.scaleType && !question.scaleType) {
+                    question.scaleType = 'likert_5'
+                }
+            } else if (oldType === 'likert' || oldType === 'rating_scale') {
+                // Clear scale type if moving away from scale types
+                if (body.questionType !== 'likert' && body.questionType !== 'rating_scale') {
+                    question.scaleType = null
+                }
+            }
+        }
+
+        // Update scale type if provided
+        if (body.scaleType !== undefined) {
+            question.scaleType = body.scaleType
+        }
+
         // Update options if provided
         if (body.options !== undefined && Array.isArray(body.options)) {
             // Validate options structure
@@ -89,6 +140,7 @@ export default defineEventHandler(async (event) => {
                 id: question.id,
                 questionText: question.questionText,
                 questionType: question.questionType,
+                scaleType: question.scaleType,
                 options: question.options,
                 orderIndex: question.orderIndex,
                 source: question.source

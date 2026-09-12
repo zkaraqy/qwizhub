@@ -2,7 +2,7 @@
   <LayoutPrivateLayout :user="userProfile" active-item="surveys" @logout="handleSignOut">
     <div class="row mb-4">
       <div class="col">
-        <h1 class="h3 mb-3">Riwayat Jawaban Saya</h1>
+        <h1 class="h3 mb-3" style="font-weight: bold;">Riwayat Jawaban Saya</h1>
       </div>
     </div>
     <div class="row mb-4">

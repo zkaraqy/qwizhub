@@ -37,8 +37,11 @@
                       <i class="bi bi-cash-coin me-2"></i>Rp {{ formatCurrency(questionnaire.honorarium) }}
                     </span>
                   </div>
-                  <span v-if="questionnaire.hasResponded" class="badge bg-info fs-6">
+                  <span v-if="questionnaire.responseStatus === 'completed'" class="badge bg-info fs-6">
                     <i class="bi bi-check-circle me-1"></i>Sudah Dikerjakan
+                  </span>
+                  <span v-else-if="questionnaire.responseStatus === 'in_progress'" class="badge bg-warning fs-6">
+                    <i class="bi bi-hourglass-half me-1"></i>Dalam Proses
                   </span>
                   <span v-else-if="!questionnaire.isAvailable" class="badge bg-secondary fs-6">
                     <i class="bi bi-lock me-1"></i>Slot Penuh
@@ -98,7 +101,7 @@
         <div class="col">
           <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-              <h5 class="mb-0"><i class="bi bi-bullseye me-2"></i>Tujuan Penelitian</h5>
+              <h5 class="mb-0 text-white "><i class="bi bi-bullseye me-2"></i>Tujuan Penelitian</h5>
             </div>
             <div class="card-body">
               <p class="mb-0">{{ questionnaire.researchObjective }}</p>
@@ -110,8 +113,11 @@
       <div class="row mb-4">
         <div class="col text-center">
           <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <button v-if="questionnaire.hasResponded" class="btn btn-secondary btn-lg px-5" disabled>
+            <button v-if="questionnaire.responseStatus === 'completed'" class="btn btn-secondary btn-lg px-5" disabled>
               <i class="bi bi-check-circle me-2"></i>Sudah Dikerjakan
+            </button>
+            <button v-else-if="questionnaire.responseStatus === 'in_progress'" class="btn btn-warning btn-lg px-5" @click="startQuestionnaire">
+              <i class="bi bi-arrow-repeat me-2"></i>Lanjutkan Mengerjakan
             </button>
             <button v-else-if="!questionnaire.isAvailable" class="btn btn-secondary btn-lg px-5" disabled>
               <i class="bi bi-lock me-2"></i>Slot Penuh
@@ -134,6 +140,7 @@
             <ul class="mb-0 mt-2">
               <li>Pastikan koneksi internet Anda stabil</li>
               <li>Jawaban akan otomatis tersimpan setiap 30 detik</li>
+              <li v-if="questionnaire.responseStatus === 'in_progress'">Anda dapat melanjutkan kuesioner yang belum selesai</li>
               <li>Honor akan diterima setelah menyelesaikan seluruh kuesioner</li>
               <li>Anda hanya dapat mengerjakan kuesioner ini satu kali</li>
             </ul>

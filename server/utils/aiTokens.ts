@@ -15,7 +15,9 @@ export const AI_TOKEN_COST = {
     /** Rewrite / Saran perbaikan AI untuk pertanyaan kuisioner (5 token) */
     REWRITE_QUESTION: 5,
     /** Edit / Saran AI saat mengedit kuisioner (5 token) */
-    AI_EDIT_SUGGESTION: 5
+    AI_EDIT_SUGGESTION: 5,
+    /** Generate indikator variabel kuisioner oleh AI (1 token per variabel) */
+    GENERATE_INDICATORS: 1
 } as const
 
 // ─── Top Up Package Constants ─────────────────────────────────────────────────
@@ -65,9 +67,9 @@ export const INITIAL_FREE_TOKENS = 15
  */
 export async function getTokenBalance(userId: string): Promise<number> {
     const user = await User.findByPk(userId, {
-        attributes: ['id', 'ai_token_balance']
+        attributes: ['id', 'aiTokenBalance']
     })
-    return user?.aiTokenBalance ?? 0
+    return Number(user?.aiTokenBalance ?? (user as any)?.dataValues?.ai_token_balance ?? 0)
 }
 
 /**

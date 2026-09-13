@@ -4,6 +4,7 @@ import { Questionnaire } from '~~/server/models/Questionnaire'
 import { IndicatorGenerator } from '~~/server/services/ai/IndicatorGenerator'
 import { AIService, createAIService } from '~~/server/services/ai/AIService'
 import { VariableIndicator } from '~~/server/models/VariableIndicator'
+import { deductAITokens, hasSufficientTokens, AI_TOKEN_COST } from '~~/server/utils/aiTokens'
 import { v4 as uuidv4 } from 'uuid'
 
 export default defineEventHandler(async (event) => {
@@ -17,6 +18,31 @@ export default defineEventHandler(async (event) => {
             throw createError({
                 statusCode: 400,
                 statusMessage: 'Questionnaire ID and Variable ID are required'
+            })
+        }
+
+        const rawCount = parseInt((body.count as string) || '5', 10)
+        if (isNaN(rawCount) || rawCount < 1) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'Invalid indicator count'
+            })
+        }
+        const count = Math.min(Math.max(rawCount, 1), 10)
+        const tokenCost = count * AI_TOKEN_COST.GENERATE_INDICATORS
+
+        // Check if user has sufficient AI tokens (1 token per indicator)
+        const hasTokens = await hasSufficientTokens(user.id, tokenCost)
+        if (!hasTokens) {
+            const currentBalance = await getTokenBalance(user.id)
+            throw createError({
+                statusCode: 402,
+                statusMessage: `Saldo token AI tidak mencukupi untuk generate ${count} indikator. Dibutuhkan ${tokenCost} token (1 token per indikator), saldo Anda: ${currentBalance} token. Silakan top up saldo token Anda.`,
+                data: {
+                    code: 'INSUFFICIENT_AI_TOKENS',
+                    required: tokenCost,
+                    available: currentBalance
+                }
             })
         }
 
@@ -54,20 +80,12 @@ export default defineEventHandler(async (event) => {
         const provider = aiService.getProvider()
         const generator = new IndicatorGenerator(provider)
 
-        const count = parseInt((body.count as string) || '5', 10)
-        if (isNaN(count) || count < 1) {
-            throw createError({
-                statusCode: 400,
-                statusMessage: 'Invalid indicator count'
-            })
-        }
-
         // Generate indicators
         const result = await generator.generateIndicators({
             variableName: variable.variableName,
             variableType: variable.variableType,
-            researchTopic: questionnaire.title,
-            researchObjective: questionnaire.description || questionnaire.title,
+            researchTopic: questionnaire.topic || questionnaire.project?.title || 'Penelitian',
+            researchObjective: questionnaire.researchObjective || questionnaire.project?.description || '',
             description: variable.description || undefined,
             indicatorCount: count
         })
@@ -92,9 +110,21 @@ export default defineEventHandler(async (event) => {
             savedIndicators.push(saved)
         }
 
+        // Deduct AI tokens (1 token per generated indicator)
+        const actualCost = savedIndicators.length * AI_TOKEN_COST.GENERATE_INDICATORS
+        const { balanceAfter } = await deductAITokens(
+            user.id,
+            actualCost,
+            `Generate ${savedIndicators.length} indikator AI untuk variabel "${variable.variableName}" (${actualCost} token)`,
+            'variable_indicator',
+            variable.id
+        )
+
         return {
             success: true,
-            message: `Generated ${savedIndicators.length} indicators`,
+            message: `Berhasil generate ${savedIndicators.length} indikator (${actualCost} token digunakan)`,
+            tokensDeducted: actualCost,
+            remainingBalance: balanceAfter,
             indicators: savedIndicators.map(ind => ({
                 id: ind.id,
                 indicatorText: ind.indicatorText,

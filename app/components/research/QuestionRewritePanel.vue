@@ -15,7 +15,7 @@
             @click="handleRewrite"
           >
             <i class="bi bi-stars me-1"></i>
-            Generate Saran
+            Generate Saran (5 Token)
           </UiBaseButton>
         </div>
       </template>
@@ -116,7 +116,7 @@
             @click="handleRewrite"
           >
             <i class="bi bi-arrow-clockwise me-1"></i>
-            Generate Ulang
+            Generate Ulang (5 Token)
           </UiBaseButton>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { AIGenerationLog } from '~~/server/models/AIGenerationLog'
 import { createAIService } from '~~/server/services/ai/AIService'
 import { enforceRateLimit } from '~~/server/utils/rateLimiter'
 import { validateResearchInput, sanitizePromptInput, sanitizePromptInputArray } from '~~/server/utils/sanitize'
+import { deductAITokens, AI_TOKEN_COST } from '~~/server/utils/aiTokens'
 import { v4 as uuidv4 } from 'uuid'
 
 export default defineEventHandler(async (event) => {
@@ -14,6 +15,19 @@ export default defineEventHandler(async (event) => {
     try {
         // Only peneliti can generate questionnaires
         const user = await requireRole(event, 'peneliti')
+
+        // Check AI token balance BEFORE doing anything
+        if ((user.aiTokenBalance ?? 0) < AI_TOKEN_COST.GENERATE_QUESTIONNAIRE) {
+            throw createError({
+                statusCode: 402,
+                statusMessage: `Saldo token AI tidak mencukupi. Dibutuhkan ${AI_TOKEN_COST.GENERATE_QUESTIONNAIRE} token, saldo Anda: ${user.aiTokenBalance ?? 0} token.`,
+                data: {
+                    code: 'INSUFFICIENT_AI_TOKENS',
+                    required: AI_TOKEN_COST.GENERATE_QUESTIONNAIRE,
+                    available: user.aiTokenBalance ?? 0
+                }
+            })
+        }
 
         // Check rate limit
         await enforceRateLimit(user.id)
@@ -108,6 +122,15 @@ export default defineEventHandler(async (event) => {
 
             const executionTimeMs = Date.now() - startTime
 
+            // Deduct AI tokens after successful generation
+            await deductAITokens(
+                user.id,
+                AI_TOKEN_COST.GENERATE_QUESTIONNAIRE,
+                'Generate Kuisioner AI',
+                'questionnaire_generate',
+                questionnaire.id
+            )
+
             // Log successful generation
             await AIGenerationLog.create({
                 id: uuidv4(),
@@ -128,6 +151,15 @@ export default defineEventHandler(async (event) => {
                 errorMessage: null,
                 executionTimeMs
             })
+
+            // Deduct AI tokens for full questionnaire generation (10 tokens)
+            await deductAITokens(
+                user.id,
+                AI_TOKEN_COST.GENERATE_QUESTIONNAIRE,
+                'Generate Kuisioner AI',
+                'questionnaire_generate',
+                questionnaire.id
+            )
 
             return {
                 success: true,

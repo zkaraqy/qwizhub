@@ -2,6 +2,7 @@ import { requireRole } from '~~/server/utils/auth'
 import { Question } from '~~/server/models/Question'
 import { createAIService } from '~~/server/services/ai/AIService'
 import { sanitizePromptInput } from '~~/server/utils/sanitize'
+import { deductAITokens, AI_TOKEN_COST } from '~~/server/utils/aiTokens'
 import { v4 as uuidv4 } from 'uuid'
 import type { ResearchVariable } from '~~/app/types/research'
 
@@ -9,6 +10,19 @@ export default defineEventHandler(async (event) => {
     try {
         const user = await requireRole(event, 'peneliti')
         const body = await readBody(event)
+
+        // Check AI token balance BEFORE doing anything
+        if ((user.aiTokenBalance ?? 0) < AI_TOKEN_COST.GENERATE_QUESTIONS) {
+            throw createError({
+                statusCode: 402,
+                statusMessage: `Saldo token AI tidak mencukupi. Dibutuhkan ${AI_TOKEN_COST.GENERATE_QUESTIONS} token, saldo Anda: ${user.aiTokenBalance ?? 0} token.`,
+                data: {
+                    code: 'INSUFFICIENT_AI_TOKENS',
+                    required: AI_TOKEN_COST.GENERATE_QUESTIONS,
+                    available: user.aiTokenBalance ?? 0
+                }
+            })
+        }
 
         // Validate required fields
         if (!body.topic || body.topic.trim().length === 0) {
@@ -106,6 +120,15 @@ export default defineEventHandler(async (event) => {
                     source: 'ai_generated'
                 }
             })
+
+            // Deduct AI tokens after successful generation
+            await deductAITokens(
+                user.id,
+                AI_TOKEN_COST.GENERATE_QUESTIONS,
+                'Generate Pertanyaan AI',
+                'question_generate',
+                undefined
+            )
 
             return {
                 success: true,

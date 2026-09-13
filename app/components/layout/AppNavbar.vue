@@ -32,6 +32,22 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Analytics</a>
             </li>
+            <!-- AI Token Balance Badge -->
+            <li v-if="user.role === 'peneliti'" class="nav-item me-2">
+              <NuxtLink
+                to="/payments"
+                class="ai-token-badge d-flex align-items-center gap-1 text-decoration-none rounded-pill px-3 py-1"
+                :class="isLowBalance ? 'token-badge-low' : 'token-badge-ok'"
+                title="Saldo Token AI — Klik untuk Top Up"
+              >
+                <span class="token-icon">🪙</span>
+                <span class="token-balance-text fw-semibold">
+                  {{ tokenLoading ? '...' : tokenBalance }}
+                </span>
+                <span class="token-label">token</span>
+                <span v-if="isLowBalance" class="ms-1 pulse-dot"></span>
+              </NuxtLink>
+            </li>
           </template>
 
           <!-- User Dropdown (both public when logged in and private) -->
@@ -126,9 +142,17 @@ const brandClass = computed(() => {
   return props.variant === 'public' ? 'text-primary' : ''
 })
 
+const { balance: tokenBalance, loading: tokenLoading, isLowBalance, fetchBalance } = useAITokens()
+
 const handleLogout = () => {
   emit('logout')
 }
+
+onMounted(() => {
+  if (props.variant === 'private' && props.user?.role === 'peneliti') {
+    fetchBalance()
+  }
+})
 </script>
 
 <style scoped>
@@ -138,5 +162,68 @@ const handleLogout = () => {
 
 .navbar-brand:hover {
   opacity: 0.8;
+}
+
+/* AI Token Badge */
+.ai-token-badge {
+  font-size: 0.78rem;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.token-badge-ok {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.token-badge-ok:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.token-badge-low {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+  animation: badge-pulse 2s infinite;
+}
+
+.token-badge-low:hover {
+  background: rgba(239, 68, 68, 0.35);
+  color: #fecaca;
+}
+
+.token-icon {
+  font-size: 0.9rem;
+}
+
+.token-balance-text {
+  font-variant-numeric: tabular-nums;
+  min-width: 1.5ch;
+  text-align: right;
+}
+
+.token-label {
+  opacity: 0.8;
+  font-size: 0.72rem;
+}
+
+.pulse-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #ef4444;
+  border-radius: 50%;
+  animation: pulse-dot-anim 1.5s infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); }
+  50% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
+}
+
+@keyframes pulse-dot-anim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
 }
 </style>

@@ -72,7 +72,7 @@
             <div class="d-flex gap-2">
               <button type="submit" class="btn btn-primary" :disabled="generating">
                 <span v-if="generating" class="spinner-border spinner-border-sm me-2"></span>
-                {{ generating ? 'Generating... (max 30s)' : 'Generate Kuesioner' }}
+                {{ generating ? 'Generating... (max 30s)' : '⚡ Generate Kuesioner (10 Token AI)' }}
               </button>
               <NuxtLink :to="`/projects`" class="btn btn-outline-secondary">
                 Kembali

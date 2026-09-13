@@ -87,7 +87,7 @@
             <div class="d-flex gap-2">
               <button class="btn btn-outline-primary" @click="generateByAI"
                 :disabled="generatingAI || questionnaire.status !== 'draft'">
-                <i class="bi bi-robot me-2"></i>{{ generatingAI ? 'Generating...' : 'Generate by AI' }}
+                <i class="bi bi-robot me-2"></i>{{ generatingAI ? 'Generating...' : '⚡ Generate by AI (5 Token)' }}
               </button>
               <button class="btn btn-primary" @click="showAddModal = true" :disabled="questionnaire.status !== 'draft'">
                 <i class="bi bi-plus-lg me-2"></i>Tambah Pertanyaan

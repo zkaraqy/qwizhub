@@ -15,7 +15,7 @@
             @click="handleReview"
           >
             <i class="bi bi-magic me-1"></i>
-            Review dengan AI
+            Review dengan AI (5 Token)
           </UiBaseButton>
         </div>
       </template>
@@ -136,7 +136,7 @@
             @click="handleReview"
           >
             <i class="bi bi-arrow-clockwise me-1"></i>
-            Review Ulang
+            Review Ulang (5 Token)
           </UiBaseButton>
         </div>
       </div>

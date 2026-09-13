@@ -1,6 +1,8 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import crypto from 'crypto'
-import { Transaction, Questionnaire } from '~~/server/models'
+import { Transaction, Questionnaire, AITokenTransaction } from '~~/server/models'
+import { processAITokenTransactionStatus } from '~~/server/utils/aiTokens'
+import { User } from '~~/server/models/User'
 
 export default defineEventHandler(async (event) => {
     try {
@@ -39,6 +41,19 @@ export default defineEventHandler(async (event) => {
 
         console.log('✓ Signature verified')
 
+        // ─── Handle AI Token Top Up ──────────────────────────────────────────
+        // AI token orders have prefix AITOKEN-
+        if (orderId.startsWith('AITOKEN-')) {
+            const result = await processAITokenTransactionStatus(orderId, transactionStatus, fraudStatus)
+            return {
+                status: result.status === 'unknown' ? 'ignored' : 'ok',
+                message: `AI token webhook processed: ${result.status}`,
+                orderId,
+                tokensCredited: result.tokensCredited
+            }
+        }
+
+        // ─── Handle regular questionnaire payments ──────────────────────────
         // Find transaction
         const transaction = await Transaction.findByPk(orderId)
         if (!transaction) {

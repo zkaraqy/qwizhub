@@ -30,12 +30,16 @@
         <div class="card border-0 shadow-sm mb-3">
           <div class="card-body text-center">
             <div class="mb-3">
-              <span class="badge bg-primary rounded-circle display-4"
-                style="width: 80px; height: 80px; line-height: 80px;">
-                {{ profile?.user?.name?.charAt(0) || 'U' }}
-              </span>
+              <img 
+                  v-if="profile?.user?.image" 
+                  :src="profile?.user?.image" 
+                  class="rounded-circle me-2" 
+                  width="32" 
+                  height="32" 
+                  alt="Profile"
+                >
+                <span>{{ profile?.user?.name }}</span>
             </div>
-            <h5 class="mb-1">{{ profile?.user?.name }}</h5>
             <p class="text-muted small mb-2">{{ profile?.user?.email }}</p>
             <span
               :class="['badge', profile?.user?.verificationStatus === 'verified' ? 'bg-success' : 'bg-warning text-dark']">

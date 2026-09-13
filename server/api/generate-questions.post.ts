@@ -3,6 +3,7 @@ import { Question } from '~~/server/models/Question'
 import { createAIService } from '~~/server/services/ai/AIService'
 import { sanitizePromptInput } from '~~/server/utils/sanitize'
 import { v4 as uuidv4 } from 'uuid'
+import type { ResearchVariable } from '~~/app/types/research'
 
 export default defineEventHandler(async (event) => {
     try {
@@ -39,8 +40,9 @@ export default defineEventHandler(async (event) => {
         const sanitizedTopic = sanitizePromptInput(body.topic)
         const sanitizedObjective = sanitizePromptInput(body.objective)
         const sanitizedVariables = Array.isArray(variables) 
-            ? variables.map((v: string) => sanitizePromptInput(v)) 
+            ? variables.map((v: ResearchVariable) => `${sanitizePromptInput(v.variableName)} | Tipe Variabel: ${v.variableType || 'unknown'} | Indikator: ${v.indicators?.map(ind => sanitizePromptInput(ind.indicatorText)).join(', ') || 'none'}`).filter(v => v.length > 0)
             : []
+
 
         // Initialize AI service
         const aiService = createAIService()

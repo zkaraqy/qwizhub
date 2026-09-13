@@ -114,6 +114,69 @@ ${objective}
 VARIABEL YANG AKAN DIUKUR:
 ${input.variables.map((v, i) => `${i + 1}. ${v}`).join('\n')}
 
+PENTING - PAHAMI TIPE SKALA DAN PENGGUNAANNYA:
+
+1. SKALA LIKERT (likert_5, likert_7):
+   - Digunakan untuk: Mengukur TINGKAT PERSETUJUAN/SIKAP terhadap PERNYATAAN
+   - Opsi jawaban: Sangat Tidak Setuju, Tidak Setuju, Netral, Setuju, Sangat Setuju
+   - Format pertanyaan: PERNYATAAN (bukan pertanyaan dengan kata tanya)
+   - Contoh BENAR: "Sistem code review di tim saya berjalan dengan efektif"
+   - Contoh SALAH: "Seberapa efektif sistem code review di tim Anda?" (ini pertanyaan FREKUENSI/TINGKAT, bukan pernyataan sikap)
+
+2. SKALA GUTTMAN (guttman):
+   - Digunakan untuk: Pertanyaan FAKTUAL dengan jawaban YA/TIDAK
+   - Opsi jawaban: Ya, Tidak
+   - Format pertanyaan: Pertanyaan tentang keberadaan, kepemilikan, atau fakta
+   - Contoh BENAR: "Apakah tim Anda menggunakan version control (Git)?"
+   - Contoh SALAH: "Apakah Anda setuju bahwa Git penting?" (ini OPINI, gunakan likert)
+
+3. SKALA KUSTOM (custom) untuk rating_scale:
+   - Digunakan untuk: Pertanyaan FREKUENSI, TINGKAT, INTENSITAS, atau RATING
+   - Opsi jawaban: Disesuaikan dengan konteks (frekuensi, tingkat, rating)
+   - Format pertanyaan: Bisa berbentuk pertanyaan dengan kata tanya
+   - Contoh untuk FREKUENSI: 
+     * Pertanyaan: "Seberapa sering tim Anda melakukan code review?"
+     * Opsi: Tidak Pernah, Jarang, Kadang-kadang, Sering, Selalu
+   - Contoh untuk TINGKAT:
+     * Pertanyaan: "Seberapa puas Anda dengan tools yang digunakan?"
+     * Opsi: Sangat Tidak Puas, Tidak Puas, Cukup Puas, Puas, Sangat Puas
+   - Contoh untuk RATING:
+     * Pertanyaan: "Bagaimana Anda menilai kualitas dokumentasi kode?"
+     * Opsi: Sangat Buruk, Buruk, Cukup, Baik, Sangat Baik
+
+4. MULTIPLE CHOICE / CHECKBOX / DROPDOWN:
+   - Digunakan untuk: Pilihan kategori, karakteristik, atau pilihan spesifik
+   - Opsi jawaban: Pilihan kategori yang mutually exclusive
+   - Contoh: "Bahasa pemrograman utama yang Anda gunakan?" → JavaScript, Python, Java, Go, Lainnya
+
+ATURAN KESELARASAN PERTANYAAN DAN SKALA (WAJIB DIIKUTI):
+
+✓ JIKA pertanyaan menggunakan kata "seberapa sering", "berapa kali", "frekuensi":
+  → Gunakan questionType: "rating_scale" dengan scaleType: "custom"
+  → Berikan opsi frekuensi: Tidak Pernah, Jarang, Kadang-kadang, Sering, Selalu
+
+✓ JIKA pertanyaan menggunakan kata "seberapa [sifat]" (seberapa puas, seberapa baik, seberapa mudah):
+  → Gunakan questionType: "rating_scale" dengan scaleType: "custom"
+  → Berikan opsi tingkat sesuai konteks: Sangat Rendah → Sangat Tinggi
+
+✓ JIKA pertanyaan berbentuk PERNYATAAN untuk mengukur sikap/opini/persepsi:
+  → Gunakan questionType: "likert" atau "rating_scale" dengan scaleType: "likert_5" atau "likert_7"
+  → JANGAN gunakan kata tanya, gunakan PERNYATAAN
+
+✓ JIKA pertanyaan tentang fakta keberadaan/kepemilikan (ya/tidak):
+  → Gunakan questionType: "rating_scale" dengan scaleType: "guttman"
+
+✓ JIKA pertanyaan memerlukan pilihan kategori/pilihan spesifik:
+  → Gunakan questionType: "multiple_choice", "checkbox", atau "dropdown"
+  → Berikan 3-7 opsi kategori yang jelas
+
+VALIDASI SEBELUM MENGHASILKAN OUTPUT:
+Sebelum membuat setiap pertanyaan, periksa:
+1. Apakah struktur pertanyaan (pernyataan vs pertanyaan) sesuai dengan scaleType?
+2. Apakah kata-kata dalam pertanyaan cocok dengan jenis opsi jawaban?
+3. Apakah opsi jawaban yang diberikan relevan dengan pertanyaan?
+4. Jika ada ketidaksesuaian, UBAH pertanyaan atau scaleType agar selaras
+
 INSTRUKSI:
 1. Buat sejumlah pertanyaan penelitian yang relevan dengan topik, variabel, dan indikator penelitian.
 2. Tentukan jumlah pertanyaan berdasarkan kebutuhan pengukuran penelitian. Jumlah pertanyaan tidak dibatasi pada rentang tertentu dan dapat melebihi 15 pertanyaan apabila diperlukan untuk merepresentasikan seluruh variabel dan indikator secara memadai.
@@ -140,37 +203,52 @@ INSTRUKSI:
 9. Gunakan bahasa Indonesia yang formal, akademis, objektif, dan mudah dipahami oleh responden sesuai dengan konteks penelitian.
 10. Hindari pertanyaan yang terlalu panjang, kompleks, atau menggunakan istilah teknis yang tidak diperlukan. Jika istilah teknis wajib digunakan karena berkaitan dengan topik penelitian, gunakan istilah yang umum atau berikan konteks yang cukup.
 11. Untuk setiap pertanyaan, tentukan tipe pertanyaan yang paling sesuai dari:
-    - multiple_choice
-    - text
-    - rating_scale
-    - checkbox
-    - dropdown
-12. Jika menggunakan rating_scale, tentukan skala yang paling sesuai:
-    - likert_5
-    - likert_7
-    - guttman
-    - custom
-13. Untuk pertanyaan multiple_choice, checkbox, atau dropdown, berikan 3-7 opsi jawaban yang relevan, mutually exclusive apabila hanya satu jawaban diperbolehkan, dan mencakup pilihan yang diperlukan untuk menjawab pertanyaan.
-14. Untuk pertanyaan rating_scale, pastikan pernyataan memiliki arah pengukuran yang jelas dan konsisten. Hindari penggunaan kalimat negatif atau reverse statement kecuali memang diperlukan secara metodologis.
-15. DETEKSI KUALITAS PERTANYAAN:
+    - multiple_choice (pilihan kategori dengan satu jawaban)
+    - checkbox (pilihan kategori dengan banyak jawaban)
+    - dropdown (pilihan kategori dalam dropdown)
+    - text (jawaban terbuka)
+    - likert (skala persetujuan terhadap PERNYATAAN)
+    - rating_scale (skala rating/frekuensi/tingkat)
+12. Jika menggunakan likert atau rating_scale, tentukan scaleType yang sesuai:
+    - likert_5 atau likert_7: HANYA untuk pertanyaan berbentuk PERNYATAAN sikap/opini
+    - guttman: HANYA untuk pertanyaan faktual Ya/Tidak
+    - custom: untuk pertanyaan frekuensi/tingkat/rating dengan opsi kustom
+13. WAJIB: Pastikan keselarasan antara struktur pertanyaan dan scaleType:
+    - Jika scaleType adalah likert_5 atau likert_7, pertanyaan HARUS berbentuk PERNYATAAN (bukan pertanyaan dengan kata tanya)
+    - Jika pertanyaan menggunakan "seberapa sering/berapa kali", scaleType HARUS "custom" dan berikan opsi frekuensi
+    - Jika pertanyaan menggunakan "seberapa [sifat]", scaleType HARUS "custom" dan berikan opsi tingkat/rating
+    - Jika pertanyaan faktual ya/tidak, scaleType HARUS "guttman"
+14. Untuk pertanyaan multiple_choice, checkbox, atau dropdown, berikan 3-7 opsi jawaban yang relevan, mutually exclusive apabila hanya satu jawaban diperbolehkan, dan mencakup pilihan yang diperlukan untuk menjawab pertanyaan.
+15. Untuk pertanyaan dengan scaleType "custom", WAJIB berikan opsi jawaban yang sesuai konteks:
+    - Frekuensi: ["Tidak Pernah", "Jarang", "Kadang-kadang", "Sering", "Selalu"]
+    - Tingkat Kepuasan: ["Sangat Tidak Puas", "Tidak Puas", "Cukup Puas", "Puas", "Sangat Puas"]
+    - Rating Kualitas: ["Sangat Buruk", "Buruk", "Cukup", "Baik", "Sangat Baik"]
+    - Tingkat Kesulitan: ["Sangat Sulit", "Sulit", "Sedang", "Mudah", "Sangat Mudah"]
+16. Untuk pertanyaan rating_scale dengan scaleType likert, pastikan pernyataan memiliki arah pengukuran yang jelas dan konsisten. Hindari penggunaan kalimat negatif atau reverse statement kecuali memang diperlukan secara metodologis.
+17. DETEKSI KUALITAS PERTANYAAN:
     Untuk setiap pertanyaan, lakukan pemeriksaan terhadap:
     - bias
     - ambiguitas
     - double-barreled
     - redundansi
     - relevansi terhadap indikator
-    - kejelasan
+    - kejelaran
     - kesesuaian tipe pertanyaan
-16. Jika pertanyaan mengandung salah satu masalah tersebut, jangan langsung memasukkannya ke hasil akhir. Perbaiki pertanyaan terlebih dahulu agar memenuhi kriteria kualitas.
-17. Setelah pertanyaan diperbaiki, sertakan status pemeriksaan:
+    - KESELARASAN antara struktur pertanyaan dan scaleType (PENTING!)
+18. Jika pertanyaan mengandung salah satu masalah tersebut, jangan langsung memasukkannya ke hasil akhir. Perbaiki pertanyaan terlebih dahulu agar memenuhi kriteria kualitas.
+19. Setelah pertanyaan diperbaiki, sertakan status pemeriksaan:
     - biasDetected: true/false
     - ambiguityDetected: true/false
     - doubleBarreledDetected: true/false
     - redundancyDetected: true/false
-18. Jika salah satu status bernilai true, berikan catatan singkat mengenai masalah yang ditemukan dan jelaskan perbaikannya.
-19. Prioritaskan kualitas dan keterukuran pertanyaan dibandingkan jumlah pertanyaan. Jangan menambahkan pertanyaan hanya untuk memenuhi jumlah tertentu.
-20. Pastikan hasil akhir memiliki cakupan yang seimbang antarvariabel dan indikator serta tidak memiliki pertanyaan yang saling tumpang tindih.
-21. Sebelum menghasilkan hasil akhir, lakukan validasi internal terhadap seluruh pertanyaan untuk memastikan tidak terdapat bias, ambiguitas, double-barreled question, atau redundansi yang dapat dihindari.
+20. Jika salah satu status bernilai true, berikan catatan singkat mengenai masalah yang ditemukan dan jelaskan perbaikannya.
+21. Prioritaskan kualitas dan keterukuran pertanyaan dibandingkan jumlah pertanyaan. Jangan menambahkan pertanyaan hanya untuk memenuhi jumlah tertentu.
+22. Pastikan hasil akhir memiliki cakupan yang seimbang antarvariabel dan indikator serta tidak memiliki pertanyaan yang saling tumpang tindih.
+23. VALIDASI AKHIR: Sebelum menghasilkan hasil akhir, periksa SETIAP pertanyaan:
+    - Apakah struktur pertanyaan sesuai dengan scaleType?
+    - Apakah opsi jawaban sesuai dengan pertanyaan?
+    - Apakah tidak ada mismatch antara pertanyaan dan skala?
+    - Jika ada ketidaksesuaian, PERBAIKI sebelum output!
 
 OUTPUT FORMAT (WAJIB JSON):
 Berikan output HANYA dalam format JSON berikut, tanpa penjelasan tambahan:
@@ -178,8 +256,8 @@ Berikan output HANYA dalam format JSON berikut, tanpa penjelasan tambahan:
 {
   "questions": [
     {
-      "questionText": "Teks pertanyaan di sini",
-      "questionType": "rating_scale",
+      "questionText": "Sistem code review di tim saya berjalan dengan efektif",
+      "questionType": "likert",
       "scaleType": "likert_5",
       "options": [],
       "biasDetected": false,
@@ -187,21 +265,51 @@ Berikan output HANYA dalam format JSON berikut, tanpa penjelasan tambahan:
       "recommendedScaleType": "likert_5"
     },
     {
-      "questionText": "Pertanyaan lain di sini",
+      "questionText": "Seberapa sering tim Anda melakukan code review sebelum merilis versi baru?",
+      "questionType": "rating_scale",
+      "scaleType": "custom",
+      "options": [
+        {"value": "1", "label": "Tidak Pernah"},
+        {"value": "2", "label": "Jarang"},
+        {"value": "3", "label": "Kadang-kadang"},
+        {"value": "4", "label": "Sering"},
+        {"value": "5", "label": "Selalu"}
+      ],
+      "biasDetected": false,
+      "biasNotes": null,
+      "recommendedScaleType": "custom"
+    },
+    {
+      "questionText": "Bahasa pemrograman utama yang Anda gunakan?",
       "questionType": "multiple_choice",
       "scaleType": null,
       "options": [
-        {"value": "1", "label": "Opsi 1"},
-        {"value": "2", "label": "Opsi 2"}
+        {"value": "1", "label": "JavaScript"},
+        {"value": "2", "label": "Python"},
+        {"value": "3", "label": "Java"},
+        {"value": "4", "label": "Go"},
+        {"value": "5", "label": "Lainnya"}
       ],
       "biasDetected": false,
       "biasNotes": null,
       "recommendedScaleType": null
+    },
+    {
+      "questionText": "Apakah tim Anda menggunakan version control (Git)?",
+      "questionType": "rating_scale",
+      "scaleType": "guttman",
+      "options": [],
+      "biasDetected": false,
+      "biasNotes": null,
+      "recommendedScaleType": "guttman"
     }
   ]
 }
 
-PENTING: Respons Anda HARUS berupa valid JSON saja, tanpa markdown code blocks, tanpa penjelasan tambahan.`
+PENTING: 
+- Respons Anda HARUS berupa valid JSON saja, tanpa markdown code blocks, tanpa penjelasan tambahan
+- WAJIB pastikan setiap pertanyaan selaras dengan scaleType-nya
+- Perhatikan contoh di atas: pertanyaan likert adalah PERNYATAAN, pertanyaan frekuensi menggunakan custom dengan opsi frekuensi`
     }
 
     /**
@@ -229,8 +337,10 @@ PENTING: Respons Anda HARUS berupa valid JSON saja, tanpa markdown code blocks, 
                     throw new Error(`Question ${index + 1}: missing or invalid questionText`)
                 }
 
-                if (!['multiple_choice', 'text', 'rating_scale', 'checkbox', 'dropdown'].includes(q.questionType)) {
-                    throw new Error(`Question ${index + 1}: invalid questionType`)
+                // Validate against all valid question types from Question model
+                const validQuestionTypes = ['multiple_choice', 'text', 'rating_scale', 'checkbox', 'dropdown', 'closed', 'mixed', 'likert', 'filter']
+                if (!validQuestionTypes.includes(q.questionType)) {
+                    throw new Error(`Question ${index + 1}: invalid questionType "${q.questionType}". Valid types: ${validQuestionTypes.join(', ')}`)
                 }
 
                 return {

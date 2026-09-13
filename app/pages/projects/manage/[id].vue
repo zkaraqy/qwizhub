@@ -90,10 +90,12 @@
         <div class="modal-content rounded-4 border-0 shadow">
           <div class="modal-header border-bottom-0 pb-0">
             <h5 class="modal-title fw-bold">Akses Form Kuesioner AI</h5>
-            <button type="button" class="btn-close" @click="showPaymentModal = false" :disabled="processingPayment"></button>
+            <button type="button" class="btn-close" @click="showPaymentModal = false"
+              :disabled="processingPayment"></button>
           </div>
           <div class="modal-body p-4">
-            <p class="text-muted mb-3">Bayar Rp 5.000 untuk mengakses form kuesioner dengan fitur AI generator pertanyaan.</p>
+            <p class="text-muted mb-3">Bayar Rp 5.000 untuk mengakses form kuesioner dengan fitur AI generator
+              pertanyaan.</p>
             <div class="alert alert-info bg-opacity-10 border-0 mb-4">
               <i class="bi bi-robot me-2"></i>
               <strong>Fitur AI membantu:</strong>
@@ -112,7 +114,8 @@
             <button class="btn btn-light rounded-3" @click="showPaymentModal = false" :disabled="processingPayment">
               Batal
             </button>
-            <button class="btn btn-primary rounded-3 px-4 fw-semibold" @click="proceedPayment" :disabled="processingPayment">
+            <button class="btn btn-primary rounded-3 px-4 fw-semibold" @click="proceedPayment"
+              :disabled="processingPayment">
               <i class="bi bi-credit-card me-2"></i>{{ processingPayment ? 'Memproses...' : 'Bayar Sekarang' }}
             </button>
           </div>
@@ -136,6 +139,7 @@ const route = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig()
 const projectId = route.params.id as string
+const questionnaireForm = useQuestionnaireForm()
 
 // Load Midtrans Snap.js script
 useHead({
@@ -203,12 +207,12 @@ const proceedPayment = async () => {
     // Trigger Midtrans Snap
     if (window.snap) {
       window.snap.pay(response.snapToken, {
-        onSuccess: async function(result: any) {
+        onSuccess: async function (result: any) {
           console.log('Payment success:', result)
-          
+
           // Wait a bit for webhook to process
           await new Promise(resolve => setTimeout(resolve, 2000))
-          
+
           await Swal.fire({
             icon: 'success',
             title: 'Pembayaran Berhasil!',
@@ -216,11 +220,11 @@ const proceedPayment = async () => {
             confirmButtonText: 'OK',
             timer: 3000
           })
-          
+
           // Redirect to edit form with questionnaireId from response
           router.push(`/projects/${projectId}/questionnaire/${questionnaireId}/edit`)
         },
-        onPending: function(result: any) {
+        onPending: function (result: any) {
           console.log('Payment pending:', result)
           Swal.fire({
             icon: 'info',
@@ -229,7 +233,7 @@ const proceedPayment = async () => {
             confirmButtonText: 'OK'
           })
         },
-        onError: function(result: any) {
+        onError: async function (result: any) {
           console.error('Payment error:', result)
           Swal.fire({
             icon: 'error',
@@ -237,8 +241,9 @@ const proceedPayment = async () => {
             text: 'Pembayaran gagal. Silakan coba lagi.',
             confirmButtonText: 'OK'
           })
+          await questionnaireForm.deleteQuestionnaire(questionnaireId)
         },
-        onClose: function() {
+        onClose: async function () {
           console.log('Payment popup closed')
           Swal.fire({
             icon: 'warning',
@@ -246,6 +251,7 @@ const proceedPayment = async () => {
             text: 'Anda menutup popup tanpa menyelesaikan pembayaran.',
             confirmButtonText: 'OK'
           })
+          await questionnaireForm.deleteQuestionnaire(questionnaireId)
         }
       })
     } else {
@@ -310,10 +316,10 @@ function statusLabel(status: string) {
 }
 
 function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString('id-ID', { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
+  return new Date(dateString).toLocaleDateString('id-ID', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
   })
 }
 </script>
@@ -321,6 +327,7 @@ function formatDate(dateString: string) {
 .rounded-4 {
   border-radius: 1rem !important;
 }
+
 .shadow-sm {
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.035) !important;
 }

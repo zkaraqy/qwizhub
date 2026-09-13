@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { User } from '~~/server/models/User'
 import { v4 as uuidv4 } from 'uuid'
+import { creditAITokens, INITIAL_FREE_TOKENS } from '~~/server/utils/aiTokens'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -64,8 +65,20 @@ export default defineEventHandler(async (event) => {
       emailVerified: null,
       image: null,
       role: role || 'responden', // default responden
-      verificationStatus: 'unverified' // default unverified
+      verificationStatus: 'unverified', // default unverified
+      aiTokenBalance: 0
     })
+
+    // Berikan token gratis awal untuk peneliti
+    if ((role || 'responden') === 'peneliti') {
+      await creditAITokens(
+        newUser.id,
+        INITIAL_FREE_TOKENS,
+        `Token gratis awal (${INITIAL_FREE_TOKENS} token) — coba AI gratis!`,
+        'initial_bonus',
+        newUser.id
+      )
+    }
 
     // Return user tanpa password
     return {

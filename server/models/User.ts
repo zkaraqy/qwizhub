@@ -42,6 +42,7 @@ export class User extends Model<
     declare verificationStatus: CreationOptional<'unverified' | 'pending' | 'verified'>
     declare totalQuestionnairesAnswered: CreationOptional<number>
     declare totalHonorEarned: CreationOptional<number>
+    declare aiTokenBalance: CreationOptional<number>
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 
@@ -144,6 +145,12 @@ export class User extends Model<
                 allowNull: false,
                 defaultValue: 0,
                 field: 'total_honor_earned'
+            },
+            aiTokenBalance: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+                field: 'ai_token_balance'
             },
             createdAt: {
                 type: DataTypes.DATE,

@@ -28,10 +28,13 @@ export const useQuestionEnhancement = () => {
         toast: true,
         position: 'top-end',
         icon: 'success',
-        title: 'Review selesai',
+        title: 'Review selesai (-5 token AI)',
         showConfirmButton: false,
         timer: 2000
       })
+
+      // Refresh token balance in navbar/sidebar
+      useAITokens().fetchBalance().catch(() => {})
       
       return response.review as QuestionReview
     } catch (err: any) {
@@ -63,10 +66,13 @@ export const useQuestionEnhancement = () => {
         toast: true,
         position: 'top-end',
         icon: 'success',
-        title: 'Saran perbaikan berhasil di-generate',
+        title: 'Saran perbaikan berhasil (-5 token AI)',
         showConfirmButton: false,
         timer: 2000
       })
+
+      // Refresh token balance in navbar/sidebar
+      useAITokens().fetchBalance().catch(() => {})
       
       return response.suggestions as QuestionRewrite
     } catch (err: any) {

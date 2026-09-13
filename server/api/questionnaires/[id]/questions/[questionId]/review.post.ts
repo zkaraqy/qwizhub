@@ -3,6 +3,7 @@ import { Question } from '~~/server/models/Question'
 import { Questionnaire } from '~~/server/models/Questionnaire'
 import { QuestionReviewer } from '~~/server/services/ai/QuestionReviewer'
 import { AIService, createAIService } from '~~/server/services/ai/AIService'
+import { deductAITokens, AI_TOKEN_COST } from '~~/server/utils/aiTokens'
 
 export default defineEventHandler(async (event) => {
     try {
@@ -14,6 +15,19 @@ export default defineEventHandler(async (event) => {
             throw createError({
                 statusCode: 400,
                 statusMessage: 'Questionnaire ID and Question ID are required'
+            })
+        }
+
+        // Check AI token balance
+        if ((user.aiTokenBalance ?? 0) < AI_TOKEN_COST.REVIEW_QUESTION) {
+            throw createError({
+                statusCode: 402,
+                statusMessage: `Saldo token AI tidak mencukupi untuk review AI. Dibutuhkan ${AI_TOKEN_COST.REVIEW_QUESTION} token, saldo Anda: ${user.aiTokenBalance ?? 0} token.`,
+                data: {
+                    code: 'INSUFFICIENT_AI_TOKENS',
+                    required: AI_TOKEN_COST.REVIEW_QUESTION,
+                    available: user.aiTokenBalance ?? 0
+                }
             })
         }
 
@@ -66,6 +80,18 @@ export default defineEventHandler(async (event) => {
         // Save review to question
         question.aiReview = review
         await question.save()
+
+        // Deduct AI tokens for review (5 tokens)
+        const truncatedText = question.questionText?.length > 40
+            ? `${question.questionText.substring(0, 40)}...`
+            : question.questionText || 'Pertanyaan'
+        await deductAITokens(
+            user.id,
+            AI_TOKEN_COST.REVIEW_QUESTION,
+            `Review Pertanyaan AI: "${truncatedText}"`,
+            'question_review',
+            question.id
+        )
 
         return {
             success: true,

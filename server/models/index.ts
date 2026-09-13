@@ -14,6 +14,7 @@ import { Response } from './Response'
 import { HonorTransaction } from './HonorTransaction'
 import { ResearchVariable } from './ResearchVariable'
 import { VariableIndicator } from './VariableIndicator'
+import { AITokenTransaction } from './AITokenTransaction'
 
 export {
   User,
@@ -30,7 +31,8 @@ export {
   Response,
   HonorTransaction,
   ResearchVariable,
-  VariableIndicator
+  VariableIndicator,
+  AITokenTransaction
 }
 
 export function initModels(sequelize: Sequelize) {
@@ -49,6 +51,7 @@ export function initModels(sequelize: Sequelize) {
   HonorTransaction.initModel(sequelize)
   ResearchVariable.initModel(sequelize)
   VariableIndicator.initModel(sequelize)
+  AITokenTransaction.initModel(sequelize)
 
   User.hasMany(Account, {
     as: 'accounts',
@@ -233,6 +236,16 @@ export function initModels(sequelize: Sequelize) {
     foreignKey: 'response_id'
   })
 
+  // AITokenTransaction associations
+  User.hasMany(AITokenTransaction, {
+    as: 'aiTokenTransactions',
+    foreignKey: 'user_id'
+  })
+  AITokenTransaction.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id'
+  })
+
   return {
     User,
     Account,
@@ -248,6 +261,7 @@ export function initModels(sequelize: Sequelize) {
     Response,
     HonorTransaction,
     ResearchVariable,
-    VariableIndicator
+    VariableIndicator,
+    AITokenTransaction
   }
 }

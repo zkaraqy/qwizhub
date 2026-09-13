@@ -44,15 +44,23 @@
       Analytics
     </a>
 
-    <NuxtLink v-if="user?.role === 'peneliti'" to="/payments" class="list-group-item list-group-item-action"
-      :class="{ active: activeItem === 'payments' }">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-        <path
-          d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
-        <rect x="2" y="8" width="3" height="2" rx="0.5" />
-      </svg>
-      Payments
-    </NuxtLink>
+    <!-- Top Up Token AI (Peneliti only) -->
+    <template v-if="user?.role === 'peneliti'">
+      <NuxtLink to="/payments" class="list-group-item list-group-item-action"
+        :class="{ active: activeItem === 'payments' }">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+          <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+        </svg>
+        <span>Top Up Token AI</span>
+        <!-- Token balance mini badge in sidebar -->
+        <span
+          class="ms-auto token-sidebar-badge"
+          :class="isLowBalance ? 'badge-danger-soft' : 'badge-primary-soft'"
+        >
+          🪙 {{ tokenLoading ? '…' : tokenBalance }}
+        </span>
+      </NuxtLink>
+    </template>
 
     <NuxtLink to="/profile" class="list-group-item list-group-item-action"
       :class="{ active: activeItem === 'profile' }">
@@ -79,9 +87,17 @@ interface Props {
   user?: User | null
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   activeItem: 'dashboard',
   user: null
+})
+
+const { balance: tokenBalance, loading: tokenLoading, isLowBalance, fetchBalance } = useAITokens()
+
+onMounted(() => {
+  if (props.user?.role === 'peneliti') {
+    fetchBalance()
+  }
 })
 </script>
 
@@ -89,6 +105,8 @@ withDefaults(defineProps<Props>(), {
 .list-group-item {
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
 }
 
 .list-group-item:hover {
@@ -104,5 +122,37 @@ withDefaults(defineProps<Props>(), {
 
 .list-group-item svg {
   vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Token sidebar badge */
+.token-sidebar-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.badge-primary-soft {
+  background-color: #e0f0ff;
+  color: #0a5dc9;
+}
+
+.badge-danger-soft {
+  background-color: #ffe4e4;
+  color: #b91c1c;
+  animation: badge-wiggle 2s ease infinite;
+}
+
+.list-group-item.active .token-sidebar-badge {
+  background-color: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+@keyframes badge-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
 }
 </style>

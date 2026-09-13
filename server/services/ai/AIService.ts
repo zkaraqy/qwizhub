@@ -65,7 +65,7 @@ export class AIService {
 export function createAIService(): AIService {
     const openrouterKey = process.env.OPENROUTER_API_KEY || ''
     const model = process.env.OPENROUTER_MODEL || 'deepseek/deepseek-chat'
-    const timeout = parseInt(process.env.AI_REQUEST_TIMEOUT_MS || '30000', 10)
+    const timeout = parseInt(process.env.AI_REQUEST_TIMEOUT_MS || '60000', 10)
 
     return new AIService(openrouterKey, model, timeout)
 }

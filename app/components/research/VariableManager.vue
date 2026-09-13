@@ -85,7 +85,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useVariableManager } from '~/composables/useVariableManager'
+import { useAITokens } from '~/composables/useAITokens'
 import type { ResearchVariable, CreateVariableData } from '~/types/research'
 import Swal from 'sweetalert2'
 
@@ -94,6 +96,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const router = useRouter()
 
 const {
   variables,
@@ -105,13 +108,18 @@ const {
   deleteVariable
 } = useVariableManager()
 
+const { balance, fetchBalance } = useAITokens()
+
 const showForm = ref(false)
 const formMode = ref<'create' | 'edit'>('create')
 const editingVariable = ref<ResearchVariable | undefined>(undefined)
 const expandedVariableId = ref<string | null>(null)
 
 onMounted(async () => {
-  await fetchVariables(props.questionnaireId)
+  await Promise.all([
+    fetchVariables(props.questionnaireId),
+    fetchBalance()
+  ])
 })
 
 const handleAddNew = () => {
@@ -158,19 +166,81 @@ const handleToggle = (variableId: string) => {
 }
 
 const handleGenerateIndicators = async (variable: ResearchVariable) => {
+  // Check token balance before opening generate modal
+  if (balance.value < 1) {
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: 'Saldo Token AI Habis',
+      html: `
+        <p class="mb-2">Anda membutuhkan <strong>1 Token AI</strong> untuk generate indikator variabel ini.</p>
+        <p class="text-muted small">Saldo Anda saat ini: <strong>0 token</strong></p>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Top Up Token',
+      confirmButtonColor: '#137A7F',
+      cancelButtonText: 'Batal'
+    })
+    if (result.isConfirmed) {
+      router.push('/payments')
+    }
+    return
+  }
+
   const { value: count } = await Swal.fire({
     title: 'Generate Indikator dengan AI',
-    text: `Berapa banyak indikator yang ingin di-generate untuk "${variable.variableName}"?`,
-    icon: 'question',
-    input: 'range',
-    inputAttributes: {
-      min: '3',
-      max: '8',
-      step: '1'
+    html: `
+      <div class="text-start mb-3">
+        <p class="mb-1 text-muted">Variabel: <strong>"${variable.variableName}"</strong></p>
+        <div class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded bg-light border text-primary small fw-semibold">
+          <span>⚡ Biaya: <strong id="cost-display">5</strong> Token AI (1 token / indikator)</span>
+          <span class="text-muted ms-1">(Saldo Anda: ${balance.value} token)</span>
+        </div>
+      </div>
+      <div class="mb-2 text-start">
+        <label for="swal-indicator-count" class="form-label fw-semibold small mb-1 d-flex justify-content-between">
+          <span>Jumlah Indikator yang Di-generate:</span>
+          <span id="count-display" class="badge bg-primary fs-6">5</span>
+        </label>
+        <input 
+          type="range" 
+          id="swal-indicator-count" 
+          min="2" 
+          max="10" 
+          value="5" 
+          step="1"
+          class="form-range"
+        />
+        <div class="d-flex justify-content-between text-muted small" style="font-size: 0.75rem;">
+          <span>2 (Min)</span>
+          <span>5 (Rekomendasi)</span>
+          <span>10 (Maks)</span>
+        </div>
+      </div>
+    `,
+    didOpen: () => {
+      const range = document.getElementById('swal-indicator-count') as HTMLInputElement
+      const display = document.getElementById('count-display')
+      const costDisplay = document.getElementById('cost-display')
+      const confirmBtn = document.querySelector('.swal2-confirm') as HTMLButtonElement
+      range?.addEventListener('input', () => {
+        const val = range.value
+        if (display) display.textContent = val
+        if (costDisplay) costDisplay.textContent = val
+        if (confirmBtn) confirmBtn.textContent = `Generate (Gunakan ${val} Token)`
+      })
     },
-    inputValue: 5,
+    preConfirm: () => {
+      const range = document.getElementById('swal-indicator-count') as HTMLInputElement
+      const c = parseInt(range?.value || '5', 10)
+      if (c > balance.value) {
+        Swal.showValidationMessage(`Saldo token Anda (${balance.value}) tidak mencukupi untuk generate ${c} indikator.`)
+        return false
+      }
+      return c
+    },
     showCancelButton: true,
-    confirmButtonText: 'Generate',
+    confirmButtonText: 'Generate (Gunakan 5 Token)',
+    confirmButtonColor: '#137A7F',
     cancelButtonText: 'Batal'
   })
 
@@ -179,7 +249,7 @@ const handleGenerateIndicators = async (variable: ResearchVariable) => {
       // Show loading
       Swal.fire({
         title: 'Generating...',
-        text: 'AI sedang membuat indikator...',
+        text: `AI sedang membuat ${count} indikator...`,
         allowOutsideClick: false,
         didOpen: () => {
           Swal.showLoading()
@@ -187,13 +257,22 @@ const handleGenerateIndicators = async (variable: ResearchVariable) => {
       })
 
       // Call API to generate indicators
-      await $fetch(`/api/questionnaires/${props.questionnaireId}/variables/${variable.id}/generate-indicators`, {
+      const res = await $fetch<{
+        success: boolean
+        message: string
+        tokensDeducted: number
+        remainingBalance: number
+        indicators: any[]
+      }>(`/api/questionnaires/${props.questionnaireId}/variables/${variable.id}/generate-indicators`, {
         method: 'POST',
         body: { count }
       })
 
-      // Refresh data
-      await fetchVariables(props.questionnaireId)
+      // Refresh variables & token balance
+      await Promise.all([
+        fetchVariables(props.questionnaireId),
+        fetchBalance()
+      ])
       
       // Expand to show results
       expandedVariableId.value = variable.id
@@ -201,15 +280,20 @@ const handleGenerateIndicators = async (variable: ResearchVariable) => {
       Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
-        text: `Indikator telah di-generate`,
-        timer: 2000,
-        showConfirmButton: false
+        html: `
+          <p class="mb-1">${res.message || 'Indikator berhasil di-generate'}</p>
+          <p class="text-muted small mb-0">Sisa saldo: <strong>${res.remainingBalance ?? balance.value} token</strong></p>
+        `,
+        timer: 3000,
+        showConfirmButton: true,
+        confirmButtonText: 'OK'
       })
     } catch (err: any) {
+      await fetchBalance()
       Swal.fire({
         icon: 'error',
         title: 'Gagal Generate',
-        text: err.data?.statusMessage || 'Terjadi kesalahan'
+        text: err.data?.statusMessage || err.message || 'Terjadi kesalahan'
       })
     }
   }

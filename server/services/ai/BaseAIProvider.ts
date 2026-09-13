@@ -29,7 +29,7 @@ export interface AIGenerationInput {
 }
 
 export abstract class BaseAIProvider {
-    protected timeout: number = 30000 // 30 seconds default
+    protected timeout: number = 60000 // 60 seconds default
 
     constructor(timeout?: number) {
         if (timeout) {

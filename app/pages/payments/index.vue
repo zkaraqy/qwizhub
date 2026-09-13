@@ -64,6 +64,11 @@
           <span class="cost-label">Tambah Pertanyaan AI</span>
           <span class="cost-value">5 token</span>
         </div>
+        <div class="cost-pill">
+          <span class="cost-icon">🎯</span>
+          <span class="cost-label">Generate Indikator Variabel</span>
+          <span class="cost-value">1 token / item</span>
+        </div>
       </div>
 
       <!-- Package Selection -->

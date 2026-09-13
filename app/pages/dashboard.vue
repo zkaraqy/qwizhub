@@ -888,10 +888,20 @@ onMounted(async () => {
 
 <style scoped>
 .filter-toolbar {
+  position: relative;
+  z-index: 1050;
   border-radius: 16px;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+}
+
+.filter-toolbar .dropdown-menu {
+  z-index: 1060 !important;
+}
+
+.table-responsive {
+  min-height: 160px;
 }
 
 .stat-card {

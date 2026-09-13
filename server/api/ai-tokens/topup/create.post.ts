@@ -66,9 +66,9 @@ export default defineEventHandler(async (event) => {
                 email: user.email || ''
             },
             callbacks: {
-                finish: `${process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/payments?status=success`,
-                error: `${process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/payments?status=error`,
-                pending: `${process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/payments?status=pending`
+                finish: `${process.env.APP_URL || 'http://localhost:3000'}/payments?status=success`,
+                error: `${process.env.APP_URL || 'http://localhost:3000'}/payments?status=error`,
+                pending: `${process.env.APP_URL || 'http://localhost:3000'}/payments?status=pending`
             }
         }
 

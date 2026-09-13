@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content rounded-4 border-0 shadow-lg">
         <!-- Header -->
-        <div class="modal-header border-bottom px-4 py-3 bg-light">
+        <div class="modal-header border-bottom px-4 py-3 bg-light d-flex justify-content-between">
           <div class="d-flex align-items-center gap-3">
             <div class="analysis-icon bg-primary text-white rounded-3 p-2">
               <i class="bi bi-bar-chart-fill fs-5"></i>
@@ -13,10 +13,7 @@
                 <h5 class="modal-title fw-bold text-dark mb-0">
                   {{ analysisData?.questionnaire?.topic || 'Analisis Kuesioner' }}
                 </h5>
-                <span v-if="analysisData?.questionnaire?.status" class="badge"
-                  :class="analysisData.questionnaire.status === 'published' ? 'bg-success' : 'bg-secondary'">
-                  {{ analysisData.questionnaire.status === 'published' ? 'Aktif' : 'Draft' }}
-                </span>
+                
               </div>
               <small class="text-muted">
                 Proyek: {{ analysisData?.questionnaire?.projectTitle || '-' }}
@@ -26,6 +23,10 @@
 
           <!-- Quick Action Buttons inside Header -->
           <div class="d-flex align-items-center gap-2">
+            <span v-if="analysisData?.questionnaire?.status" class="badge"
+                  :class="analysisData.questionnaire.status === 'published' ? 'bg-success' : 'bg-secondary'">
+                  {{ analysisData.questionnaire.status === 'published' ? 'Aktif' : 'Draft' }}
+                </span>
             <div class="btn-group">
               <button
                 class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"

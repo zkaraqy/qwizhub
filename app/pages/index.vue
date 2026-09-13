@@ -34,12 +34,23 @@
             </template>
             <template v-else>
               <div class="nav-item dropdown list-unstyled">
-                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 fw-semibold text-dark" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown">
-                  <span class="rounded-circle text-white d-inline-flex align-items-center justify-content-center fw-bold" style="width: 34px; height: 34px; font-size: 0.85rem; background-color: #137A7F;">
-                    {{ data?.user?.name?.charAt(0) || 'U' }}
-                  </span>
-                  <span>{{ data?.user?.name }}</span>
-                </a>
+                <a 
+                class="nav-link dropdown-toggle d-flex align-items-center" 
+                href="#" 
+                id="navbarDropdown" 
+                role="button" 
+                data-bs-toggle="dropdown"
+              >
+                <img 
+                  v-if="data?.user?.image" 
+                  :src="data?.user.image" 
+                  class="rounded-circle me-2" 
+                  width="32" 
+                  height="32" 
+                  alt="Profile"
+                >
+                <span>{{ data?.user?.name }}</span>
+              </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border">
                   <li><NuxtLink to="/dashboard" class="dropdown-item py-2"><i class="bi bi-speedometer2 me-2"></i>Dashboard</NuxtLink></li>
                   <li><NuxtLink to="/profile" class="dropdown-item py-2"><i class="bi bi-person me-2"></i>Profile</NuxtLink></li>

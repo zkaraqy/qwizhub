@@ -24,21 +24,47 @@
           <!-- Private Navigation -->
           <template v-if="variant === 'private' && user">
             <!-- AI Token Balance Badge -->
-            <li v-if="user.role === 'peneliti'" class="nav-item me-2">
+            <li v-if="user.role === 'responden'" class="nav-item me-2 d-md-none">
               <NuxtLink
-                to="/payments"
-                class="ai-token-badge d-flex align-items-center gap-1 text-decoration-none rounded-pill px-3 py-1"
-                :class="isLowBalance ? 'token-badge-low' : 'token-badge-ok'"
-                title="Saldo Token AI — Klik untuk Top Up"
+                to="/questionnaires"
+                class="nav-link"
               >
-                <span class="token-icon">🪙</span>
-                <span class="token-balance-text fw-semibold">
-                  {{ tokenLoading ? '...' : tokenBalance }}
-                </span>
-                <span class="token-label">token</span>
-                <span v-if="isLowBalance" class="ms-1 pulse-dot"></span>
+                <span>My Surveys</span>
               </NuxtLink>
             </li>
+            <template v-if="user.role === 'peneliti'">
+              <li  class="nav-item me-2 d-md-none">
+                <NuxtLink
+                  to="/projects"
+                  class="nav-link"
+                >
+                  <span>My Projects</span>
+                </NuxtLink>
+              </li>
+              <li  class="nav-item me-2 d-md-none">
+                <NuxtLink
+                  to="/payments"
+                  class="nav-link"
+                >
+                  <span>Top Up Token AI</span>
+                </NuxtLink>
+              </li>
+              <li  class="nav-item me-2">
+                <NuxtLink
+                  to="/payments"
+                  class="ai-token-badge d-flex align-items-center gap-1 text-decoration-none rounded-pill px-3 py-1"
+                  :class="isLowBalance ? 'token-badge-low' : 'token-badge-ok'"
+                  title="Saldo Token AI — Klik untuk Top Up"
+                >
+                  <span class="token-icon">🪙</span>
+                  <span class="token-balance-text fw-semibold">
+                    {{ tokenLoading ? '...' : tokenBalance }}
+                  </span>
+                  <span class="token-label">token</span>
+                  <span v-if="isLowBalance" class="ms-1 pulse-dot"></span>
+                </NuxtLink>
+              </li>
+            </template>
           </template>
 
           <!-- User Dropdown (both public when logged in and private) -->

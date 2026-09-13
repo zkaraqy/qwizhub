@@ -23,15 +23,6 @@
 
           <!-- Private Navigation -->
           <template v-if="variant === 'private' && user">
-            <li v-if="user.role === 'peneliti'" class="nav-item">
-              <NuxtLink to="/projects" class="nav-link">My Projects</NuxtLink>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Surveys</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Analytics</a>
-            </li>
             <!-- AI Token Balance Badge -->
             <li v-if="user.role === 'peneliti'" class="nav-item me-2">
               <NuxtLink
@@ -68,14 +59,6 @@
                   height="32" 
                   alt="Profile"
                 >
-                <span 
-                  v-else 
-                  class="badge rounded-circle me-2"
-                  :class="variant === 'public' ? 'bg-secondary' : 'bg-light text-primary'"
-                  style="width: 32px; height: 32px; line-height: 32px;"
-                >
-                  {{ user.name?.charAt(0) || 'U' }}
-                </span>
                 <span>{{ user.name }}</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-end">

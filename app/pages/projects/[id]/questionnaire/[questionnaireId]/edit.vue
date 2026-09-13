@@ -417,7 +417,7 @@ const publishForm = ref({
 })
 
 // Research assistant state
-const activeTab = ref('questions') // Default to questions tab
+const activeTab = ref('info')
 const activeReview = ref<string | null>(null)
 const activeRewrite = ref<string | null>(null)
 const showMapperModal = ref(false)

@@ -2,6 +2,7 @@ import { requireRole } from '~~/server/utils/auth'
 import { Questionnaire } from '~~/server/models/Questionnaire'
 import { Question } from '~~/server/models/Question'
 import { Project } from '~~/server/models/Project'
+import { ResearchVariable, VariableIndicator } from '~~/server/models'
 
 export default defineEventHandler(async (event) => {
     try {
@@ -26,6 +27,17 @@ export default defineEventHandler(async (event) => {
                 {
                     model: Question,
                     as: 'questions'
+                },
+                {
+                    model: ResearchVariable,
+                    as: 'researchVariables',
+                    include: [
+                        {
+                            model: VariableIndicator,
+                            as: 'indicators',
+                            where: { status: 'accepted' },
+                        }
+                    ]
                 }
             ],
             order: [[{ model: Question, as: 'questions' }, 'orderIndex', 'ASC']]
@@ -53,7 +65,16 @@ export default defineEventHandler(async (event) => {
                 projectId: questionnaire.projectId,
                 topic: questionnaire.topic,
                 researchObjective: questionnaire.researchObjective,
-                variables: questionnaire.variables,
+                variables: questionnaire.researchVariables?.map(rv => ({
+                    id: rv.id,
+                    variableName: rv.variableName,
+                    variableType: rv.variableType,
+                    description: rv.description,
+                    indicators: rv.indicators?.map(ind => ({
+                        id: ind.id,
+                        indicatorText: ind.indicatorText,
+                    })) || []
+                })) || [],
                 status: questionnaire.status,
                 createdAt: questionnaire.createdAt,
                 updatedAt: questionnaire.updatedAt,

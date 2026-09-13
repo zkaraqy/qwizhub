@@ -25,15 +25,20 @@ export interface IndicatorGenerationResponse {
 }
 
 export class IndicatorGenerator {
-    constructor(private aiProvider: BaseAIProvider) {}
+    private timeout: number
+
+    constructor(private aiProvider: BaseAIProvider, timeout: number = 60000) {
+        this.timeout = timeout
+    }
 
     async generateIndicators(input: IndicatorGenerationInput): Promise<IndicatorGenerationResponse> {
         const startTime = Date.now()
         const prompt = this.buildPrompt(input)
 
-        try {
+        let lastError: any = null
+        for (let attempt = 1; attempt <= 2; attempt++) {
             const controller = new AbortController()
-            const timeoutId = setTimeout(() => controller.abort(), 30000)
+            const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
             try {
                 const response = await this.aiProvider.generateText(prompt, controller.signal)
@@ -52,13 +57,17 @@ export class IndicatorGenerator {
                 }
             } catch (error: any) {
                 clearTimeout(timeoutId)
-                throw error
+                lastError = error
+                console.warn(`[IndicatorGenerator] Percobaan ${attempt} gagal (${Date.now() - startTime}ms): ${error.message}`)
+                if (attempt < 2) {
+                    await new Promise(res => setTimeout(res, 1500))
+                }
             }
-        } catch (error: any) {
-            const executionTimeMs = Date.now() - startTime
-            console.error('Indicator generation error:', error)
-            throw new Error(`Failed to generate indicators (${executionTimeMs}ms): ${error.message}`)
         }
+
+        const executionTimeMs = Date.now() - startTime
+        console.error('Indicator generation error after retries:', lastError)
+        throw new Error(`Gagal generate indikator AI (${executionTimeMs}ms): ${lastError?.message || 'Timeout'}`)
     }
 
     private buildPrompt(input: IndicatorGenerationInput): string {

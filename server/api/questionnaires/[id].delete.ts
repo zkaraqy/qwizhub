@@ -1,33 +1,58 @@
-import { Questionnaire } from "~~/server/models";
+import { requireRole } from '~~/server/utils/auth'
+import { Questionnaire } from '~~/server/models/Questionnaire'
 
 export default defineEventHandler(async (event) => {
   try {
-    // get the questionnaire id from the request params
-    const { id } = event.context.params;
+    // Ensure the caller is authenticated as peneliti
+    const user = await requireRole(event, 'peneliti')
+    
+    const questionnaireId = getRouterParam(event, 'id')
 
-    // find the questionnaire by id
-    const questionnaire = await Questionnaire.findByPk(id);
+    if (!questionnaireId) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Questionnaire ID is required'
+      })
+    }
 
-    // if questionnaire not found, return 404
+    // Find the questionnaire by id
+    const questionnaire = await Questionnaire.findByPk(questionnaireId)
+
+    // If questionnaire not found, return 404
     if (!questionnaire) {
       throw createError({
         statusCode: 404,
-        statusMessage: "Questionnaire not found",
-      });
+        statusMessage: 'Questionnaire not found'
+      })
     }
 
-    // delete the questionnaire
-    await questionnaire.destroy();
+    // Check ownership - only the owner can delete
+    if (!await questionnaire.canEdit(user.id)) {
+      throw createError({
+        statusCode: 403,
+        statusMessage: 'You do not have permission to delete this questionnaire'
+      })
+    }
 
-    // return success response
+    // Delete the questionnaire
+    await questionnaire.destroy()
+
+    // Return success response
     return {
-      message: "Questionnaire deleted successfully",
-    };
+      success: true,
+      message: 'Questionnaire deleted successfully'
+    }
   } catch (error: any) {
-    // handle errors
+    // Propagate known errors
+    if (error.statusCode) {
+      throw error
+    }
+
+    // Log and handle unexpected errors
+    console.error('Delete questionnaire error:', error)
     throw createError({
-      statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || "Internal Server Error",
-    });
+      statusCode: 500,
+      statusMessage: 'Failed to delete questionnaire'
+    })
   }
-});
+})

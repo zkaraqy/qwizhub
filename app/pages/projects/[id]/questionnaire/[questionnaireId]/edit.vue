@@ -531,13 +531,17 @@ async function saveQuestion() {
   }
 }
 
+const {
+  variables,
+  fetchVariables
+} = useVariableManager()
 async function generateByAI() {
   // Validate inputs
   if (!questionnaire.value.topic || !questionnaire.value.researchObjective) {
     Swal.fire('Error', 'Mohon isi Topik dan Tujuan Penelitian terlebih dahulu.', 'warning')
     return
   }
-
+  const responseVariables = await fetchVariables(questionnaireId)
   generatingAI.value = true
   try {
     const response = await $fetch('/api/generate-questions', {
@@ -545,7 +549,7 @@ async function generateByAI() {
       body: {
         topic: questionnaire.value.topic,
         objective: questionnaire.value.researchObjective,
-        variables: questionnaire.value.variables || [],
+        variables: responseVariables,
         count: 5 // Default generate 5
       }
     }) as any
@@ -782,7 +786,6 @@ async function proceedPublish() {
       }
     }) as any
 
-    console.log('Publish response:', response)
     showPublishModal.value = false
 
     // Trigger Midtrans Snap
@@ -852,7 +855,6 @@ async function proceedPublish() {
           })
         },
         onPending: function (result: any) {
-          console.log('Payment pending:', result)
           Swal.fire({
             icon: 'info',
             title: 'Pembayaran Pending',

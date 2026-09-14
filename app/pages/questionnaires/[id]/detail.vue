@@ -193,15 +193,13 @@ const loading = ref(true)
 const loadQuestionnaireDetail = async () => {
   loading.value = true
   try {
-    const { data: detailData, error: detailError } = await useFetch(`/api/questionnaires/${questionnaireId}/detail`)
-    
-    if (!detailError.value && detailData.value?.success) {
-      questionnaire.value = detailData.value.data
-    } else {
-      console.error('Failed to load questionnaire:', detailError.value)
+    const response = await $fetch(`/api/questionnaires/${questionnaireId}/detail`)
+    if (response.success && response.data) {
+      questionnaire.value = response.data
     }
   } catch (error) {
     console.error('Error loading questionnaire:', error)
+    questionnaire.value = null
   } finally {
     loading.value = false
   }
@@ -228,8 +226,8 @@ const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('id-ID').format(amount || 0)
 }
 
-onMounted(() => {
-  loadQuestionnaireDetail()
+onMounted(async () => {
+  await loadQuestionnaireDetail()
 })
 </script>
 

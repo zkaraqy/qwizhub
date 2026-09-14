@@ -36,7 +36,7 @@ export async function getAuthenticatedUser(event: H3Event): Promise<User> {
  * Require the authenticated user to have a specific role.
  * Throws 403 if user does not match.
  */
-export async function requireRole(event: H3Event, role: 'peneliti' | 'responden'): Promise<User> {
+export async function requireRole(event: H3Event, role: 'peneliti' | 'responden' | 'admin'): Promise<User> {
   const user = await getAuthenticatedUser(event)
 
   if (user.role !== role) {
@@ -47,6 +47,13 @@ export async function requireRole(event: H3Event, role: 'peneliti' | 'responden'
   }
 
   return user
+}
+
+/**
+ * Require user to be an admin
+ */
+export async function requireAdmin(event: H3Event): Promise<User> {
+  return await requireRole(event, 'admin')
 }
 
 /**

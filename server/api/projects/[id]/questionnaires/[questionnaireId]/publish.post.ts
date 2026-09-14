@@ -14,7 +14,6 @@ export default defineEventHandler(async (event) => {
         const userId = session.user.id
         const questionnaireId = event.context.params?.questionnaireId
 
-        console.log('Publishing questionnaire:', questionnaireId, 'by user:', session.user)
         if (!questionnaireId) {
             throw createError({ statusCode: 400, statusMessage: 'Questionnaire ID is required' })
         }

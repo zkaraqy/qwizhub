@@ -237,13 +237,6 @@ const handleApply = async (suggestion: RewriteSuggestion) => {
     emit('apply-rewrite', suggestion)
   }
 }
-
-onMounted(() => {
-  // If there's an existing rewrite, we can optionally auto-apply it or just display it
-  if (rewrite.value && rewrite.value.rewrites.length > 0) {
-    console.log('Existing rewrites loaded:', rewrite.value)
-  }
-})
 </script>
 
 <style scoped>

@@ -29,7 +29,7 @@ interface User {
 
 interface Props {
   user?: User | null
-  activeItem?: 'dashboard' | 'projects' | 'surveys' | 'analytics' | 'profile' | 'payments'
+  activeItem?: 'dashboard' | 'projects' | 'surveys' | 'analytics' | 'profile' | 'payments' | 'honor' | 'admin'
 }
 
 withDefaults(defineProps<Props>(), {

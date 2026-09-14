@@ -12,6 +12,7 @@ import { AIGenerationLog } from './AIGenerationLog'
 import { Transaction } from './Transaction'
 import { Response } from './Response'
 import { HonorTransaction } from './HonorTransaction'
+import { HonorWithdrawal } from './HonorWithdrawal'
 import { ResearchVariable } from './ResearchVariable'
 import { VariableIndicator } from './VariableIndicator'
 import { AITokenTransaction } from './AITokenTransaction'
@@ -30,6 +31,7 @@ export {
   Transaction,
   Response,
   HonorTransaction,
+  HonorWithdrawal,
   ResearchVariable,
   VariableIndicator,
   AITokenTransaction
@@ -49,6 +51,7 @@ export function initModels(sequelize: Sequelize) {
   Transaction.initModel(sequelize)
   Response.initModel(sequelize)
   HonorTransaction.initModel(sequelize)
+  HonorWithdrawal.initModel(sequelize)
   ResearchVariable.initModel(sequelize)
   VariableIndicator.initModel(sequelize)
   AITokenTransaction.initModel(sequelize)
@@ -236,6 +239,20 @@ export function initModels(sequelize: Sequelize) {
     foreignKey: 'response_id'
   })
 
+  // HonorWithdrawal associations
+  User.hasMany(HonorWithdrawal, {
+    as: 'honorWithdrawals',
+    foreignKey: 'respondent_id'
+  })
+  HonorWithdrawal.belongsTo(User, {
+    as: 'respondent',
+    foreignKey: 'respondent_id'
+  })
+  HonorWithdrawal.belongsTo(User, {
+    as: 'processor',
+    foreignKey: 'processed_by'
+  })
+
   // AITokenTransaction associations
   User.hasMany(AITokenTransaction, {
     as: 'aiTokenTransactions',
@@ -260,6 +277,7 @@ export function initModels(sequelize: Sequelize) {
     Transaction,
     Response,
     HonorTransaction,
+    HonorWithdrawal,
     ResearchVariable,
     VariableIndicator,
     AITokenTransaction

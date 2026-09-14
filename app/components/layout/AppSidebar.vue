@@ -22,7 +22,8 @@
       My Projects
     </NuxtLink>
 
-    <NuxtLink v-if="user?.role === 'responden'" to="/questionnaires" class="list-group-item list-group-item-action" :class="{ active: activeItem === 'surveys' }">
+    <NuxtLink v-if="user?.role === 'responden'" to="/questionnaires" class="list-group-item list-group-item-action"
+      :class="{ active: activeItem === 'surveys' }">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
         class="bi bi-clipboard-check me-2" viewBox="0 0 16 16">
         <path fill-rule="evenodd"
@@ -34,20 +35,32 @@
       </svg>
       My Surveys
     </NuxtLink>
+    <NuxtLink v-if="user?.role === 'responden'" to="/honor" class="list-group-item list-group-item-action"
+      :class="{ active: activeItem === 'honor' }">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cash me-2"
+        viewBox="0 0 16 16">
+        <path
+          d="M3 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z" />
+        <path d="M2 5v6h1V5zm11 0v6h-1V5z" />
+        <path d="M8 5.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4m0 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+        <path
+          d="M8.5 4.5h-1v.75H7a.5.5 0 0 0 0 1h.5v1.5H7a.5.5 0 0 0 0 1h.5v.75h1v-.75H9a.5.5 0 0 0 0-1h-.5v-1.5H9a.5.5 0 0 0 0-1h-.5z" />
+      </svg>
+      Pencairan Honor
+    </NuxtLink>
 
     <!-- Top Up Token AI (Peneliti only) -->
     <template v-if="user?.role === 'peneliti'">
       <NuxtLink to="/payments" class="list-group-item list-group-item-action"
         :class="{ active: activeItem === 'payments' }">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-          <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-2"
+          viewBox="0 0 16 16">
+          <path
+            d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
         </svg>
         <span>Top Up Token AI</span>
         <!-- Token balance mini badge in sidebar -->
-        <span
-          class="ms-auto token-sidebar-badge"
-          :class="isLowBalance ? 'badge-danger-soft' : 'badge-primary-soft'"
-        >
+        <span class="ms-auto token-sidebar-badge" :class="isLowBalance ? 'badge-danger-soft' : 'badge-primary-soft'">
           🪙 {{ tokenLoading ? '…' : tokenBalance }}
         </span>
       </NuxtLink>
@@ -74,7 +87,7 @@ interface User {
 }
 
 interface Props {
-  activeItem?: 'dashboard' | 'projects' | 'surveys' | 'analytics' | 'profile' | 'payments'
+  activeItem?: 'dashboard' | 'projects' | 'surveys' | 'analytics' | 'profile' | 'payments' | 'honor'
   user?: User | null
 }
 
@@ -137,13 +150,23 @@ onMounted(() => {
 }
 
 .list-group-item.active .token-sidebar-badge {
-  background-color: rgba(255,255,255,0.2);
+  background-color: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
 
 @keyframes badge-wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-3deg); }
-  75% { transform: rotate(3deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-3deg);
+  }
+
+  75% {
+    transform: rotate(3deg);
+  }
 }
 </style>

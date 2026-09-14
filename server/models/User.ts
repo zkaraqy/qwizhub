@@ -38,10 +38,11 @@ export class User extends Model<
     declare emailVerified: Date | null
     declare image: string | null
     declare password: string | null
-    declare role: CreationOptional<'peneliti' | 'responden'>
+    declare role: CreationOptional<'peneliti' | 'responden' | 'admin'>
     declare verificationStatus: CreationOptional<'unverified' | 'pending' | 'verified'>
     declare totalQuestionnairesAnswered: CreationOptional<number>
     declare totalHonorEarned: CreationOptional<number>
+    declare totalHonorWithdrawn: CreationOptional<number>
     declare aiTokenBalance: CreationOptional<number>
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
@@ -124,7 +125,7 @@ export class User extends Model<
                 allowNull: true
             },
             role: {
-                type: DataTypes.ENUM('peneliti', 'responden'),
+                type: DataTypes.ENUM('peneliti', 'responden', 'admin'),
                 allowNull: false,
                 defaultValue: 'responden'
             },
@@ -145,6 +146,12 @@ export class User extends Model<
                 allowNull: false,
                 defaultValue: 0,
                 field: 'total_honor_earned'
+            },
+            totalHonorWithdrawn: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+                field: 'total_honor_withdrawn'
             },
             aiTokenBalance: {
                 type: DataTypes.INTEGER,

@@ -293,7 +293,6 @@ onMounted(async () => {
         phoneNumber: response.profile.phoneNumber || ''
       }
     }
-    console.log('Profile loaded:', profile.value)
   } catch (error: any) {
     console.error('Load profile error:', error)
     errorMessage.value = error.data?.statusMessage || 'Failed to load profile'

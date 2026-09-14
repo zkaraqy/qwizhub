@@ -81,7 +81,6 @@ export default defineEventHandler(async (event) => {
                         respondentId: userId
                     }
                 })
-                console.log(`[Transaction] Questionnaire ID: ${q.topic}, Trx: ${JSON.stringify(q.dataValues)}`)
                 const honorarium = q.transactions?.[0]?.honorariumPerRespondent || 0
                 const publishedAt = q.transactions?.[0]?.createdAt || q.createdAt
 

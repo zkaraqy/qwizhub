@@ -48,6 +48,7 @@ export default defineEventHandler(async (event) => {
                     as: 'transactions',
                     where: { status: 'success' },
                     required: false,
+                    order: [['createdAt', 'DESC']],
                     limit: 1
                 }
             ]

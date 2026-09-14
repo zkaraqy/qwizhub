@@ -96,7 +96,8 @@ export default defineEventHandler(async (event) => {
             where: {
                 questionnaireId: questionnaire.id,
                 status: 'success'
-            }
+            },
+            order: [['createdAt', 'DESC']]
         })
 
         const honorAmount = transaction?.honorariumPerRespondent || 0

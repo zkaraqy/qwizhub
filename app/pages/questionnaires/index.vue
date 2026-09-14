@@ -235,7 +235,6 @@ const formatDate = (dateString: string) => {
 
 onMounted(async () => {
   await loadQuestionnaires()
-  console.log(questionnaires.value) // Debugging: Log the loaded questionnaires
 })
 </script>
 

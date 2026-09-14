@@ -183,7 +183,6 @@ const fetchProjectData = async () => {
 
 onMounted(async () => {
   await fetchProjectData();
-  console.log(questionnaires.value)
 })
 
 const createQuestionnaire = () => {
@@ -198,7 +197,6 @@ const proceedPayment = async () => {
       body: { projectId }
     }) as any
 
-    console.log('Payment access response:', response)
     showPaymentModal.value = false
 
     // Store questionnaireId for later use
@@ -208,7 +206,6 @@ const proceedPayment = async () => {
     if (window.snap) {
       window.snap.pay(response.snapToken, {
         onSuccess: async function (result: any) {
-          console.log('Payment success:', result)
 
           // Wait a bit for webhook to process
           await new Promise(resolve => setTimeout(resolve, 2000))
@@ -225,7 +222,6 @@ const proceedPayment = async () => {
           router.push(`/projects/${projectId}/questionnaire/${questionnaireId}/edit`)
         },
         onPending: function (result: any) {
-          console.log('Payment pending:', result)
           Swal.fire({
             icon: 'info',
             title: 'Pembayaran Pending',

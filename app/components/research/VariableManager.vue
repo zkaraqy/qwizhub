@@ -161,7 +161,6 @@ const handleDelete = async (variableId: string) => {
 }
 
 const handleToggle = (variableId: string) => {
-  console.log('Toggling variable:', variableId)
   expandedVariableId.value = expandedVariableId.value === variableId ? null : variableId
 }
 

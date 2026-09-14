@@ -1,7 +1,7 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="dashboard" @logout="handleSignOut">
     <!-- Hero Welcome Section -->
-    <div class="hero-section fade-in mb-4">
+    <div v-if="userProfile?.role !== 'admin'" class="hero-section fade-in mb-4">
       <div class="position-relative d-flex justify-content-between align-items-center flex-wrap gap-3" style="z-index: 1;">
         <div>
           <h1 class="display-6 fw-bold mb-2">Welcome back, {{ userProfile?.name || 'User' }}! 👋</h1>
@@ -617,6 +617,10 @@
           </div>
         </div>
       </div>
+    </template>
+
+    <template v-else-if="userProfile?.role === 'admin'">
+      <DashboardAdmin/>
     </template>
   </LayoutPrivateLayout>
 </template>

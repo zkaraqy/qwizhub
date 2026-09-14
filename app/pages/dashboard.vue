@@ -877,10 +877,10 @@ onMounted(async () => {
     if (userProfile.value?.role === 'peneliti') {
       await loadResearcherData()
     } else if (userProfile.value?.role === 'responden') {
-      const { data: statsData, error: statsError } = await useFetch('/api/dashboard/respondent')
-      if (!statsError.value && statsData.value?.success) {
-        stats.value.totalQuestionnairesAnswered = statsData.value.stats.totalQuestionnairesAnswered
-        stats.value.totalHonorEarned = statsData.value.stats.totalHonorEarned
+      const responseDashboardRespondent = await $fetch('/api/dashboard/respondent')
+      if (responseDashboardRespondent?.success) {
+        stats.value.totalQuestionnairesAnswered = responseDashboardRespondent.stats.totalQuestionnairesAnswered
+        stats.value.totalHonorEarned = responseDashboardRespondent.stats.totalHonorEarned
       }
       await loadQuestionnairesList()
     }

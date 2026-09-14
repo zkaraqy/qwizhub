@@ -39,8 +39,7 @@ export default defineEventHandler(async (event) => {
         }
 
         // Calculate amounts
-        const serviceFee = 5000
-        const totalAmount = (targetRespondents * honorariumPerRespondent) + serviceFee
+        const totalAmount = (targetRespondents * honorariumPerRespondent)
 
         // Create transaction record
         const transactionId = uuidv4()
@@ -72,7 +71,7 @@ export default defineEventHandler(async (event) => {
             amount: totalAmount,
             targetRespondents,
             honorariumPerRespondent,
-            serviceFee,
+            serviceFee: 0,
             status: 'pending',
             snapToken: midtransResponse.token,
             paymentUrl: midtransResponse.redirect_url,

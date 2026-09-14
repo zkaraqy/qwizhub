@@ -44,9 +44,6 @@
               <div class="stat-icon primary">
                 <i class="bi bi-folder2-open"></i>
               </div>
-              <span :class="statusBadgeClass(project.status)">
-                {{ statusLabel(project.status) }}
-              </span>
             </div>
             
             <h5 class="fw-bold mb-2">{{ project.title }}</h5>

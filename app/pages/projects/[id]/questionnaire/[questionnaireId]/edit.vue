@@ -308,27 +308,20 @@
             <input type="number" class="form-control rounded-3" v-model.number="publishForm.targetRespondents" min="1">
           </div>
           <div class="mb-4">
-            <label class="form-label fw-semibold">Nominal Honor per Responden (Rp)</label>
-            <input type="number" class="form-control rounded-3" v-model.number="publishForm.honorariumPerRespondent"
+            <label class="form-label fw-semibold">Budget (Rp)</label>
+            <input type="number" class="form-control rounded-3" v-model.number="publishForm.budget"
               min="0" step="1000">
           </div>
 
           <div class="bg-light p-3 rounded-4 mb-3">
             <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Total Honor ({{ publishForm.targetRespondents || 0 }} x Rp {{
-                publishForm.honorariumPerRespondent || 0 }})</span>
-              <span class="fw-semibold">Rp {{ ((publishForm.targetRespondents || 0) *
-                (publishForm.honorariumPerRespondent || 0)).toLocaleString('id-ID') }}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Fee Service</span>
-              <span class="fw-semibold">Rp 5.000</span>
+              <span class="text-muted">Honor per Responden ({{ publishForm.targetRespondents || 0 }} respondent)</span>
+              <span class="fw-semibold">Rp {{ ((publishForm.budget || 0) / (publishForm.targetRespondents || 1)).toLocaleString('id-ID') }}</span>
             </div>
             <hr>
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-bold">Total Pembayaran</span>
-              <h4 class="fw-bold mb-0 text-primary">Rp {{ (((publishForm.targetRespondents || 0) *
-                (publishForm.honorariumPerRespondent || 0)) + 5000).toLocaleString('id-ID') }}</h4>
+              <h4 class="fw-bold mb-0 text-primary">Rp {{ ((publishForm.budget || 0)).toLocaleString('id-ID') }}</h4>
             </div>
           </div>
         </div>
@@ -413,7 +406,8 @@ const showPublishModal = ref(false)
 const publishing = ref(false)
 const publishForm = ref({
   targetRespondents: 100,
-  honorariumPerRespondent: 5000
+  honorariumPerRespondent: 5000,
+  budget: 0
 })
 
 // Research assistant state
@@ -778,11 +772,12 @@ function handleReordered(newOrder: any[]) {
 async function proceedPublish() {
   publishing.value = true
   try {
+    const calculatedHonor = Math.round((publishForm.value.budget || 0) / (publishForm.value.targetRespondents || 1))
     const response = await $fetch(`/api/projects/${projectId}/questionnaires/${questionnaireId}/publish`, {
       method: 'POST',
       body: {
         targetRespondents: publishForm.value.targetRespondents,
-        honorariumPerRespondent: publishForm.value.honorariumPerRespondent
+        honorariumPerRespondent: calculatedHonor
       }
     }) as any
 

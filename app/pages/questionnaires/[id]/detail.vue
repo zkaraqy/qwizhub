@@ -122,7 +122,7 @@
             <button v-else-if="!questionnaire.isAvailable" class="btn btn-secondary btn-lg px-5" disabled>
               <i class="bi bi-lock me-2"></i>Slot Penuh
             </button>
-            <button v-else class="btn btn-success btn-lg px-5" @click="startQuestionnaire">
+            <button v-else class="btn btn-success btn-lg px-5" @click="startQuestionnaire" :disabled="!userProfile?.isVerified">
               <i class="bi bi-play-circle me-2"></i>Mulai Mengerjakan
             </button>
             <button class="btn btn-outline-secondary btn-lg px-5" @click="router.back()">
@@ -178,7 +178,8 @@ const userProfile = computed(() => {
     name: data.value.user.name || '',
     email: data.value.user.email || '',
     image: data.value.user.image,
-    role: (data.value.user as any).role
+    role: (data.value.user as any).role,
+    isVerified: (data.value.user as any).verificationStatus === "verified"
   }
 })
 

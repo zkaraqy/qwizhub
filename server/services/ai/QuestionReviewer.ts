@@ -116,7 +116,30 @@ OUTPUT JSON:
                 cleaned = cleaned.replace(/```\s*/g, '')
             }
 
-            const parsed = JSON.parse(cleaned)
+            // Try to extract JSON if there's extra text before/after
+            const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
+            if (jsonMatch) {
+                cleaned = jsonMatch[0]
+            }
+
+            let parsed
+            try {
+                parsed = JSON.parse(cleaned)
+            } catch (parseError: any) {
+                console.error('[QuestionReviewer] JSON parse error:', parseError.message)
+                console.error('[QuestionReviewer] Raw response (first 1000 chars):', rawResponse.substring(0, 1000))
+                
+                // Attempt to repair common JSON issues
+                console.log('[QuestionReviewer] Attempting to repair JSON...')
+                try {
+                    let repaired = cleaned.replace(/,(\s*[}\]])/g, '$1')
+                    parsed = JSON.parse(repaired)
+                    console.log('[QuestionReviewer] Successfully repaired JSON')
+                } catch (repairError) {
+                    console.error('Failed to parse review response:', rawResponse.substring(0, 500))
+                    throw new Error(`Failed to parse AI response: ${parseError.message}\n\nPlease try again.`)
+                }
+            }
 
             if (typeof parsed.hasIssues !== 'boolean') {
                 throw new Error('Invalid hasIssues')
@@ -143,7 +166,7 @@ OUTPUT JSON:
                 score: parsed.score
             }
         } catch (error: any) {
-            console.error('Failed to parse review response:', rawResponse)
+            console.error('[QuestionReviewer] Parse error:', error.message)
             throw new Error(`Failed to parse AI response: ${error.message}`)
         }
     }

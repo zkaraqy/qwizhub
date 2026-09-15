@@ -8,7 +8,7 @@ export class OpenRouterProvider extends BaseAIProvider {
     constructor(apiKey: string, model?: string, timeout?: number) {
         super(timeout)
         this.apiKey = apiKey
-        this.model = model || 'deepseek/deepseek-chat'
+        this.model = model || process.env.OPENROUTER_MODEL || 'deepseek/deepseek-chat'
     }
 
     getProviderName(): 'gemini' | 'openai' {
@@ -60,6 +60,27 @@ export class OpenRouterProvider extends BaseAIProvider {
             const controller = signal ? undefined : new AbortController()
             const timeoutId = controller ? setTimeout(() => controller.abort(), this.timeout) : undefined
 
+            const requestBody: any = {
+                model: this.model,
+                messages: [
+                    {
+                        role: 'system',
+                        content: 'You are an expert research assistant. You MUST respond ONLY with valid, well-formed JSON. Never include markdown, explanations, or any text outside the JSON structure. Ensure all strings are properly escaped.'
+                    },
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                temperature: 0.7,
+                max_tokens: 4096
+            }
+
+            // Add response_format if the model supports it (OpenAI-compatible models)
+            if (this.model.includes('gpt') || this.model.includes('claude')) {
+                requestBody.response_format = { type: 'json_object' }
+            }
+
             const response = await fetch(this.baseUrl, {
                 method: 'POST',
                 headers: {
@@ -68,21 +89,7 @@ export class OpenRouterProvider extends BaseAIProvider {
                     'HTTP-Referer': process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
                     'X-Title': 'QwizHub AI Research Assistant'
                 },
-                body: JSON.stringify({
-                    model: this.model,
-                    messages: [
-                        {
-                            role: 'system',
-                            content: 'You are an expert research assistant. Always respond in valid JSON format.'
-                        },
-                        {
-                            role: 'user',
-                            content: prompt
-                        }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 2048
-                }),
+                body: JSON.stringify(requestBody),
                 signal: signal || controller?.signal
             })
 

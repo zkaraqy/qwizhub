@@ -1,12 +1,14 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="projects" @logout="handleSignOut">
-    <!-- Hero Header with Gradient -->
-    <div class="hero-section fade-in mb-4">
-      <div class="position-relative" style="z-index: 1;">
-        <h1 class="display-6 fw-bold mb-2">My Research Projects</h1>
-        <p class="lead mb-4 text-white opacity-90">Manage and monitor all your research questionnaires</p>
-        <button class="btn btn-light btn-lg px-4 fw-semibold shadow-sm" @click="router.push('/projects/create')">
-          <i class="bi bi-plus-lg me-2"></i>Create New Project
+    <!-- Hero Header - Compact & Transparent -->
+    <div class="hero-section-transparent fade-in mb-3">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h3 class="fw-bold mb-1 text-dark">My Research Projects</h3>
+          <p class="mb-0 text-muted small">Manage and monitor all your research questionnaires</p>
+        </div>
+        <button class="btn bg-primary text-white btn-sm px-3 fw-semibold" @click="router.push('/projects/create')">
+          <i class="bi bi-plus-lg me-1"></i>Create New Project
         </button>
       </div>
     </div>
@@ -57,7 +59,7 @@
             </div>
 
             <div class="d-flex gap-2">
-              <button class="btn btn-primary btn-sm flex-grow-1" @click="router.push(`/projects/manage/${project.id}`)">
+              <button class="btn bg-primary text-white btn-sm flex-grow-1" @click="router.push(`/projects/manage/${project.id}`)">
                 <i class="bi bi-kanban me-2"></i>Manage
               </button>
               <button class="btn btn-outline-danger btn-sm" @click="deleteProject(project.id)" :disabled="deleting === project.id">
@@ -179,3 +181,53 @@ function formatDate(dateString: string) {
 }
 </script>
 
+<style scoped>
+/* Hero Section - Transparent Glass Effect */
+.hero-section-transparent {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(228, 233, 231, 0.8);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.hero-section-transparent:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border-color: rgba(42, 127, 121, 0.3);
+}
+
+.hero-section-transparent h3 {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: #17212B;
+}
+
+.hero-section-transparent p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #66727C;
+}
+
+@media (max-width: 768px) {
+  .hero-section-transparent {
+    padding: 1rem 1.25rem;
+  }
+  
+  .hero-section-transparent h3 {
+    font-size: 1.25rem;
+  }
+  
+  .hero-section-transparent p {
+    font-size: 0.8125rem;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .hero-section-transparent .btn {
+    width: 100%;
+  }
+}
+</style>

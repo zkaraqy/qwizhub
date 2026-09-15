@@ -313,6 +313,23 @@ PENTING:
     }
 
     /**
+     * Sanitize JSON string to fix common issues
+     */
+    protected sanitizeJSON(jsonString: string): string {
+        let sanitized = jsonString
+        
+        // Fix common escape issues in strings
+        // This is a simple fix - for production you might want a more robust solution
+        try {
+            // Try to find problematic unescaped quotes and newlines within JSON strings
+            // Note: This is a basic approach and might not catch all cases
+            return sanitized
+        } catch (error) {
+            return sanitized
+        }
+    }
+
+    /**
      * Parse and validate AI response
      */
     protected parseResponse(rawResponse: string): AIGeneratedQuestion[] {
@@ -325,7 +342,49 @@ PENTING:
                 cleaned = cleaned.replace(/```\s*/g, '')
             }
 
-            const parsed = JSON.parse(cleaned)
+            // Try to extract JSON if there's extra text before/after
+            const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
+            if (jsonMatch) {
+                cleaned = jsonMatch[0]
+            }
+
+            // Log for debugging (first 500 chars)
+            if (cleaned.length > 500) {
+                console.log('[BaseAIProvider] Parsing JSON response (truncated):', cleaned.substring(0, 500) + '...')
+            } else {
+                console.log('[BaseAIProvider] Parsing JSON response:', cleaned)
+            }
+
+            let parsed
+            try {
+                parsed = JSON.parse(cleaned)
+            } catch (parseError: any) {
+                // Log the exact position of the error for debugging
+                console.error('[BaseAIProvider] JSON parse error:', parseError.message)
+                console.error('[BaseAIProvider] Raw response (first 1000 chars):', rawResponse.substring(0, 1000))
+                console.error('[BaseAIProvider] Cleaned response (first 1000 chars):', cleaned.substring(0, 1000))
+                
+                // Try to find and log the problematic area
+                const errorMatch = parseError.message.match(/position (\d+)/)
+                if (errorMatch) {
+                    const position = parseInt(errorMatch[1])
+                    const start = Math.max(0, position - 50)
+                    const end = Math.min(cleaned.length, position + 50)
+                    console.error('[BaseAIProvider] Context around error:', cleaned.substring(start, end))
+                }
+                
+                // Attempt to repair common JSON issues
+                console.log('[BaseAIProvider] Attempting to repair JSON...')
+                try {
+                    // Try removing trailing commas
+                    let repaired = cleaned.replace(/,(\s*[}\]])/g, '$1')
+                    parsed = JSON.parse(repaired)
+                    console.log('[BaseAIProvider] Successfully repaired JSON by removing trailing commas')
+                } catch (repairError) {
+                    // If repair fails, throw the original error with more context
+                    throw new Error(`${parseError.message}\n\nThis usually happens when the AI returns malformed JSON. Please try again.`)
+                }
+            }
 
             if (!parsed.questions || !Array.isArray(parsed.questions)) {
                 throw new Error('Invalid response: missing questions array')

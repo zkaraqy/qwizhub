@@ -1,21 +1,21 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="dashboard" @logout="handleSignOut">
-    <!-- Hero Welcome Section -->
-    <div v-if="userProfile?.role !== 'admin'" class="hero-section fade-in mb-4">
-      <div class="position-relative d-flex justify-content-between align-items-center flex-wrap gap-3" style="z-index: 1;">
+    <!-- Hero Welcome Section - Compact & Professional -->
+    <div v-if="userProfile?.role !== 'admin'" class="hero-section hero-section-compact fade-in mb-3">
+      <div class="position-relative d-flex justify-content-between align-items-center flex-wrap gap-2" style="z-index: 1;">
         <div>
-          <h1 class="display-6 fw-bold mb-2">Welcome back, {{ userProfile?.name || 'User' }}! 👋</h1>
-          <p v-if="userProfile?.role === 'peneliti'" class="lead mb-0 text-white opacity-90">
+          <h3 class="fw-bold mb-1 text-black">Welcome back, {{ userProfile?.name || 'User' }}!</h3>
+          <p v-if="userProfile?.role === 'peneliti'" class="mb-0 text-black opacity-90 small">
             Pusat analitik & pengelolaan seluruh kuesioner dan respons penelitian Anda.
           </p>
-          <p v-else class="lead mb-0 text-white opacity-90">
+          <p v-else class="mb-0 text-black opacity-90 small">
             Temukan kuesioner menarik dan dapatkan honor setelah mengisi survei.
           </p>
         </div>
 
         <div v-if="userProfile?.role === 'peneliti'" class="d-flex gap-2">
-          <button class="btn btn-light btn-lg px-4 fw-semibold shadow-sm" @click="handleCreateSurvey">
-            <i class="bi bi-plus-lg me-2"></i>Proyek Baru
+          <button class="btn btn-light btn-sm px-3 fw-semibold shadow-sm" @click="handleCreateSurvey">
+            <i class="bi bi-plus-lg me-1"></i>Proyek Baru
           </button>
         </div>
       </div>
@@ -95,7 +95,7 @@
               <label class="filter-label text-muted small fw-semibold mb-1 d-block d-none d-lg-block">&nbsp;</label>
               <div class="dropdown w-100">
                 <button
-                  class="btn btn-sm btn-primary w-100 dropdown-toggle rounded-3 d-flex align-items-center justify-content-center gap-1"
+                  class="btn btn-sm text-white bg-primary w-100 dropdown-toggle rounded-3 d-flex align-items-center justify-content-center gap-1"
                   type="button"
                   data-bs-toggle="dropdown"
                   :disabled="globalExporting || !hasResponses"
@@ -891,6 +891,66 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+/* Compact Hero Section - Navy + Teal Theme */
+.hero-section-compact {
+  background: transparent !important;
+  padding: 1.25rem 1.5rem !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section-compact::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(234, 245, 243, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-section-compact h3 {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.hero-section-compact p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.hero-section-compact .btn-light {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #183153;
+  transition: all 0.3s ease;
+}
+
+.hero-section-compact .btn-light:hover {
+  background-color: #EAF5F3;
+  border-color: #EAF5F3;
+  color: #2A7F79;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(42, 127, 121, 0.25);
+}
+
+@media (max-width: 768px) {
+  .hero-section-compact {
+    padding: 1rem 1.25rem !important;
+  }
+  
+  .hero-section-compact h3 {
+    font-size: 1.25rem;
+  }
+  
+  .hero-section-compact p {
+    font-size: 0.8125rem;
+  }
+}
+
 .filter-toolbar {
   position: relative;
   z-index: 1050;

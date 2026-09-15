@@ -111,6 +111,7 @@ onMounted(() => {
   border-left: 3px solid transparent;
   display: flex;
   align-items: center;
+  padding: 1.1rem 1rem;
 }
 
 .list-group-item:hover {

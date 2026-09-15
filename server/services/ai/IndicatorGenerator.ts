@@ -127,7 +127,30 @@ PENTING: Respons Anda HARUS berupa valid JSON saja, tanpa markdown, tanpa penjel
                 cleaned = cleaned.replace(/```\s*/g, '')
             }
 
-            const parsed = JSON.parse(cleaned)
+            // Try to extract JSON if there's extra text before/after
+            const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
+            if (jsonMatch) {
+                cleaned = jsonMatch[0]
+            }
+
+            let parsed
+            try {
+                parsed = JSON.parse(cleaned)
+            } catch (parseError: any) {
+                console.error('[IndicatorGenerator] JSON parse error:', parseError.message)
+                console.error('[IndicatorGenerator] Raw response (first 1000 chars):', rawResponse.substring(0, 1000))
+                
+                // Attempt to repair common JSON issues
+                console.log('[IndicatorGenerator] Attempting to repair JSON...')
+                try {
+                    let repaired = cleaned.replace(/,(\s*[}\]])/g, '$1')
+                    parsed = JSON.parse(repaired)
+                    console.log('[IndicatorGenerator] Successfully repaired JSON')
+                } catch (repairError) {
+                    console.error('Failed to parse indicator response:', rawResponse.substring(0, 500))
+                    throw new Error(`Failed to parse AI response: ${parseError.message}\n\nPlease try again.`)
+                }
+            }
 
             if (!parsed.indicators || !Array.isArray(parsed.indicators)) {
                 throw new Error('Invalid response: missing indicators array')
@@ -144,7 +167,7 @@ PENTING: Respons Anda HARUS berupa valid JSON saja, tanpa markdown, tanpa penjel
                 }
             })
         } catch (error: any) {
-            console.error('Failed to parse indicator response:', rawResponse)
+            console.error('[IndicatorGenerator] Parse error:', error.message)
             throw new Error(`Failed to parse AI response: ${error.message}`)
         }
     }

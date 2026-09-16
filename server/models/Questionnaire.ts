@@ -39,6 +39,7 @@ export class Questionnaire extends Model<
     declare status: CreationOptional<'draft' | 'published'>
     declare targetRespondents: CreationOptional<number>
     declare currentResponses: CreationOptional<number>
+    declare requiredSpecializations: CreationOptional<string[]>
     declare paidForAccess: CreationOptional<boolean>
     declare accessPaymentId: string | null
     declare accessPaymentDate: CreationOptional<Date | null>
@@ -180,6 +181,12 @@ export class Questionnaire extends Model<
                 allowNull: false,
                 defaultValue: 0,
                 field: 'current_responses'
+            },
+            requiredSpecializations: {
+                type: DataTypes.JSONB,
+                allowNull: false,
+                defaultValue: [],
+                field: 'required_specializations'
             },
             paidForAccess: {
                 type: DataTypes.BOOLEAN,

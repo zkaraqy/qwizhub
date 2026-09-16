@@ -307,10 +307,37 @@
             <label class="form-label fw-semibold">Target Responden</label>
             <input type="number" class="form-control rounded-3" v-model.number="publishForm.targetRespondents" min="1">
           </div>
-          <div class="mb-4">
+          <div class="mb-3">
             <label class="form-label fw-semibold">Budget (Rp)</label>
             <input type="number" class="form-control rounded-3" v-model.number="publishForm.budget"
               min="0" step="1000">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">
+              Target Specializations
+              <span class="text-muted small">(optional - leave empty for all)</span>
+            </label>
+            <div class="row g-2">
+              <div class="col-md-6" v-for="spec in SPECIALIZATIONS" :key="spec.value">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    :value="spec.value"
+                    v-model="publishForm.requiredSpecializations"
+                    :id="`spec-${spec.value}`"
+                  >
+                  <label class="form-check-label" :for="`spec-${spec.value}`">
+                    {{ spec.label }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <small class="text-muted d-block mt-2">
+              <i class="bi bi-info-circle me-1"></i>
+              Select which specializations can respond. Empty = all specializations accepted.
+            </small>
           </div>
 
           <div class="bg-light p-3 rounded-4 mb-3">
@@ -340,6 +367,7 @@
 
 <script setup lang="ts">
 import Swal from 'sweetalert2'
+import { SPECIALIZATIONS } from '~/constants/specializations'
 
 const route = useRoute()
 const router = useRouter()
@@ -407,7 +435,8 @@ const publishing = ref(false)
 const publishForm = ref({
   targetRespondents: 100,
   honorariumPerRespondent: 5000,
-  budget: 0
+  budget: 0,
+  requiredSpecializations: [] as string[]
 })
 
 // Research assistant state
@@ -777,7 +806,8 @@ async function proceedPublish() {
       method: 'POST',
       body: {
         targetRespondents: publishForm.value.targetRespondents,
-        honorariumPerRespondent: calculatedHonor
+        honorariumPerRespondent: calculatedHonor,
+        requiredSpecializations: publishForm.value.requiredSpecializations
       }
     }) as any
 

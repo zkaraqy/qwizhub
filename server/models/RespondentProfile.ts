@@ -28,6 +28,7 @@ export class RespondentProfile extends Model<
     declare province: string | null
     declare educationLevel: 'sd' | 'smp' | 'sma' | 'd3' | 's1' | 's2' | 's3' | null
     declare phoneNumber: string | null
+    declare specialization: string | null
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 
@@ -51,7 +52,8 @@ export class RespondentProfile extends Model<
             this.profession &&
             this.city &&
             this.province &&
-            this.educationLevel
+            this.educationLevel &&
+            this.specialization
         )
     }
 
@@ -99,6 +101,10 @@ export class RespondentProfile extends Model<
                 type: DataTypes.TEXT,
                 allowNull: true,
                 field: 'phone_number'
+            },
+            specialization: {
+                type: DataTypes.TEXT,
+                allowNull: true
             },
             createdAt: {
                 type: DataTypes.DATE,

@@ -87,7 +87,7 @@
                 >
                 <span>{{ user.name }}</span>
               </a>
-              <ul class="dropdown-menu dropdown-menu-end">
+              <ul class="dropdown-menu dropdown-menu-end" style="z-index: 100 !important;">
                 <li><NuxtLink to="/dashboard" class="dropdown-item">Dashboard</NuxtLink></li>
                 <li><NuxtLink to="/profile" class="dropdown-item">Profile</NuxtLink></li>
                 <li v-if="variant === 'private'"><NuxtLink to="/" class="dropdown-item">Home</NuxtLink></li>

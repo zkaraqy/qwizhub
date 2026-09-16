@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
         }
 
         const body = await readBody(event)
-        const { targetRespondents, honorariumPerRespondent } = body
+        const { targetRespondents, honorariumPerRespondent, requiredSpecializations } = body
 
         if (!targetRespondents || !honorariumPerRespondent) {
             throw createError({ statusCode: 400, statusMessage: 'Target respondents and honorarium are required' })
@@ -81,6 +81,7 @@ export default defineEventHandler(async (event) => {
         // Update questionnaire with target respondents (will be published after payment success)
         questionnaire.targetRespondents = targetRespondents
         questionnaire.currentResponses = 0
+        questionnaire.requiredSpecializations = requiredSpecializations || []
         await questionnaire.save()
 
         return {

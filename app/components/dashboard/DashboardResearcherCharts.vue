@@ -221,12 +221,12 @@ const renderTimelineChart = () => {
 
   // Gradient background
   const gradientTotal = ctx.createLinearGradient(0, 0, 0, 260)
-  gradientTotal.addColorStop(0, 'rgba(14, 59, 67, 0.28)')
-  gradientTotal.addColorStop(1, 'rgba(14, 59, 67, 0.0)')
+  gradientTotal.addColorStop(0, 'rgba(24, 49, 83, 0.22)')
+  gradientTotal.addColorStop(1, 'rgba(24, 49, 83, 0.0)')
 
   const gradientCompleted = ctx.createLinearGradient(0, 0, 0, 260)
-  gradientCompleted.addColorStop(0, 'rgba(40, 167, 69, 0.25)')
-  gradientCompleted.addColorStop(1, 'rgba(40, 167, 69, 0.0)')
+  gradientCompleted.addColorStop(0, 'rgba(33, 138, 97, 0.22)')
+  gradientCompleted.addColorStop(1, 'rgba(33, 138, 97, 0.0)')
 
   timelineChartInstance = new Chart(ctx, {
     type: 'line',
@@ -236,24 +236,24 @@ const renderTimelineChart = () => {
         {
           label: 'Total Respons Masuk',
           data: totalData,
-          borderColor: '#0E3B43',
+          borderColor: '#183153',
           backgroundColor: gradientTotal,
           fill: true,
           tension: 0.35,
           borderWidth: 2.5,
-          pointBackgroundColor: '#0E3B43',
+          pointBackgroundColor: '#183153',
           pointRadius: 3.5,
           pointHoverRadius: 6
         },
         {
           label: 'Respons Selesai',
           data: completedData,
-          borderColor: '#28a745',
+          borderColor: '#218A61',
           backgroundColor: gradientCompleted,
           fill: true,
           tension: 0.35,
           borderWidth: 2,
-          pointBackgroundColor: '#28a745',
+          pointBackgroundColor: '#218A61',
           pointRadius: 3,
           pointHoverRadius: 5
         }
@@ -372,14 +372,14 @@ const renderBarChart = () => {
         {
           label: 'Respons Terkumpul',
           data: currentData,
-          backgroundColor: '#0E3B43',
+          backgroundColor: '#183153',
           borderRadius: 6,
           barThickness: 16
         },
         {
           label: 'Target Responden',
           data: targetData,
-          backgroundColor: 'rgba(14, 59, 67, 0.2)',
+          backgroundColor: 'rgba(42, 127, 121, 0.22)',
           borderRadius: 6,
           barThickness: 16
         }
@@ -459,7 +459,7 @@ onBeforeUnmount(() => {
 .chart-title {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0E3B43;
+  color: #183153;
 }
 
 .chart-subtitle {

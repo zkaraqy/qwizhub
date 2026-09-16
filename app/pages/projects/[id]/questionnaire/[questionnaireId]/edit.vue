@@ -16,7 +16,7 @@
           <h2 class="fw-bold mb-1">Edit Kuesioner</h2>
           <p class="text-muted mb-0">Project: {{ questionnaire?.project?.project?.title || 'Unknown' }}</p>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex flex-wrap gap-2">
           <button class="btn btn-outline-secondary fw-semibold" @click="handleBack">
             Kembali
           </button>
@@ -31,19 +31,19 @@
       </div>
 
       <!-- Tab Navigation -->
-      <ul class="nav nav-tabs mb-4" role="tablist">
-        <li class="nav-item" role="presentation">
+      <ul class="nav nav-tabs mb-4 flex-nowrap overflow-x-auto" role="tablist" style="scrollbar-width: thin; -webkit-overflow-scrolling: touch;">
+        <li class="nav-item text-nowrap" role="presentation">
           <button class="nav-link" :class="{ active: activeTab === 'info' }" @click="activeTab = 'info'" type="button">
             <i class="bi bi-info-circle me-2"></i>Info Kuesioner
           </button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item text-nowrap" role="presentation">
           <button class="nav-link" :class="{ active: activeTab === 'variables' }" @click="activeTab = 'variables'"
             type="button">
             <i class="bi bi-diagram-3 me-2"></i>Variabel & Indikator
           </button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item text-nowrap" role="presentation">
           <button class="nav-link" :class="{ active: activeTab === 'questions' }" @click="activeTab = 'questions'"
             type="button">
             <i class="bi bi-ui-checks me-2"></i>Pertanyaan
@@ -948,30 +948,31 @@ async function proceedPublish() {
 }
 
 .nav-tabs .nav-link:hover {
-  color: #0d6efd;
-  border-bottom-color: #0d6efd;
+  color: #183153;
+  border-bottom-color: #183153;
 }
 
 .nav-tabs .nav-link.active {
-  color: #0d6efd;
+  color: #183153;
   background-color: transparent;
-  border-bottom-color: #0d6efd;
+  border-bottom-color: #183153;
+  font-weight: 600;
 }
 
 .enhancement-actions .btn.active {
-  background-color: #0d6efd;
+  background-color: #183153;
   color: white;
-  border-color: #0d6efd;
+  border-color: #183153;
 }
 
 .enhancement-actions .btn-outline-info.active {
-  background-color: #0dcaf0;
-  border-color: #0dcaf0;
+  background-color: var(--qh-accent, #2A7F79);
+  border-color: var(--qh-accent, #2A7F79);
 }
 
 .enhancement-actions .btn-outline-primary.active {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #183153;
+  border-color: #183153;
 }
 
 /* Drag handle styles */
@@ -982,7 +983,7 @@ async function proceedPublish() {
 }
 
 .drag-handle:hover {
-  color: #0d6efd !important;
+  color: #183153 !important;
 }
 
 .drag-handle:active {
@@ -994,6 +995,6 @@ async function proceedPublish() {
 }
 
 .drag-handle:hover i {
-  color: #0d6efd !important;
+  color: #183153 !important;
 }
 </style>

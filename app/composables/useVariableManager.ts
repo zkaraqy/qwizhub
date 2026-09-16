@@ -123,7 +123,7 @@ export const useVariableManager = () => {
       showCancelButton: true,
       confirmButtonText: 'Ya, Hapus',
       cancelButtonText: 'Batal',
-      confirmButtonColor: '#dc3545'
+      confirmButtonColor: '#C84B4B'
     })
     
     if (!result.isConfirmed) return false

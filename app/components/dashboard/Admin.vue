@@ -347,17 +347,17 @@ onUnmounted(() => {
 
 <style scoped>
 .hero-section {
-  background: linear-gradient(135deg, #0E3B43 0%, #17a2b8 100%);
+  background: linear-gradient(135deg, #183153 0%, #10243D 100%);
   padding: 2rem;
   border-radius: 16px;
   color: white;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 18px rgba(24, 49, 83, 0.15);
 }
 
 .stat-card {
   background: #ffffff;
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--qh-border, #E4E9E7);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   height: 100%;
@@ -365,7 +365,7 @@ onUnmounted(() => {
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(24, 49, 83, 0.08);
 }
 
 .stat-icon {
@@ -378,10 +378,10 @@ onUnmounted(() => {
   font-size: 1.15rem;
 }
 
-.stat-icon.primary { background: rgba(14, 59, 67, 0.12); color: #0E3B43; }
-.stat-icon.success { background: rgba(40, 167, 69, 0.12); color: #28a745; }
-.stat-icon.info { background: rgba(23, 162, 184, 0.12); color: #17a2b8; }
-.stat-icon.warning { background: rgba(253, 126, 20, 0.12); color: #fd7e14; }
+.stat-icon.primary { background: rgba(24, 49, 83, 0.1); color: #183153; }
+.stat-icon.success { background: rgba(33, 138, 97, 0.12); color: #218A61; }
+.stat-icon.info { background: #EAF5F3; color: #2A7F79; }
+.stat-icon.warning { background: rgba(200, 138, 40, 0.12); color: #C88A28; }
 
 .fade-in {
   animation: fadeIn 0.5s ease-in;

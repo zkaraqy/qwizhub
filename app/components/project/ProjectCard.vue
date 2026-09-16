@@ -1,59 +1,57 @@
 <template>
-  <UiBaseCard>
-    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-start mb-3">
-        <div>
-          <h5 class="card-title mb-1">{{ project.title }}</h5>
-          <p class="text-muted small mb-2">{{ project.description || 'No description' }}</p>
+  <div class="card border rounded-4 shadow-sm bg-white h-100 project-card" style="border-color: #E2E8F0;">
+    <div class="card-body p-4 d-flex flex-column">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="stat-icon-folder">
+          <i class="bi bi-folder2-open" style="color: #137A7F;"></i>
         </div>
         <ProjectStatusBadge :status="project.status" />
       </div>
       
-      <div class="d-flex gap-3 text-muted small mb-3">
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-calendar3 me-1" viewBox="0 0 16 16">
-            <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
-            <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-          </svg>
-          {{ formatDate(project.createdAt) }}
+      <h5 class="fw-bold mb-2 text-dark" style="letter-spacing: -0.01em;">{{ project.title }}</h5>
+      <p class="text-muted small mb-3 flex-grow-1" style="line-height: 1.6;">
+        {{ project.description || 'Tidak ada deskripsi untuk proyek penelitian ini.' }}
+      </p>
+      
+      <div class="d-flex align-items-center gap-3 text-secondary small mb-4 pt-3 border-top" style="border-color: #F0F4F4; font-size: 0.8rem;">
+        <span class="d-flex align-items-center gap-1.5">
+          <i class="bi bi-calendar3" style="color: #137A7F;"></i>
+          <span>{{ formatDate(project.createdAt) }}</span>
         </span>
-        <span v-if="project.questionnaireCount">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-clipboard-check me-1" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-          </svg>
-          {{ project.questionnaireCount }} questionnaire(s)
+        <span v-if="project.questionnaireCount !== undefined" class="d-flex align-items-center gap-1.5 ms-auto">
+          <i class="bi bi-clipboard-check" style="color: #137A7F;"></i>
+          <span>{{ project.questionnaireCount }} kuesioner</span>
         </span>
       </div>
-      
-      <div class="d-flex gap-2">
-        <UiBaseButton 
-          variant="primary" 
-          size="sm"
+
+      <div class="d-flex gap-2 mt-auto">
+        <button 
+          class="btn text-white btn-sm flex-grow-1 py-2 fw-semibold rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-1.5" 
+          style="background-color: #0E3B43;"
           @click="$emit('view', project.id)"
         >
-          View Details
-        </UiBaseButton>
-        <UiBaseButton 
+          <i class="bi bi-kanban"></i>
+          <span>Kelola</span>
+        </button>
+        <button 
           v-if="project.status === 'draft'"
-          variant="outline-secondary" 
-          size="sm"
+          class="btn btn-outline-secondary btn-sm px-2.5 rounded-3" 
           @click="$emit('edit', project.id)"
+          title="Edit Proyek"
         >
-          Edit
-        </UiBaseButton>
-        <UiBaseButton 
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button 
           v-if="project.status === 'draft'"
-          variant="outline-danger" 
-          size="sm"
+          class="btn btn-outline-danger btn-sm px-2.5 rounded-3" 
           @click="$emit('delete', project.id)"
+          title="Hapus Proyek"
         >
-          Delete
-        </UiBaseButton>
+          <i class="bi bi-trash"></i>
+        </button>
       </div>
     </div>
-  </UiBaseCard>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -82,10 +80,34 @@ defineEmits<{
 }>()
 
 const formatDate = (date: Date | string) => {
-  return new Date(date).toLocaleDateString('en-US', {
+  if (!date) return '-'
+  return new Date(date).toLocaleDateString('id-ID', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   })
 }
 </script>
+
+<style scoped>
+.stat-icon-folder {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #EBF5F3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.project-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(14, 59, 67, 0.08) !important;
+  border-color: rgba(19, 122, 127, 0.35) !important;
+}
+</style>

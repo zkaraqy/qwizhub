@@ -155,7 +155,7 @@ export const useIndicatorManager = () => {
       showCancelButton: true,
       confirmButtonText: 'Ya, Hapus',
       cancelButtonText: 'Batal',
-      confirmButtonColor: '#dc3545'
+      confirmButtonColor: '#C84B4B'
     })
     
     if (!result.isConfirmed) return false
@@ -274,7 +274,7 @@ export const useIndicatorManager = () => {
       showCancelButton: true,
       confirmButtonText: 'Ya, Terima Semua',
       cancelButtonText: 'Batal',
-      confirmButtonColor: '#198754'
+      confirmButtonColor: '#218A61'
     })
 
     if (!result.isConfirmed) return false

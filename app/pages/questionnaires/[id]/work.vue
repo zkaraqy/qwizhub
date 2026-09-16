@@ -269,7 +269,7 @@ onUnmounted(() => {
 
 .options-list .form-check:hover {
   background-color: #f8f9fa;
-  border-color: #0d6efd;
+  border-color: #183153;
 }
 
 .options-list .form-check-input:checked+.form-check-label {

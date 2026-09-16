@@ -70,7 +70,7 @@ export const useToast = () => {
       text: options.text || '',
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#0d6efd',
+      confirmButtonColor: '#183153',
       cancelButtonColor: '#6c757d',
       confirmButtonText: options.confirmButtonText || 'Yes',
       cancelButtonText: options.cancelButtonText || 'Cancel'

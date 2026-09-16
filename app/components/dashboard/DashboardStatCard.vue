@@ -64,11 +64,11 @@ const iconComponent = computed(() => {
 
 const getIconColor = () => {
   const colorMap: Record<string, string> = {
-    primary: '#0d6efd',
-    success: '#198754',
-    warning: '#ffc107',
-    info: '#0dcaf0',
-    danger: '#dc3545'
+    primary: '#183153',
+    success: '#218A61',
+    warning: '#C88A28',
+    info: '#2A7F79',
+    danger: '#C84B4B'
   }
   return colorMap[props.color] || colorMap.primary
 }

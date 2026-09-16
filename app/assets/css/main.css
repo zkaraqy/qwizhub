@@ -116,7 +116,21 @@ a:hover {
 
 /* --- Bootstrap Button Overrides --- */
 .btn-primary {
+  --bs-btn-color: #fff !important;
+  --bs-btn-bg: var(--qh-primary) !important;
+  --bs-btn-border-color: var(--qh-primary) !important;
+  --bs-btn-hover-color: #fff !important;
+  --bs-btn-hover-bg: var(--qh-primary-dark) !important;
+  --bs-btn-hover-border-color: var(--qh-primary-dark) !important;
+  --bs-btn-focus-shadow-rgb: var(--qh-primary-rgb) !important;
+  --bs-btn-active-color: #fff !important;
+  --bs-btn-active-bg: var(--qh-primary-dark) !important;
+  --bs-btn-active-border-color: var(--qh-primary-dark) !important;
+  --bs-btn-disabled-color: #fff !important;
+  --bs-btn-disabled-bg: var(--qh-primary) !important;
+  --bs-btn-disabled-border-color: var(--qh-primary) !important;
   background-color: var(--qh-primary) !important;
+  background-image: none !important;
   border-color: var(--qh-primary) !important;
   color: #fff !important;
   font-weight: 600;
@@ -129,7 +143,9 @@ a:hover {
 .btn-primary:hover,
 .btn-primary:focus {
   background-color: var(--qh-primary-dark) !important;
+  background-image: none !important;
   border-color: var(--qh-primary-dark) !important;
+  color: #fff !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(var(--qh-primary-rgb), 0.3);
 }
@@ -139,6 +155,17 @@ a:hover {
 }
 
 .btn-outline-primary {
+  --bs-btn-color: var(--qh-primary) !important;
+  --bs-btn-border-color: var(--qh-primary) !important;
+  --bs-btn-hover-color: #fff !important;
+  --bs-btn-hover-bg: var(--qh-primary) !important;
+  --bs-btn-hover-border-color: var(--qh-primary) !important;
+  --bs-btn-focus-shadow-rgb: var(--qh-primary-rgb) !important;
+  --bs-btn-active-color: #fff !important;
+  --bs-btn-active-bg: var(--qh-primary) !important;
+  --bs-btn-active-border-color: var(--qh-primary) !important;
+  --bs-btn-disabled-color: var(--qh-primary) !important;
+  --bs-btn-disabled-border-color: var(--qh-primary) !important;
   color: var(--qh-primary) !important;
   border-color: var(--qh-primary) !important;
   background: transparent !important;
@@ -148,7 +175,8 @@ a:hover {
 }
 
 .btn-outline-primary:hover,
-.btn-outline-primary:focus {
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
   background-color: var(--qh-primary) !important;
   border-color: var(--qh-primary) !important;
   color: #fff !important;

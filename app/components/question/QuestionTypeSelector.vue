@@ -67,7 +67,7 @@ async function handleTypeChange() {
       showCancelButton: true,
       confirmButtonText: 'Ya, Ubah',
       cancelButtonText: 'Batal',
-      confirmButtonColor: '#0d6efd'
+      confirmButtonColor: '#183153'
     })
 
     if (result.isConfirmed) {

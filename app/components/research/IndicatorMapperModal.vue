@@ -196,12 +196,12 @@ const getStatusBadgeClass = (status: string): string => {
 
 .indicator-item:hover {
   background: #f8f9fa;
-  border-color: #0d6efd;
+  border-color: #183153;
 }
 
 .indicator-item.selected {
-  background: #e7f1ff;
-  border-color: #0d6efd;
+  background: #eaf1f8;
+  border-color: #183153;
 }
 
 .variable-section {

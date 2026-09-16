@@ -1,12 +1,14 @@
 import { defineEventHandler, getQuery, createError } from 'h3'
 import { getServerSession } from '#auth'
-import { Questionnaire, Project, User, Transaction } from '~~/server/models'
+import { Questionnaire, Project, User, Transaction, RespondentProfile } from '~~/server/models'
 import { Op } from 'sequelize'
 
 /**
  * GET /api/questionnaires/published
  * Browse published questionnaires available for respondents
- * Query params: search, page, limit, status (filter)
+ * Query params: search, page, limit, status (filter), specialization (filter)
+ *   - specialization: '' or 'all' = show all accessible questionnaires (based on profile),
+ *                     '<value>' = additionally filter by that specific specialization
  */
 export default defineEventHandler(async (event) => {
     try {
@@ -20,6 +22,14 @@ export default defineEventHandler(async (event) => {
             throw createError({ statusCode: 403, statusMessage: 'Only respondents can browse questionnaires' })
         }
 
+        // Get user's specialization from profile
+        const userId = session.user.id
+        const userProfile = await RespondentProfile.findOne({
+            where: { userId }
+        })
+
+        const userSpecialization = userProfile?.specialization || null
+
         const query = getQuery(event)
         const search = (query.search as string) || ''
         const page = parseInt((query.page as string) || '1')
@@ -27,9 +37,26 @@ export default defineEventHandler(async (event) => {
         const statusFilter = (query.status as string) || 'all' // all, available, full, completed
         const offset = (page - 1) * limit
 
+        // Specialization filter from frontend ('' or 'all' = no override, use profile-based logic)
+        const specializationParam = (query.specialization as string) || ''
+        // The effective specialization to use for filtering:
+        //   - If frontend sends a specific value, use that (user manually selected)
+        //   - Otherwise fall back to user's profile specialization
+        const activeSpecialization = (specializationParam && specializationParam !== 'all')
+            ? specializationParam
+            : userSpecialization
+
         // Build where clause
+        // Always show questionnaires that accept all specializations (empty array / null).
+        // If an active specialization is resolved, also include questionnaires that specifically
+        // require that specialization.
         const whereClause: any = {
-            status: 'published'
+            status: 'published',
+            [Op.or]: [
+                { requiredSpecializations: { [Op.eq]: [] } }, // Accept all specializations
+                { requiredSpecializations: { [Op.is]: null } }, // Legacy data compatibility
+                ...(activeSpecialization ? [{ requiredSpecializations: { [Op.contains]: [activeSpecialization] } }] : [])
+            ]
         }
 
         // Add search filter
@@ -70,7 +97,6 @@ export default defineEventHandler(async (event) => {
         })
 
         // Check if user has already responded to each questionnaire
-        const userId = session.user.id
         const { Response } = await import('~~/server/models')
         
         let questionnairesWithStatus = await Promise.all(
@@ -94,6 +120,7 @@ export default defineEventHandler(async (event) => {
                     isAvailable: q.isAcceptingResponses(),
                     hasResponded: !!hasResponded,
                     honorariumPerRespondent: honorarium,
+                    requiredSpecializations: q.requiredSpecializations || [],
                     publishedAt: publishedAt,
                     createdAt: q.createdAt,
                     project: {
@@ -118,6 +145,7 @@ export default defineEventHandler(async (event) => {
         return {
             success: true,
             data: questionnairesWithStatus,
+            userSpecialization,
             pagination: {
                 page,
                 limit,

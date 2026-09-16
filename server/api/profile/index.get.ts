@@ -32,7 +32,8 @@ export default defineEventHandler(async (event) => {
         city: profile.city,
         province: profile.province,
         educationLevel: profile.educationLevel,
-        phoneNumber: profile.phoneNumber
+        phoneNumber: profile.phoneNumber,
+        specialization: profile.specialization
       } : null
     }
   } catch (error: any) {

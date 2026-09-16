@@ -169,6 +169,17 @@
               </div>
 
               <div class="col-md-6">
+                <label for="specialization" class="form-label">Specialization / Field of Expertise <span class="text-danger">*</span></label>
+                <select id="specialization" v-model="formData.profile.specialization" class="form-select">
+                  <option value="">Select your specialization</option>
+                  <option v-for="spec in SPECIALIZATIONS" :key="spec.value" :value="spec.value">
+                    {{ spec.label }}
+                  </option>
+                </select>
+                <small class="text-muted d-block mt-1">Required for account verification</small>
+              </div>
+
+              <div class="col-md-6">
                 <label for="city" class="form-label">City <span class="text-danger">*</span></label>
                 <input id="city" v-model="formData.profile.city" type="text" class="form-control"
                   placeholder="e.g., Jakarta" />
@@ -216,6 +227,8 @@
 </template>
 
 <script lang="ts" setup>
+import { SPECIALIZATIONS } from '~/constants/specializations'
+
 definePageMeta({
   auth: {
     unauthenticatedOnly: false,
@@ -263,7 +276,8 @@ const formData = ref({
     city: '',
     province: '',
     educationLevel: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    specialization: ''
   }
 })
 
@@ -290,7 +304,8 @@ onMounted(async () => {
         city: response.profile.city || '',
         province: response.profile.province || '',
         educationLevel: response.profile.educationLevel || '',
-        phoneNumber: response.profile.phoneNumber || ''
+        phoneNumber: response.profile.phoneNumber || '',
+        specialization: response.profile.specialization || ''
       }
     }
   } catch (error: any) {

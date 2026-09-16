@@ -33,7 +33,8 @@ export default defineEventHandler(async (event) => {
           city: profileData.city || null,
           province: profileData.province || null,
           educationLevel: profileData.educationLevel || null,
-          phoneNumber: profileData.phoneNumber || null
+          phoneNumber: profileData.phoneNumber || null,
+          specialization: profileData.specialization || null
         })
       } else {
         // Update existing profile
@@ -44,7 +45,8 @@ export default defineEventHandler(async (event) => {
           city: profileData.city !== undefined ? profileData.city : profile.city,
           province: profileData.province !== undefined ? profileData.province : profile.province,
           educationLevel: profileData.educationLevel !== undefined ? profileData.educationLevel : profile.educationLevel,
-          phoneNumber: profileData.phoneNumber !== undefined ? profileData.phoneNumber : profile.phoneNumber
+          phoneNumber: profileData.phoneNumber !== undefined ? profileData.phoneNumber : profile.phoneNumber,
+          specialization: profileData.specialization !== undefined ? profileData.specialization : profile.specialization
         })
       }
 
@@ -73,7 +75,8 @@ export default defineEventHandler(async (event) => {
           city: profile.city,
           province: profile.province,
           educationLevel: profile.educationLevel,
-          phoneNumber: profile.phoneNumber
+          phoneNumber: profile.phoneNumber,
+          specialization: profile.specialization
         }
       }
     }

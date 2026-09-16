@@ -507,12 +507,12 @@
             </div>
 
             <!-- Search and Filter -->
-            <div class="row mb-3">
-              <div class="col-md-6 mb-2">
+            <div class="row mb-3 g-2">
+              <div class="col-md-6">
                 <input v-model="searchQuery" type="text" class="form-control" placeholder="Cari kuesioner..."
                   @input="debouncedSearchQuestionnaires" />
               </div>
-              <div class="col-md-3 mb-2">
+              <div class="col-md-2">
                 <select v-model="statusFilter" class="form-select" @change="loadQuestionnairesList">
                   <option value="all">Semua Status</option>
                   <option value="available">Tersedia</option>
@@ -520,11 +520,30 @@
                   <option value="completed">Sudah Dikerjakan</option>
                 </select>
               </div>
-              <div class="col-md-3 mb-2">
+              <div class="col-md-2">
                 <select v-model="sortBy" class="form-select" @change="loadQuestionnairesList">
                   <option value="newest">Terbaru</option>
                   <option value="oldest">Terlama</option>
                   <option value="honor">Honor Tertinggi</option>
+                </select>
+              </div>
+              <!-- Filter Specialization -->
+              <div class="col-md-2">
+                <select
+                  class="form-select"
+                  :value="specializationFilter"
+                  @change="setSpecializationFilter(($event.target as HTMLSelectElement).value)"
+                >
+                  <option value="all">
+                    🎓 Semua Spesialisasi
+                  </option>
+                  <option
+                    v-for="spec in SPECIALIZATIONS"
+                    :key="spec.value"
+                    :value="spec.value"
+                  >
+                    {{ spec.label }}{{ userProfileSpecialization === spec.value ? ' ★' : '' }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -634,6 +653,7 @@ definePageMeta({
 
 const { data, signOut, refresh } = useAuth()
 import { useFetch } from '#app'
+import { SPECIALIZATIONS } from '~/constants/specializations'
 const router = useRouter()
 
 const userProfile = computed(() => {
@@ -690,6 +710,9 @@ const sortBy = ref('newest')
 const currentPageQuestionnaires = ref(1)
 const totalPagesQuestionnaires = ref(1)
 const limitQuestionnaires = 10
+// Specialization filter — default will be set from user's profile on mount
+const specializationFilter = ref('all')
+const userProfileSpecialization = ref<string | null>(null)
 
 // ─── Researcher Methods ───────────────────────────────────────────────────
 const loadResearcherStats = async () => {
@@ -793,7 +816,8 @@ const loadQuestionnairesList = async () => {
         search: searchQuery.value,
         status: statusFilter.value,
         page: currentPageQuestionnaires.value,
-        limit: limitQuestionnaires
+        limit: limitQuestionnaires,
+        specialization: specializationFilter.value === 'all' ? '' : specializationFilter.value
       }
     })
 
@@ -814,6 +838,12 @@ const loadQuestionnairesList = async () => {
   } finally {
     loadingQuestionnaires.value = false
   }
+}
+
+const setSpecializationFilter = (value: string) => {
+  specializationFilter.value = value
+  currentPageQuestionnaires.value = 1
+  loadQuestionnairesList()
 }
 
 let searchTimeout: NodeJS.Timeout
@@ -882,6 +912,20 @@ onMounted(async () => {
         stats.value.totalQuestionnairesAnswered = responseDashboardRespondent.stats.totalQuestionnairesAnswered
         stats.value.totalHonorEarned = responseDashboardRespondent.stats.totalHonorEarned
       }
+
+      // Fetch user's profile specialization to set as default filter
+      try {
+        const profileResponse = await $fetch<any>('/api/profile')
+        const profileSpecialization = profileResponse?.profile?.specialization || null
+        userProfileSpecialization.value = profileSpecialization
+        // Set the default specialization filter to user's profile specialization
+        if (profileSpecialization) {
+          specializationFilter.value = profileSpecialization
+        }
+      } catch (profileErr) {
+        console.warn('Could not load profile specialization:', profileErr)
+      }
+
       await loadQuestionnairesList()
     }
   } catch (e) {
@@ -953,7 +997,7 @@ onMounted(async () => {
 
 .filter-toolbar {
   position: relative;
-  z-index: 1050;
+  z-index: 99;
   border-radius: 16px;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.07);

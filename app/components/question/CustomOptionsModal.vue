@@ -242,7 +242,7 @@ function handleClose() {
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--qh-primary, #183153);
   color: white;
   border-radius: 50%;
   font-weight: bold;

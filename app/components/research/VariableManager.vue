@@ -1,7 +1,7 @@
 <template>
   <UiBaseCard title="Variabel Penelitian" :shadow="true">
     <template #header>
-      <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
         <h5 class="mb-0 fw-bold">
           <i class="bi bi-diagram-3 me-2"></i>
           Variabel Penelitian
@@ -176,7 +176,7 @@ const handleGenerateIndicators = async (variable: ResearchVariable) => {
       `,
       showCancelButton: true,
       confirmButtonText: 'Top Up Token',
-      confirmButtonColor: '#137A7F',
+      confirmButtonColor: '#183153',
       cancelButtonText: 'Batal'
     })
     if (result.isConfirmed) {
@@ -239,7 +239,7 @@ const handleGenerateIndicators = async (variable: ResearchVariable) => {
     },
     showCancelButton: true,
     confirmButtonText: 'Generate (Gunakan 5 Token)',
-    confirmButtonColor: '#137A7F',
+    confirmButtonColor: '#183153',
     cancelButtonText: 'Batal'
   })
 

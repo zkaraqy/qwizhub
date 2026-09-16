@@ -3,46 +3,47 @@
     <div class="topup-page">
 
       <!-- Page Header -->
-      <div class="page-header mb-4 fade-in">
+      <div class="hero-section-clean mb-4 fade-in">
         <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
           <div>
             <div class="d-flex align-items-center gap-2 mb-1">
-              <span class="header-icon">🤖</span>
               <span class="text-uppercase fw-bold small" style="color: #137A7F; letter-spacing: 0.08em; font-size: 0.72rem;">
-                AI Tokenisasi
+                AI TOKENISASI & PEMBAYARAN
               </span>
             </div>
-            <h1 class="page-title mb-1">Top Up Token AI</h1>
-            <p class="text-muted mb-0" style="font-size: 0.875rem;">
-              Token AI digunakan untuk generate kuisioner, pertanyaan, dan saran cerdas dari AI.
+            <h2 class="fw-bold mb-1" style="color: #0E3B43; letter-spacing: -0.02em;">Top Up Token AI</h2>
+            <p class="text-secondary small mb-0">
+              Token AI digunakan untuk generate kuesioner otomatis, evaluasi indikator, dan saran cerdas AI.
             </p>
           </div>
 
-          <!-- Current Balance Card -->
-          <div class="balance-card" :class="{ 'balance-card-low': isLowBalance, 'balance-card-empty': isEmptyBalance }">
-            <div class="balance-label">Saldo Token Anda</div>
-            <div class="balance-amount">
-              <span class="balance-icon">🪙</span>
-              <span class="balance-number" :class="{ 'count-up': balanceLoaded }">
-                {{ displayBalance }}
-              </span>
-              <span class="balance-unit">token</span>
+          <!-- Current Balance Card (Centered on mobile) -->
+          <div class="balance-card-wrapper w-100 w-md-auto d-flex justify-content-center justify-content-md-end">
+            <div class="balance-card" :class="{ 'balance-card-low': isLowBalance, 'balance-card-empty': isEmptyBalance }">
+              <div class="balance-label">Saldo Token Anda</div>
+              <div class="balance-amount">
+                <span class="balance-icon">🪙</span>
+                <span class="balance-number" :class="{ 'count-up': balanceLoaded }">
+                  {{ displayBalance }}
+                </span>
+                <span class="balance-unit">token</span>
+              </div>
+              <div v-if="isEmptyBalance" class="balance-warning">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>Saldo habis — pilih paket di bawah
+              </div>
+              <div v-else-if="isLowBalance" class="balance-warning">
+                <i class="bi bi-exclamation-circle me-1"></i>Saldo hampir habis
+              </div>
+              <button class="balance-refresh" @click="refreshBalance" :disabled="loading" title="Refresh saldo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16"
+                  :class="{ 'spin': loading }">
+                  <path fill-rule="evenodd"
+                    d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
+                  <path
+                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
+                </svg>
+              </button>
             </div>
-            <div v-if="isEmptyBalance" class="balance-warning">
-              <i class="bi bi-exclamation-triangle-fill me-1"></i>Saldo habis — pilih paket di bawah
-            </div>
-            <div v-else-if="isLowBalance" class="balance-warning">
-              <i class="bi bi-exclamation-circle me-1"></i>Saldo hampir habis
-            </div>
-            <button class="balance-refresh" @click="refreshBalance" :disabled="loading" title="Refresh saldo">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16"
-                :class="{ 'spin': loading }">
-                <path fill-rule="evenodd"
-                  d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
-                <path
-                  d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
-              </svg>
-            </button>
           </div>
         </div>
       </div>
@@ -51,22 +52,22 @@
       <div class="cost-info-row mb-4 fade-in stagger-1">
         <div class="cost-pill">
           <span class="cost-icon">⚡</span>
-          <span class="cost-label">Generate Kuisioner</span>
+          <span class="cost-label">Generate Kuisioner:</span>
           <span class="cost-value">10 token</span>
         </div>
         <div class="cost-pill">
           <span class="cost-icon">✨</span>
-          <span class="cost-label">Saran/Edit AI</span>
+          <span class="cost-label">Saran / Edit AI:</span>
           <span class="cost-value">5 token</span>
         </div>
         <div class="cost-pill">
           <span class="cost-icon">💡</span>
-          <span class="cost-label">Tambah Pertanyaan AI</span>
+          <span class="cost-label">Tambah Butir AI:</span>
           <span class="cost-value">5 token</span>
         </div>
         <div class="cost-pill">
           <span class="cost-icon">🎯</span>
-          <span class="cost-label">Generate Indikator Variabel</span>
+          <span class="cost-label">Indikator Variabel:</span>
           <span class="cost-value">1 token / item</span>
         </div>
       </div>
@@ -74,7 +75,7 @@
       <!-- Package Selection -->
       <div class="section-title mb-3 fade-in stagger-2">
         <h2 class="h5 fw-bold mb-0" style="color: #0E3B43;">Pilih Paket Top Up</h2>
-        <p class="text-muted small mb-0">Pilih paket yang sesuai kebutuhan riset Anda</p>
+        <p class="text-secondary small mb-0">Pilih paket yang sesuai dengan volume dan skala riset Anda</p>
       </div>
 
       <div class="packages-grid mb-5 fade-in stagger-2">
@@ -175,7 +176,7 @@
 
       <!-- Transaction History -->
       <div class="section-title mb-3 fade-in stagger-3">
-        <h2 class="h5 fw-bold mb-0" style="color: #0E3B43;">Riwayat Transaksi Token</h2>
+        <h2 class="h5 fw-bold mb-0" style="color: #183153;">Riwayat Transaksi Token</h2>
         <p class="text-muted small mb-0">Penggunaan dan pembelian token AI Anda</p>
       </div>
 
@@ -412,17 +413,12 @@ onMounted(async () => {
 <style scoped>
 /* ── Page Layout ─────────────────────────────────────────── */
 .topup-page {
-  max-width: 960px;
+  max-width: 1140px;
+  margin: 0 auto;
 }
 
-.page-title {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #0E3B43;
-}
-
-.header-icon {
-  font-size: 1.1rem;
+.hero-section-clean {
+  padding: 0.25rem 0 0.5rem 0;
 }
 
 /* ── Balance Card ─────────────────────────────────────────── */
@@ -432,8 +428,9 @@ onMounted(async () => {
   color: white;
   border-radius: 16px;
   padding: 18px 24px;
-  min-width: 200px;
-  box-shadow: 0 4px 24px rgba(14, 59, 67, 0.25);
+  min-width: 220px;
+  box-shadow: 0 4px 24px rgba(14, 59, 67, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   transition: all 0.3s ease;
 }
 
@@ -451,7 +448,7 @@ onMounted(async () => {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  opacity: 0.75;
+  opacity: 0.85;
   margin-bottom: 4px;
 }
 
@@ -472,12 +469,12 @@ onMounted(async () => {
 
 .balance-unit {
   font-size: 0.85rem;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .balance-warning {
   font-size: 0.7rem;
-  opacity: 0.9;
+  opacity: 0.95;
   margin-top: 4px;
 }
 
@@ -520,17 +517,17 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
+  background: #EBF5F3;
+  border: 1px solid rgba(19, 122, 127, 0.25);
   border-radius: 50px;
   padding: 6px 14px;
   font-size: 0.8rem;
-  color: #0369a1;
+  color: #137A7F;
 }
 
 .cost-icon { font-size: 0.9rem; }
 
-.cost-label { color: #475569; }
+.cost-label { color: #4B5563; font-weight: 500; }
 
 .cost-value {
   font-weight: 700;
@@ -545,23 +542,44 @@ onMounted(async () => {
 .packages-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .packages-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
   .packages-grid { grid-template-columns: 1fr; }
+  
+  .balance-card-wrapper {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 0.5rem;
+  }
+
+  .balance-card {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .cost-info-row {
+    justify-content: center;
+  }
 }
 
 .package-card {
   position: relative;
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 28px 22px 22px;
   cursor: pointer;
   transition: all 0.25s ease;
-  border: 2px solid transparent;
+  border: 1px solid #E2E8F0;
   text-align: center;
   background: #fff;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   overflow: hidden;
 }
 
@@ -573,24 +591,25 @@ onMounted(async () => {
 }
 
 .package-bronze::before { background: linear-gradient(90deg, #92400e, #d97706); }
-.package-silver::before { background: linear-gradient(90deg, #475569, #94a3b8); }
+.package-silver::before { background: linear-gradient(90deg, #137A7F, #218A61); }
 .package-gold::before   { background: linear-gradient(90deg, #a16207, #f59e0b); }
 
 .package-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 30px rgba(14, 59, 67, 0.08);
+  border-color: rgba(19, 122, 127, 0.35);
 }
 
 .package-card.selected {
-  border-color: #137A7F;
-  box-shadow: 0 8px 30px rgba(19, 122, 127, 0.2);
+  border-color: #0E3B43;
+  box-shadow: 0 8px 30px rgba(14, 59, 67, 0.15);
   transform: translateY(-4px);
 }
 
 .popular {
-  border-color: #475569;
-  background: linear-gradient(180deg, #f8faff 0%, #fff 100%);
-  box-shadow: 0 4px 24px rgba(71, 85, 105, 0.18);
+  border-color: #137A7F;
+  background: linear-gradient(180deg, #F8FAFA 0%, #fff 100%);
+  box-shadow: 0 4px 20px rgba(19, 122, 127, 0.12);
 }
 
 .popular-badge {
@@ -598,7 +617,7 @@ onMounted(async () => {
   top: -1px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(90deg, #475569, #94a3b8);
+  background: #137A7F;
   color: white;
   font-size: 0.65rem;
   font-weight: 700;
@@ -618,12 +637,12 @@ onMounted(async () => {
 }
 
 .package-bronze .pkg-tier { color: #92400e; }
-.package-silver .pkg-tier { color: #334155; }
+.package-silver .pkg-tier { color: #137A7F; }
 .package-gold   .pkg-tier { color: #a16207; }
 
 .pkg-description {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #66727C;
   margin-bottom: 16px;
 }
 
@@ -644,17 +663,18 @@ onMounted(async () => {
 
 .pkg-token-label {
   font-size: 0.9rem;
-  color: #64748b;
+  color: #66727C;
   font-weight: 600;
 }
 
 .pkg-usage {
   font-size: 0.72rem;
-  color: #94a3b8;
+  color: #66727C;
   margin-bottom: 14px;
   padding: 4px 10px;
-  background: #f8fafc;
+  background: #F8FAFA;
   border-radius: 6px;
+  border: 1px solid #E2E8F0;
 }
 
 .pkg-price {
@@ -666,7 +686,7 @@ onMounted(async () => {
 
 .pkg-btn {
   width: 100%;
-  border: 2px solid #0E3B43;
+  border: 1.5px solid #0E3B43;
   background: transparent;
   color: #0E3B43;
   font-weight: 700;
@@ -689,11 +709,11 @@ onMounted(async () => {
 }
 
 .pkg-btn-silver {
-  border-color: #334155;
-  color: #334155;
+  border-color: #137A7F;
+  color: #137A7F;
 }
 .pkg-btn-silver:hover:not(:disabled), .package-silver .pkg-btn-selected {
-  background: #334155 !important;
+  background: #137A7F !important;
   color: white !important;
 }
 
@@ -713,7 +733,7 @@ onMounted(async () => {
   background: #fff;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   border: 1px solid #E2E8F0;
 }
 
@@ -724,21 +744,22 @@ onMounted(async () => {
 }
 
 .tx-filter-btn {
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: #F8FAFA;
+  border: 1px solid #E2E8F0;
   border-radius: 8px;
-  padding: 5px 14px;
+  padding: 6px 16px;
   font-size: 0.8rem;
   font-weight: 500;
-  color: #64748b;
+  color: #66727C;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .tx-filter-btn.active, .tx-filter-btn:hover {
-  background: #0E3B43;
-  color: white;
-  border-color: #0E3B43;
+  background: #EBF5F3;
+  color: #137A7F;
+  border-color: rgba(19, 122, 127, 0.35);
+  font-weight: 600;
 }
 
 .tx-loading, .tx-empty {

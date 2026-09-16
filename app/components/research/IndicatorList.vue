@@ -1,13 +1,13 @@
 <template>
   <div class="indicator-list">
     <!-- Header with Actions -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-3">
       <h6 class="mb-0 fw-semibold">
         <i class="bi bi-list-check me-1"></i>
         Indikator ({{ indicators.length }})
       </h6>
       
-      <div class="d-flex gap-2">
+      <div class="d-flex flex-wrap gap-2 w-100 w-sm-auto justify-content-start justify-content-sm-end">
         <UiBaseButton
           v-if="hasPendingIndicators && !showForm"
           variant="success"
@@ -179,7 +179,7 @@ const handleGenerateAI = async () => {
       `,
       showCancelButton: true,
       confirmButtonText: 'Top Up Token',
-      confirmButtonColor: '#137A7F',
+      confirmButtonColor: '#183153',
       cancelButtonText: 'Batal'
     })
     if (result.isConfirmed) {
@@ -220,7 +220,7 @@ const handleGenerateAI = async () => {
     `,
     showCancelButton: true,
     confirmButtonText: 'Generate (Gunakan 5 Token)',
-    confirmButtonColor: '#137A7F',
+    confirmButtonColor: '#183153',
     cancelButtonText: 'Batal',
     didOpen: () => {
       const range = document.getElementById('count-range') as HTMLInputElement

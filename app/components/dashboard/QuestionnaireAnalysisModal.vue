@@ -296,13 +296,13 @@ const getProgressColor = (percentage: number) => {
 
 <style scoped>
 .modal-analysis-backdrop {
-  background: rgba(14, 59, 67, 0.45);
+  background: rgba(24, 49, 83, 0.45);
   backdrop-filter: blur(4px);
   z-index: 1055;
 }
 
 .analysis-icon {
-  background: #0E3B43 !important;
+  background: #183153 !important;
 }
 
 .question-analysis-card {

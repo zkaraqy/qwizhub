@@ -1,19 +1,21 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="projects">
-    <!-- Hero Header -->
-    <div class="hero-section fade-in mb-2">
-      <div class="position-relative" style="z-index: 1;">
-        <div class="d-flex align-items-center mb-3">
-          <button class="btn btn-light me-3" @click="router.push('/projects')">
-            <i class="bi bi-arrow-left"></i>
-          </button>
-          <div>
-            <h1 class="display-6 fw-bold mb-1">{{ project?.title || 'Loading...' }}</h1>
-            <p class="lead mb-0 text-white opacity-90">Manage questionnaires for this research project</p>
-          </div>
+    <!-- Hero Header - Compact & Transparent -->
+    <div class="hero-section-transparent fade-in mb-3">
+      <!-- Back Button on Top -->
+      <div class="mb-2">
+        <button class="btn btn-light border btn-sm px-2 py-1 back-btn" @click="router.push('/projects')" title="Kembali ke Proyek">
+          <i class="bi bi-arrow-left fs-6"></i>
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div class="flex-grow-1" style="min-width: 0;">
+          <h3 class="fw-bold mb-1 text-dark text-break">{{ project?.title || 'Loading...' }}</h3>
+          <p class="mb-0 text-muted small">Manage questionnaires for this research project</p>
         </div>
-        <button class="btn btn-light btn-lg px-4 fw-semibold shadow-sm" @click="createQuestionnaire">
-          <i class="bi bi-plus-lg me-2"></i>Create Questionnaire
+        <button class="btn bg-primary text-white btn-sm px-3 fw-semibold hero-action-btn flex-shrink-0" @click="createQuestionnaire">
+          <i class="bi bi-plus-lg me-1"></i>Create Questionnaire
         </button>
       </div>
     </div>
@@ -27,7 +29,7 @@
         <i class="bi bi-file-earmark-text display-1 text-muted opacity-25 mb-4 d-block"></i>
         <h4 class="fw-bold mb-3">No Questionnaires Yet</h4>
         <p class="text-muted mb-4">Create your first questionnaire to start collecting responses</p>
-        <button class="btn btn-gradient btn-lg" @click="createQuestionnaire">
+        <button class="btn bg-primary text-white btn-lg px-4" @click="createQuestionnaire">
           <i class="bi bi-plus-circle me-2"></i>Create Questionnaire
         </button>
       </div>
@@ -320,6 +322,59 @@ function formatDate(dateString: string) {
 }
 </script>
 <style scoped>
+/* Hero Section - Transparent Glass Effect */
+.hero-section-transparent {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(228, 233, 231, 0.8);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.hero-section-transparent:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border-color: rgba(42, 127, 121, 0.3);
+}
+
+.hero-section-transparent h3 {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: #17212B;
+}
+
+.hero-section-transparent p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #66727C;
+}
+
+@media (max-width: 768px) {
+  .hero-section-transparent {
+    padding: 1rem 1.25rem;
+  }
+  
+  .hero-section-transparent h3 {
+    font-size: 1.25rem;
+  }
+  
+  .hero-section-transparent p {
+    font-size: 0.8125rem;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .hero-section-transparent .back-btn {
+    width: auto !important;
+  }
+
+  .hero-section-transparent .hero-action-btn {
+    width: 100%;
+  }
+}
+
 .rounded-4 {
   border-radius: 1rem !important;
 }

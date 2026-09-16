@@ -1,21 +1,33 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="dashboard" @logout="handleSignOut">
-    <!-- Hero Welcome Section - Compact & Professional -->
-    <div v-if="userProfile?.role !== 'admin'" class="hero-section hero-section-compact fade-in mb-3">
-      <div class="position-relative d-flex justify-content-between align-items-center flex-wrap gap-2" style="z-index: 1;">
+    <!-- Hero Welcome Section - Standardized SaaS Header -->
+    <div v-if="userProfile?.role !== 'admin'" class="hero-section-clean fade-in mb-4">
+      <div class="d-flex justify-content-between align-items-start align-items-md-center flex-wrap gap-3">
         <div>
-          <h3 class="fw-bold mb-1 text-black">Welcome back, {{ userProfile?.name || 'User' }}!</h3>
-          <p v-if="userProfile?.role === 'peneliti'" class="mb-0 text-black opacity-90 small">
-            Pusat analitik & pengelolaan seluruh kuesioner dan respons penelitian Anda.
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="text-uppercase fw-bold small" style="color: #137A7F; letter-spacing: 0.08em; font-size: 0.72rem;">
+              PANEL KONTROL {{ userProfile?.role === 'peneliti' ? 'PENELITI' : 'RESPONDEN' }}
+            </span>
+          </div>
+          <h2 class="fw-bold mb-1" style="color: #0E3B43; letter-spacing: -0.02em;">
+            Selamat Datang Kembali, {{ userProfile?.name || 'User' }} 👋
+          </h2>
+          <p v-if="userProfile?.role === 'peneliti'" class="mb-0 text-secondary small">
+            Pusat analitik, evaluasi AI, dan pemantauan respons penelitian Anda secara real-time.
           </p>
-          <p v-else class="mb-0 text-black opacity-90 small">
-            Temukan kuesioner menarik dan dapatkan honor setelah mengisi survei.
+          <p v-else class="mb-0 text-secondary small">
+            Temukan kuesioner menarik, isi survei, dan dapatkan honor penelitian langsung ke dompet Anda.
           </p>
         </div>
 
         <div v-if="userProfile?.role === 'peneliti'" class="d-flex gap-2">
-          <button class="btn btn-light btn-sm px-3 fw-semibold shadow-sm" @click="handleCreateSurvey">
-            <i class="bi bi-plus-lg me-1"></i>Proyek Baru
+          <button 
+            class="btn text-white px-3.5 py-2 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2" 
+            style="background-color: #0E3B43;"
+            @click="handleCreateSurvey"
+          >
+            <i class="bi bi-plus-lg"></i>
+            <span>Proyek Baru</span>
           </button>
         </div>
       </div>
@@ -30,12 +42,12 @@
     <!-- ========================================================================= -->
     <template v-if="userProfile?.role === 'peneliti'">
       <!-- Interactive Filter Toolbar -->
-      <div class="filter-toolbar glass-card p-3 mb-4 fade-in stagger-1">
+      <div class="filter-toolbar card border rounded-4 shadow-sm p-3 mb-4 fade-in stagger-1" style="border-color: #E2E8F0;">
         <div class="row g-2 align-items-center">
           <!-- Filter Kuesioner Dropdown -->
           <div class="col-lg-3 col-md-6">
             <label class="filter-label text-muted small fw-semibold mb-1 d-block">
-              <i class="bi bi-ui-checks-grid me-1"></i>Filter Kuesioner
+              <i class="bi bi-ui-checks-grid me-1" style="color: #137A7F;"></i>Filter Kuesioner
             </label>
             <select v-model="selectedQuestionnaireFilter" class="form-select form-select-sm rounded-3" @change="onFilterChange">
               <option value="all">Semua Kuesioner ({{ researcherQuestionnaires.length }})</option>
@@ -48,7 +60,7 @@
           <!-- Filter Status Dropdown -->
           <div class="col-lg-2 col-md-6 col-6">
             <label class="filter-label text-muted small fw-semibold mb-1 d-block">
-              <i class="bi bi-funnel me-1"></i>Status
+              <i class="bi bi-funnel me-1" style="color: #137A7F;"></i>Status
             </label>
             <select v-model="selectedStatusFilter" class="form-select form-select-sm rounded-3" @change="onFilterChange">
               <option value="all">Semua Status</option>
@@ -61,7 +73,7 @@
           <!-- Filter Rentang Tanggal -->
           <div class="col-lg-2 col-md-6 col-6">
             <label class="filter-label text-muted small fw-semibold mb-1 d-block">
-              <i class="bi bi-calendar3 me-1"></i>Rentang Waktu
+              <i class="bi bi-calendar3 me-1" style="color: #137A7F;"></i>Rentang Waktu
             </label>
             <select v-model="selectedDateRangeFilter" class="form-select form-select-sm rounded-3" @change="onFilterChange">
               <option value="all">Semua Waktu</option>
@@ -73,7 +85,7 @@
           <!-- Search Box -->
           <div class="col-lg-3 col-md-6">
             <label class="filter-label text-muted small fw-semibold mb-1 d-block">
-              <i class="bi bi-search me-1"></i>Cari Kuesioner / Respons
+              <i class="bi bi-search me-1" style="color: #137A7F;"></i>Cari Kuesioner / Respons
             </label>
             <div class="input-group input-group-sm">
               <input
@@ -95,7 +107,8 @@
               <label class="filter-label text-muted small fw-semibold mb-1 d-block d-none d-lg-block">&nbsp;</label>
               <div class="dropdown w-100">
                 <button
-                  class="btn btn-sm text-white bg-primary w-100 dropdown-toggle rounded-3 d-flex align-items-center justify-content-center gap-1"
+                  class="btn btn-sm text-white w-100 dropdown-toggle rounded-3 d-flex align-items-center justify-content-center gap-1 shadow-sm"
+                  style="background-color: #0E3B43;"
                   type="button"
                   data-bs-toggle="dropdown"
                   :disabled="globalExporting || !hasResponses"
@@ -104,9 +117,9 @@
                   <i v-else class="bi bi-download me-1"></i>
                   <span>Export Data</span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                <ul class="dropdown-menu dropdown-menu-end shadow border rounded-3" style="border-color: #E2E8F0;">
                   <li>
-                    <h6 class="dropdown-header text-uppercase small" style="font-size: 0.7rem;">Pilih Format File</h6>
+                    <h6 class="dropdown-header text-uppercase small" style="font-size: 0.7rem; color: #137A7F;">Pilih Format File</h6>
                   </li>
                   <li>
                     <button class="dropdown-item d-flex align-items-center gap-2 py-2" @click="exportData('excel')">
@@ -233,17 +246,18 @@
       <!-- Section 2: Analisis Berdasarkan Kuesioner -->
       <div class="row mb-4 fade-in stagger-3">
         <div class="col-12">
-          <div class="card glass-card border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card border rounded-4 shadow-sm bg-white overflow-hidden" style="border-color: #E2E8F0;">
             <!-- Header -->
-            <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center p-4">
+            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center p-3.5 p-md-4" style="border-color: #E2E8F0;">
               <div>
                 <h5 class="fw-bold mb-1 text-dark">
-                  <i class="bi bi-clipboard-data-fill text-primary me-2"></i>Daftar & Analisis Kuesioner
+                  <i class="bi bi-clipboard-data-fill me-2" style="color: #137A7F;"></i>Daftar & Analisis Kuesioner
                 </h5>
                 <p class="text-muted small mb-0">Kelola dan telusuri analisis komprehensif setiap kuesioner Anda</p>
               </div>
-              <button class="btn btn-sm btn-outline-primary rounded-pill px-3" @click="loadResearcherData">
-                <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+              <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 d-flex align-items-center gap-1.5" @click="loadResearcherData">
+                <i class="bi bi-arrow-clockwise"></i>
+                <span>Refresh</span>
               </button>
             </div>
 
@@ -373,12 +387,12 @@
       <!-- Section 3: Respons Masuk Terbaru (Recent Responses) -->
       <div class="row mb-4 fade-in stagger-3" v-if="researcherStats?.recentResponses && researcherStats.recentResponses.length > 0">
         <div class="col-12">
-          <div class="card glass-card border-0 shadow-sm rounded-4 overflow-hidden">
-            <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center p-4">
+          <div class="card border rounded-4 shadow-sm bg-white overflow-hidden" style="border-color: #E2E8F0;">
+            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center p-3.5 p-md-4" style="border-color: #E2E8F0;">
               <h5 class="fw-bold mb-0 text-dark">
-                <i class="bi bi-clock-history me-2 text-primary"></i>Respons Masuk Terbaru
+                <i class="bi bi-clock-history me-2" style="color: #137A7F;"></i>Respons Masuk Terbaru
               </h5>
-              <span class="badge bg-light text-muted border px-2 py-1">
+              <span class="badge rounded-pill px-2.5 py-1 fw-medium" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.75rem;">
                 {{ researcherStats.recentResponses.length }} respons terakhir
               </span>
             </div>
@@ -405,10 +419,10 @@
                       <small class="text-muted">{{ r.answersCount }} pertanyaan terisi</small>
                     </td>
                     <td>
-                      <span v-if="r.status === 'completed'" class="badge bg-success-subtle text-success border border-success-subtle">
+                      <span v-if="r.status === 'completed'" class="badge rounded-pill px-2.5 py-1" style="background-color: #DEF7EC; color: #0E9F6E;">
                         Selesai
                       </span>
-                      <span v-else class="badge bg-warning-subtle text-warning border border-warning-subtle">
+                      <span v-else class="badge rounded-pill px-2.5 py-1" style="background-color: #FEF3C7; color: #D97706;">
                         Sedang Mengisi
                       </span>
                     </td>
@@ -435,58 +449,34 @@
     </template>
 
     <!-- ========================================================================= -->
-    <!-- ─── RESPONDEN DASHBOARD SECTION (KEPT INTACT) ─────────────────────────── -->
+    <!-- ─── RESPONDEN DASHBOARD SECTION (STANDARDIZED) ────────────────────────── -->
     <!-- ========================================================================= -->
     <template v-else-if="userProfile?.role === 'responden'">
       <!-- Stats Cards -->
       <div class="row g-4 mb-4">
         <div class="col-md-6 col-sm-12 fade-in stagger-1">
-          <div class="stat-card">
-            <div class="row">
-              <div class="col gap-2 align-items-center" style="max-width: max-content;">
-                <div class="stat-icon primary m-0">
-                  <i class="bi bi-card-checklist"></i>
-                </div>
+          <div class="card border rounded-4 shadow-sm bg-white p-4" style="border-color: #E2E8F0;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="stat-icon teal">
+                <i class="bi bi-card-checklist"></i>
               </div>
-              <div class="col d-flex align-items-center">
-                <div class="text-muted fw-semibold text-uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">
-                  Total Questionnaires Answered</div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col" style="max-width: max-content;">
-                <div class="stat-icon primary m-0 opacity-0">
-                  <i class="bi bi-card-checklist"></i>
-                </div>
-              </div>
-              <div class="col">
-                <h2 class="fw-bold mb-0 display-6">{{ stats.totalQuestionnairesAnswered }}</h2>
+              <div>
+                <div class="stat-sublabel text-muted text-uppercase mb-1">Total Kuesioner Diisi</div>
+                <h2 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.02em;">{{ stats.totalQuestionnairesAnswered }}</h2>
               </div>
             </div>
           </div>
         </div>
 
         <div class="col-md-6 col-sm-12 fade-in stagger-1">
-          <div class="stat-card">
-            <div class="row">
-              <div class="col gap-2 align-items-center" style="max-width: max-content;">
-                <div class="stat-icon success m-0">
-                  <i class="bi bi-cash-stack"></i>
-                </div>
+          <div class="card border rounded-4 shadow-sm bg-white p-4" style="border-color: #E2E8F0;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="stat-icon success">
+                <i class="bi bi-cash-stack"></i>
               </div>
-              <div class="col d-flex align-items-center">
-                <div class="text-muted fw-semibold text-uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">
-                  Total Honor Earned</div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col" style="max-width: max-content;">
-                <div class="stat-icon primary m-0 opacity-0">
-                  <i class="bi bi-cash-stack"></i>
-                </div>
-              </div>
-              <div class="col">
-                <h2 class="fw-bold mb-0 display-6">Rp {{ formatCurrency(stats.totalHonorEarned) }}</h2>
+              <div>
+                <div class="stat-sublabel text-muted text-uppercase mb-1">Total Honor Diperoleh</div>
+                <h2 class="fw-bold mb-0 text-success" style="letter-spacing: -0.02em;">Rp {{ formatCurrency(stats.totalHonorEarned) }}</h2>
               </div>
             </div>
           </div>
@@ -496,12 +486,12 @@
       <!-- Kuesioner Tersedia (Responden Only) -->
       <div class="row mb-4 fade-in stagger-2">
         <div class="col-12">
-          <div class="glass-card p-4">
+          <div class="card border rounded-4 shadow-sm bg-white p-4" style="border-color: #E2E8F0;">
             <div class="d-flex justify-content-between align-items-center mb-4">
-              <h5 class="fw-bold mb-0">
-                <i class="bi bi-clipboard-check text-primary me-2"></i>Kuesioner Tersedia
+              <h5 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-clipboard-check me-2" style="color: #137A7F;"></i>Kuesioner Tersedia
               </h5>
-              <NuxtLink to="/questionnaires" class="btn btn-sm btn-outline-primary">
+              <NuxtLink to="/questionnaires" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
                 Lihat Semua
               </NuxtLink>
             </div>
@@ -645,6 +635,9 @@
 </template>
 
 <script lang="ts" setup>
+import { useFetch } from '#app'
+import { SPECIALIZATIONS } from '~/constants/specializations'
+
 definePageMeta({
   auth: {
     unauthenticatedOnly: false
@@ -652,8 +645,6 @@ definePageMeta({
 })
 
 const { data, signOut, refresh } = useAuth()
-import { useFetch } from '#app'
-import { SPECIALIZATIONS } from '~/constants/specializations'
 const router = useRouter()
 
 const userProfile = computed(() => {
@@ -935,73 +926,17 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Compact Hero Section - Navy + Teal Theme */
-.hero-section-compact {
-  background: transparent !important;
-  padding: 1.25rem 1.5rem !important;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-section-compact::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(234, 245, 243, 0.15) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.hero-section-compact h3 {
-  font-size: 1.5rem;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
-}
-
-.hero-section-compact p {
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-
-.hero-section-compact .btn-light {
-  background-color: #ffffff;
-  border-color: #ffffff;
-  color: #183153;
-  transition: all 0.3s ease;
-}
-
-.hero-section-compact .btn-light:hover {
-  background-color: #EAF5F3;
-  border-color: #EAF5F3;
-  color: #2A7F79;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(42, 127, 121, 0.25);
-}
-
-@media (max-width: 768px) {
-  .hero-section-compact {
-    padding: 1rem 1.25rem !important;
-  }
-  
-  .hero-section-compact h3 {
-    font-size: 1.25rem;
-  }
-  
-  .hero-section-compact p {
-    font-size: 0.8125rem;
-  }
+.hero-section-clean {
+  padding: 0.25rem 0 0.5rem 0;
 }
 
 .filter-toolbar {
   position: relative;
-  z-index: 99;
   border-radius: 16px;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  z-index: 1050;
 }
 
 .filter-toolbar .dropdown-menu {
@@ -1015,21 +950,23 @@ onMounted(async () => {
 .stat-card {
   background: #ffffff;
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   height: 100%;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(14, 59, 67, 0.06);
+  border-color: rgba(19, 122, 127, 0.3);
 }
 
 .stat-sublabel {
   font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: #66727C;
 }
 
 .stat-footnote {
@@ -1037,24 +974,24 @@ onMounted(async () => {
 }
 
 .stat-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
 }
 
-.stat-icon.primary { background: rgba(14, 59, 67, 0.12); color: #0E3B43; }
-.stat-icon.success { background: rgba(40, 167, 69, 0.12); color: #28a745; }
-.stat-icon.info { background: rgba(23, 162, 184, 0.12); color: #17a2b8; }
-.stat-icon.warning { background: rgba(253, 126, 20, 0.12); color: #fd7e14; }
-.stat-icon.purple { background: rgba(111, 66, 193, 0.12); color: #6f42c1; }
-.stat-icon.teal { background: rgba(32, 201, 151, 0.12); color: #20c997; }
+.stat-icon.primary { background: #EBF5F3; color: #0E3B43; }
+.stat-icon.success { background: #DEF7EC; color: #0E9F6E; }
+.stat-icon.info { background: #EBF5F3; color: #137A7F; }
+.stat-icon.warning { background: #FEF3C7; color: #D97706; }
+.stat-icon.purple { background: #EDE9FE; color: #6D28D9; }
+.stat-icon.teal { background: #EBF5F3; color: #137A7F; }
 
-.text-purple { color: #6f42c1 !important; }
-.text-teal { color: #20c997 !important; }
+.text-purple { color: #6D28D9 !important; }
+.text-teal { color: #137A7F !important; }
 
 .dropdown-item:active {
   background-color: #0E3B43;

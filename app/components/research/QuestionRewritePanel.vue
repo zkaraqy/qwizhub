@@ -229,7 +229,7 @@ const handleApply = async (suggestion: RewriteSuggestion) => {
     showCancelButton: true,
     confirmButtonText: 'Ya, Gunakan',
     cancelButtonText: 'Batal',
-    confirmButtonColor: '#198754',
+    confirmButtonColor: '#183153',
     width: '600px'
   })
 
@@ -244,7 +244,7 @@ const handleApply = async (suggestion: RewriteSuggestion) => {
   background: #f8f9fa;
   border-radius: 0.25rem;
   padding: 0.75rem;
-  border-left: 3px solid #0d6efd;
+  border-left: 3px solid #183153;
 }
 
 .options-preview ul {
@@ -262,7 +262,7 @@ const handleApply = async (suggestion: RewriteSuggestion) => {
 
 .rewrite-card:hover {
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  border-color: #0d6efd;
+  border-color: #183153;
 }
 
 .rationale {

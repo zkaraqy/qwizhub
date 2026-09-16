@@ -6,27 +6,27 @@
 /* ===== CSS Variables ===== */
 :root {
   /* Gradient Colors */
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  --gradient-info: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --gradient-warning: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --gradient-primary: linear-gradient(135deg, #183153 0%, #10243D 100%);
+  --gradient-success: linear-gradient(135deg, #218A61 0%, #2ecc71 100%);
+  --gradient-info: linear-gradient(135deg, #2A7F79 0%, #1F6662 100%);
+  --gradient-warning: linear-gradient(135deg, #C88A28 0%, #e69500 100%);
+  --gradient-danger: linear-gradient(135deg, #C84B4B 0%, #a93232 100%);
   
   /* Glass-morphism */
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-bg-dark: rgba(255, 255, 255, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-bg-dark: rgba(255, 255, 255, 0.75);
+  --glass-border: #E4E9E7;
+  --glass-shadow: 0 8px 32px 0 rgba(24, 49, 83, 0.06);
   
   /* Shadows */
-  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.08);
-  --shadow-medium: 0 12px 48px rgba(0, 0, 0, 0.12);
-  --shadow-hover: 0 16px 64px rgba(0, 0, 0, 0.15);
-  --shadow-glow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.07);
+  --shadow-hover: 0 12px 40px rgba(24, 49, 83, 0.08);
+  --shadow-glow: 0 8px 24px rgba(24, 49, 83, 0.22);
   
   /* Background */
-  --bg-gradient: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
-  --bg-pattern: radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.05) 0%, transparent 50%);
+  --bg-gradient: linear-gradient(180deg, #FAFBFA 0%, #FAFBFA 100%);
+  --bg-pattern: none;
   
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -147,12 +147,19 @@ body::before {
 }
 
 .btn-primary {
-  background: var(--gradient-primary);
-  border: none;
+  background-color: var(--qh-primary, #183153) !important;
+  background-image: none !important;
+  border-color: var(--qh-primary, #183153) !important;
+  color: #ffffff !important;
 }
 
-.btn-primary:hover {
-  box-shadow: var(--shadow-glow);
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--qh-primary-dark, #10243D) !important;
+  background-image: none !important;
+  border-color: var(--qh-primary-dark, #10243D) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(24, 49, 83, 0.3) !important;
 }
 
 /* ===== Stat Cards ===== */
@@ -201,23 +208,23 @@ body::before {
 }
 
 .stat-icon.primary {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-  color: #667eea;
+  background: rgba(24, 49, 83, 0.1);
+  color: #183153;
 }
 
 .stat-icon.success {
-  background: linear-gradient(135deg, rgba(17, 153, 142, 0.1) 0%, rgba(56, 239, 125, 0.1) 100%);
-  color: #11998e;
+  background: rgba(33, 138, 97, 0.12);
+  color: #218A61;
 }
 
 .stat-icon.info {
-  background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
-  color: #4facfe;
+  background: #EAF5F3;
+  color: #2A7F79;
 }
 
 .stat-icon.warning {
-  background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%);
-  color: #f093fb;
+  background: rgba(200, 138, 40, 0.12);
+  color: #C88A28;
 }
 
 /* ===== Project Cards ===== */
@@ -366,30 +373,30 @@ body::before {
 }
 
 .table-glass thead {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  background: rgba(24, 49, 83, 0.04);
 }
 
 .table-glass tbody tr {
   transition: all var(--transition-fast);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--qh-border, #E4E9E7);
 }
 
 .table-glass tbody tr:hover {
-  background: rgba(102, 126, 234, 0.03);
-  transform: scale(1.01);
+  background: rgba(42, 127, 121, 0.03);
+  transform: scale(1.005);
 }
 
 /* ===== Form Enhancements ===== */
 .form-control, .form-select {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--qh-border, #E4E9E7);
   padding: 0.75rem 1rem;
   transition: all var(--transition-base);
 }
 
 .form-control:focus, .form-select:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--qh-accent, #2A7F79);
+  box-shadow: 0 0 0 3px rgba(42, 127, 121, 0.15);
   transform: translateY(-1px);
 }
 

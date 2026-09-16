@@ -119,7 +119,7 @@ watch(() => reordering.value, (val) => {
 .ghost {
   opacity: 0.5;
   background: #f8f9fa;
-  border: 2px dashed #0d6efd;
+  border: 2px dashed #183153;
 }
 
 /* Element being dragged */

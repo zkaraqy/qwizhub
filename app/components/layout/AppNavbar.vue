@@ -1,63 +1,60 @@
 <template>
-  <nav :class="navbarClasses">
+  <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top py-2.5" id="main-app-navbar">
     <div :class="containerClass">
-      <NuxtLink :to="variant === 'public' ? '/' : '/dashboard'" class="navbar-brand fw-bold" :class="brandClass">
-        <span class="fs-4">QwizHub</span>
+      <!-- Brand Logo with AI Research Badge -->
+      <NuxtLink :to="variant === 'public' ? '/' : '/dashboard'" class="navbar-brand fw-bold fs-4 d-flex align-items-center gap-2" style="color: #0E3B43;">
+        <span>QwizHub</span>
+        <span class="badge rounded-pill py-1 px-2 fw-medium" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.65rem;">
+          AI Research
+        </span>
       </NuxtLink>
       
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto align-items-center">
+        <ul class="navbar-nav ms-auto align-items-center gap-1 gap-lg-2">
           <!-- Public Navigation -->
           <template v-if="variant === 'public' && !user">
-            <li class="nav-item me-2">
-              <NuxtLink to="/login" class="btn btn-outline-primary">Login</NuxtLink>
+            <li class="nav-item">
+              <NuxtLink to="/login" class="btn btn-outline-secondary px-3 py-1.5 fw-semibold rounded-3 bg-white" style="border-color: #D1D9D6; color: #17212B;">Login</NuxtLink>
             </li>
             <li class="nav-item">
-              <NuxtLink to="/register" class="btn btn-primary">Get Started</NuxtLink>
+              <NuxtLink to="/register" class="btn text-white px-3 py-1.5 fw-semibold rounded-3 shadow-sm" style="background-color: #0E3B43;">Get Started</NuxtLink>
             </li>
           </template>
 
           <!-- Private Navigation -->
           <template v-if="variant === 'private' && user">
-            <!-- AI Token Balance Badge -->
-            <li v-if="user.role === 'responden'" class="nav-item me-2 d-md-none">
-              <NuxtLink
-                to="/questionnaires"
-                class="nav-link"
-              >
-                <span>My Surveys</span>
+            <!-- Mobile Navigation Links -->
+            <li v-if="user.role === 'responden'" class="nav-item d-lg-none w-100">
+              <NuxtLink to="/questionnaires" class="nav-link py-2 text-secondary fw-semibold">
+                <i class="bi bi-clipboard-check me-2"></i>My Surveys
               </NuxtLink>
             </li>
             <template v-if="user.role === 'peneliti'">
-              <li  class="nav-item me-2 d-md-none">
-                <NuxtLink
-                  to="/projects"
-                  class="nav-link"
-                >
-                  <span>My Projects</span>
+              <li class="nav-item d-lg-none w-100">
+                <NuxtLink to="/projects" class="nav-link py-2 text-secondary fw-semibold">
+                  <i class="bi bi-folder me-2"></i>My Projects
                 </NuxtLink>
               </li>
-              <li  class="nav-item me-2 d-md-none">
-                <NuxtLink
-                  to="/payments"
-                  class="nav-link"
-                >
-                  <span>Top Up Token AI</span>
+              <li class="nav-item d-lg-none w-100">
+                <NuxtLink to="/payments" class="nav-link py-2 text-secondary fw-semibold">
+                  <i class="bi bi-coin me-2"></i>Top Up Token AI
                 </NuxtLink>
               </li>
-              <li  class="nav-item me-2">
+              
+              <!-- Desktop Token Pill -->
+              <li class="nav-item me-2">
                 <NuxtLink
                   to="/payments"
-                  class="ai-token-badge d-flex align-items-center gap-1 text-decoration-none rounded-pill px-3 py-1"
+                  class="ai-token-badge d-flex align-items-center gap-1.5 text-decoration-none rounded-pill px-3 py-1.5"
                   :class="isLowBalance ? 'token-badge-low' : 'token-badge-ok'"
                   title="Saldo Token AI — Klik untuk Top Up"
                 >
                   <span class="token-icon">🪙</span>
-                  <span class="token-balance-text fw-semibold">
+                  <span class="token-balance-text fw-bold">
                     {{ tokenLoading ? '...' : tokenBalance }}
                   </span>
                   <span class="token-label">token</span>
@@ -71,30 +68,71 @@
           <template v-if="user">
             <li class="nav-item dropdown">
               <a 
-                class="nav-link dropdown-toggle d-flex align-items-center" 
+                class="nav-link dropdown-toggle d-flex align-items-center gap-2 py-1 px-2 rounded-3 text-decoration-none" 
                 href="#" 
                 id="navbarDropdown" 
                 role="button" 
                 data-bs-toggle="dropdown"
+                style="color: #17212B;"
               >
                 <img 
                   v-if="user.image" 
                   :src="user.image" 
-                  class="rounded-circle me-2" 
+                  class="rounded-circle border" 
                   width="32" 
                   height="32" 
                   alt="Profile"
+                  style="border-color: #E2E8F0; object-fit: cover;"
                 >
-                <span>{{ user.name }}</span>
+                <div 
+                  v-else 
+                  class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                  style="width: 32px; height: 32px; font-size: 0.8rem; background-color: #0E3B43;"
+                >
+                  {{ (user.name || 'U').charAt(0).toUpperCase() }}
+                </div>
+                <span class="fw-semibold small d-none d-sm-inline" style="color: #17212B;">{{ user.name }}</span>
               </a>
-              <ul class="dropdown-menu dropdown-menu-end" style="z-index: 100 !important;">
-                <li><NuxtLink to="/dashboard" class="dropdown-item">Dashboard</NuxtLink></li>
-                <li><NuxtLink to="/profile" class="dropdown-item">Profile</NuxtLink></li>
-                <li v-if="variant === 'private'"><NuxtLink to="/" class="dropdown-item">Home</NuxtLink></li>
-                <li><hr class="dropdown-divider"></li>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border p-1" style="border-color: #E2E8F0; min-width: 220px;">
+                <li class="px-3 py-2 border-bottom mb-1 bg-light rounded-top">
+                  <div class="fw-bold text-dark small text-truncate">{{ user.name }}</div>
+                  <div class="text-secondary" style="font-size: 0.75rem;">{{ user.email || (user.role === 'peneliti' ? 'Peneliti' : 'Responden') }}</div>
+                </li>
                 <li>
-                  <a class="dropdown-item text-danger" href="#" @click.prevent="handleLogout">
-                    Logout
+                  <NuxtLink to="/dashboard" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
+                    <i class="bi bi-speedometer2 text-secondary"></i>
+                    <span>Dashboard</span>
+                  </NuxtLink>
+                </li>
+                <li v-if="user.role === 'peneliti'">
+                  <NuxtLink to="/projects" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
+                    <i class="bi bi-folder text-secondary"></i>
+                    <span>My Projects</span>
+                  </NuxtLink>
+                </li>
+                <li v-if="user.role === 'peneliti'">
+                  <NuxtLink to="/payments" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
+                    <i class="bi bi-coin text-secondary"></i>
+                    <span>Top Up Token AI</span>
+                  </NuxtLink>
+                </li>
+                <li>
+                  <NuxtLink to="/profile" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
+                    <i class="bi bi-person text-secondary"></i>
+                    <span>Profile</span>
+                  </NuxtLink>
+                </li>
+                <li v-if="variant === 'private'">
+                  <NuxtLink to="/" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
+                    <i class="bi bi-globe text-secondary"></i>
+                    <span>Beranda Publik</span>
+                  </NuxtLink>
+                </li>
+                <li><hr class="dropdown-divider my-1"></li>
+                <li>
+                  <a class="dropdown-item text-danger py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small" href="#" @click.prevent="handleLogout">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
                   </a>
                 </li>
               </ul>
@@ -131,24 +169,8 @@ const emit = defineEmits<{
   logout: []
 }>()
 
-const navbarClasses = computed(() => {
-  const classes = ['navbar', 'navbar-expand-lg', 'shadow-sm']
-  
-  if (props.variant === 'public') {
-    classes.push('navbar-light', 'bg-white')
-  } else {
-    classes.push('navbar-dark', 'bg-primary')
-  }
-  
-  return classes.join(' ')
-})
-
 const containerClass = computed(() => {
-  return props.variant === 'public' ? 'container' : 'container-fluid'
-})
-
-const brandClass = computed(() => {
-  return props.variant === 'public' ? 'text-primary' : ''
+  return props.variant === 'public' ? 'container' : 'container-fluid px-3 px-lg-4'
 })
 
 const { balance: tokenBalance, loading: tokenLoading, isLowBalance, fetchBalance } = useAITokens()
@@ -170,51 +192,53 @@ onMounted(() => {
 }
 
 .navbar-brand:hover {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* AI Token Badge */
 .ai-token-badge {
   font-size: 0.78rem;
   transition: all 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .token-badge-ok {
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.95);
+  background: #EBF5F3;
+  color: #137A7F;
+  border: 1px solid rgba(19, 122, 127, 0.25);
 }
 
 .token-badge-ok:hover {
-  background: rgba(255, 255, 255, 0.22);
-  color: #fff;
+  background: #def0ec;
+  color: #0E3B43;
 }
 
 .token-badge-low {
-  background: rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
-  border-color: rgba(239, 68, 68, 0.4);
+  background: #FEE2E2;
+  color: #DC2626;
+  border: 1px solid rgba(220, 38, 38, 0.3);
   animation: badge-pulse 2s infinite;
 }
 
 .token-badge-low:hover {
-  background: rgba(239, 68, 68, 0.35);
-  color: #fecaca;
+  background: #fecaca;
+  color: #b91c1c;
 }
 
 .token-icon {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .token-balance-text {
   font-variant-numeric: tabular-nums;
   min-width: 1.5ch;
   text-align: right;
+  letter-spacing: -0.01em;
 }
 
 .token-label {
-  opacity: 0.8;
+  opacity: 0.85;
   font-size: 0.72rem;
+  font-weight: 500;
 }
 
 .pulse-dot {
@@ -224,6 +248,11 @@ onMounted(() => {
   background: #ef4444;
   border-radius: 50%;
   animation: pulse-dot-anim 1.5s infinite;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: #EBF5F3;
+  color: #137A7F;
 }
 
 @keyframes badge-pulse {

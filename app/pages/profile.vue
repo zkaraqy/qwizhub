@@ -1,17 +1,20 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="profile" @logout="handleSignOut">
-    <!-- Page Header -->
-    <div class="row mb-4">
-      <div class="col-12">
-        <h1 class="h3 mb-0">My Profile</h1>
-        <p class="text-muted">Manage your account information and preferences</p>
+    <!-- Page Header - Standardized SaaS Header -->
+    <div class="hero-section-clean mb-4 fade-in">
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <span class="text-uppercase fw-bold small" style="color: #137A7F; letter-spacing: 0.08em; font-size: 0.72rem;">
+          PENGATURAN AKUN
+        </span>
       </div>
+      <h2 class="fw-bold mb-1" style="color: #0E3B43; letter-spacing: -0.02em;">Profil Pengguna</h2>
+      <p class="text-secondary small mb-0">Kelola informasi data pribadi, preferensi akun, dan status verifikasi Anda.</p>
     </div>
 
     <!-- Loading State -->
     <div v-if="loading" class="text-center py-5">
       <UiBaseSpinner centered size="lg" />
-      <p class="mt-3 text-muted">Loading profile...</p>
+      <p class="mt-3 text-muted">Memuat profil...</p>
     </div>
 
     <!-- Error Alert -->
@@ -27,46 +30,53 @@
       <!-- Sidebar -->
       <div class="col-lg-3 mb-4">
         <!-- Profile Card -->
-        <div class="card border-0 shadow-sm mb-3">
-          <div class="card-body text-center">
-            <div class="mb-3">
+        <div class="card border rounded-4 shadow-sm mb-3 bg-white overflow-hidden" style="border-color: #E2E8F0;">
+          <div class="card-body text-center p-4">
+            <div class="mb-3 d-flex justify-content-center">
               <img 
-                  v-if="profile?.user?.image" 
-                  :src="profile?.user?.image" 
-                  class="rounded-circle me-2" 
-                  width="32" 
-                  height="32" 
-                  alt="Profile"
-                >
-                <span>{{ profile?.user?.name }}</span>
+                v-if="profile?.user?.image" 
+                :src="profile?.user?.image" 
+                class="rounded-circle shadow-sm" 
+                width="68" 
+                height="68" 
+                alt="Profile"
+                style="object-fit: cover; border: 2px solid #E2E8F0;"
+              >
+              <div
+                v-else
+                class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                style="width: 68px; height: 68px; font-size: 1.6rem; background: linear-gradient(135deg, #0E3B43 0%, #137A7F 100%);"
+              >
+                {{ (profile?.user?.name || 'U').charAt(0).toUpperCase() }}
+              </div>
             </div>
+            <h5 class="fw-bold text-dark mb-1" style="letter-spacing: -0.01em;">{{ profile?.user?.name }}</h5>
             <p class="text-muted small mb-2">{{ profile?.user?.email }}</p>
-            <span
-              :class="['badge', profile?.user?.verificationStatus === 'verified' ? 'bg-success' : 'bg-warning text-dark']">
-              {{ profile?.user?.verificationStatus === 'verified' ? '✓ Verified' : '⚠ Pending Verification' }}
-            </span>
+            <div class="d-flex justify-content-center gap-2 flex-wrap mb-2">
+              <span class="badge rounded-pill px-2.5 py-1" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.72rem;">
+                {{ profile?.user?.role === 'peneliti' ? 'Peneliti' : 'Responden' }}
+              </span>
+            </div>
+            <div>
+              <span
+                class="badge rounded-pill px-3 py-1.5 fw-semibold"
+                :style="profile?.user?.verificationStatus === 'verified' ? 'background-color: #DEF7EC; color: #0E9F6E; border: 1px solid rgba(14, 159, 110, 0.25);' : 'background-color: #FEF3C7; color: #D97706; border: 1px solid rgba(217, 119, 6, 0.25);'"
+              >
+                {{ profile?.user?.verificationStatus === 'verified' ? '✓ Terverifikasi' : '⚠ Menunggu Verifikasi' }}
+              </span>
+            </div>
           </div>
         </div>
 
-        <!-- Navigation -->
-        <div class="list-group">
-          <a href="#" class="list-group-item list-group-item-action active">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2"
-              viewBox="0 0 16 16">
-              <path
-                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-            </svg>
-            Profile
+        <!-- Navigation Links -->
+        <div class="card border rounded-4 shadow-sm bg-white p-2" style="border-color: #E2E8F0;">
+          <a href="#" class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-decoration-none fw-semibold small" style="background-color: #EBF5F3; color: #137A7F;">
+            <i class="bi bi-person-fill"></i>
+            <span>Informasi Akun</span>
           </a>
-          <NuxtLink to="/dashboard" class="list-group-item list-group-item-action">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house me-2"
-              viewBox="0 0 16 16">
-              <path fill-rule="evenodd"
-                d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z" />
-              <path fill-rule="evenodd"
-                d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z" />
-            </svg>
-            Dashboard
+          <NuxtLink to="/dashboard" class="d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-decoration-none text-secondary small nav-hover mt-1">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
           </NuxtLink>
         </div>
       </div>
@@ -74,98 +84,83 @@
       <!-- Main Content Area -->
       <div class="col-lg-9">
         <!-- Basic Information Card -->
-        <div class="card border-0 shadow-sm mb-4">
-          <div class="card-header bg-white border-bottom">
-            <h5 class="mb-0">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                class="bi bi-person-circle me-2" viewBox="0 0 16 16">
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                <path fill-rule="evenodd"
-                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-              </svg>
-              Basic Information
+        <div class="card border rounded-4 shadow-sm mb-4 bg-white overflow-hidden" style="border-color: #E2E8F0;">
+          <div class="card-header bg-white border-bottom p-3.5 p-md-4" style="border-color: #E2E8F0;">
+            <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+              <i class="bi bi-person-circle" style="color: #137A7F;"></i>
+              <span>Informasi Utama</span>
             </h5>
           </div>
-          <div class="card-body">
+          <div class="card-body p-4">
             <div class="row g-3">
               <div class="col-md-6">
-                <label for="name" class="form-label">Full Name</label>
-                <input id="name" v-model="formData.name" type="text" class="form-control"
-                  placeholder="Enter your full name" />
+                <label for="name" class="form-label fw-semibold text-dark small">Nama Lengkap</label>
+                <input id="name" v-model="formData.name" type="text" class="form-control rounded-3 py-2" placeholder="Nama lengkap Anda" style="border-color: #E2E8F0;" />
               </div>
               <div class="col-md-6">
-                <label class="form-label">Email Address</label>
-                <input :value="profile.user.email" type="email" class="form-control" disabled />
-                <div class="form-text">Email cannot be changed</div>
+                <label class="form-label fw-semibold text-dark small">Alamat Email</label>
+                <input :value="profile.user.email" type="email" class="form-control rounded-3 py-2 bg-light" disabled style="border-color: #E2E8F0;" />
+                <div class="form-text text-muted" style="font-size: 0.75rem;">Email tertaut tidak dapat diubah langsung</div>
               </div>
               <div class="col-md-6">
-                <label class="form-label">Account Role</label>
-                <input
-                  :value="profile.user.role === 'peneliti' ? 'Peneliti (Researcher)' : 'Responden (Survey Participant)'"
-                  type="text" class="form-control" disabled />
+                <label class="form-label fw-semibold text-dark small">Tipe Akun (Role)</label>
+                <input :value="profile.user.role === 'peneliti' ? 'Peneliti (Researcher)' : 'Responden (Survey Participant)'" type="text" class="form-control rounded-3 py-2 bg-light" disabled style="border-color: #E2E8F0;" />
               </div>
               <div class="col-md-6">
-                <label class="form-label">Verification Status</label>
-                <br/>
-                <span
-                  :class="['badge fs-6', profile.user.verificationStatus === 'verified' ? 'bg-success' : 'bg-warning text-dark']">
-                  {{ profile.user.verificationStatus === 'verified' ? '✓ Verified' : '⚠ Pending Verification' }}
-                </span>
+                <label class="form-label fw-semibold text-dark small">Status Verifikasi</label>
+                <div class="pt-1">
+                  <span
+                    class="badge rounded-pill px-3 py-2 fw-semibold"
+                    :style="profile.user.verificationStatus === 'verified' ? 'background-color: #DEF7EC; color: #0E9F6E;' : 'background-color: #FEF3C7; color: #D97706;'"
+                  >
+                    {{ profile.user.verificationStatus === 'verified' ? '✓ Terverifikasi' : '⚠ Menunggu Verifikasi' }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Demographic Profile Card (only for responden) -->
-        <div v-if="profile?.user?.role === 'responden'" class="card border-0 shadow-sm mb-4">
-          <div class="card-header bg-white border-bottom">
-            <h5 class="mb-0">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                class="bi bi-clipboard-data me-2" viewBox="0 0 16 16">
-                <path
-                  d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
-                <path
-                  d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-              </svg>
-              Demographic Profile
+        <div v-if="profile?.user?.role === 'responden'" class="card border rounded-4 shadow-sm mb-4 bg-white overflow-hidden" style="border-color: #E2E8F0;">
+          <div class="card-header bg-white border-bottom p-3.5 p-md-4" style="border-color: #E2E8F0;">
+            <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+              <i class="bi bi-clipboard-data" style="color: #137A7F;"></i>
+              <span>Profil Demografi Responden</span>
             </h5>
           </div>
-          <div class="card-body">
-            <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                class="bi bi-info-circle-fill me-2" viewBox="0 0 16 16">
-                <path
-                  d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-              </svg>
-              <div>Complete your demographic profile to get verified and access paid surveys.</div>
+          <div class="card-body p-4">
+            <div class="alert alert-light border d-flex align-items-center gap-2 mb-4 p-3 rounded-3" style="background-color: #EBF5F3; border-color: rgba(19, 122, 127, 0.25) !important;">
+              <i class="bi bi-info-circle-fill flex-shrink-0" style="color: #137A7F;"></i>
+              <div class="small" style="color: #0E3B43;">Lengkapi profil demografi Anda untuk mendapatkan status terverifikasi dan menerima rekomendasi survei berbayar yang relevan.</div>
             </div>
 
             <div class="row g-3">
               <div class="col-md-6">
-                <label for="dateOfBirth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                <input id="dateOfBirth" v-model="formData.profile.dateOfBirth" type="date" class="form-control" />
+                <label for="dateOfBirth" class="form-label fw-semibold text-dark small">Tanggal Lahir <span class="text-danger">*</span></label>
+                <input id="dateOfBirth" v-model="formData.profile.dateOfBirth" type="date" class="form-control rounded-3 py-2" style="border-color: #E2E8F0;" />
               </div>
 
               <div class="col-md-6">
-                <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
-                <select id="gender" v-model="formData.profile.gender" class="form-select">
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
+                <label for="gender" class="form-label fw-semibold text-dark small">Jenis Kelamin <span class="text-danger">*</span></label>
+                <select id="gender" v-model="formData.profile.gender" class="form-select rounded-3 py-2" style="border-color: #E2E8F0;">
+                  <option value="">Pilih Jenis Kelamin</option>
+                  <option value="male">Laki-laki</option>
+                  <option value="female">Perempuan</option>
+                  <option value="other">Lainnya</option>
                 </select>
               </div>
 
               <div class="col-md-6">
-                <label for="profession" class="form-label">Profession <span class="text-danger">*</span></label>
-                <input id="profession" v-model="formData.profile.profession" type="text" class="form-control"
-                  placeholder="e.g., Student, Teacher, Engineer" />
+                <label for="profession" class="form-label fw-semibold text-dark small">Profesi / Pekerjaan <span class="text-danger">*</span></label>
+                <input id="profession" v-model="formData.profile.profession" type="text" class="form-control rounded-3 py-2"
+                  placeholder="Contoh: Mahasiswa, Dosen, Guru, Karyawan" style="border-color: #E2E8F0;" />
               </div>
 
               <div class="col-md-6">
-                <label for="phoneNumber" class="form-label">Phone Number</label>
-                <input id="phoneNumber" v-model="formData.profile.phoneNumber" type="tel" class="form-control"
-                  placeholder="e.g., 08123456789" />
+                <label for="phoneNumber" class="form-label fw-semibold text-dark small">Nomor Telepon / WhatsApp</label>
+                <input id="phoneNumber" v-model="formData.profile.phoneNumber" type="tel" class="form-control rounded-3 py-2"
+                  placeholder="Contoh: 08123456789" style="border-color: #E2E8F0;" />
               </div>
 
               <div class="col-md-6">
@@ -183,43 +178,47 @@
                 <label for="city" class="form-label">City <span class="text-danger">*</span></label>
                 <input id="city" v-model="formData.profile.city" type="text" class="form-control"
                   placeholder="e.g., Jakarta" />
+                <label for="city" class="form-label fw-semibold text-dark small">Kota / Kabupaten <span class="text-danger">*</span></label>
+                <input id="city" v-model="formData.profile.city" type="text" class="form-control rounded-3 py-2"
+                  placeholder="Contoh: Jakarta Selatan" style="border-color: #E2E8F0;" />
               </div>
 
               <div class="col-md-6">
-                <label for="province" class="form-label">Province <span class="text-danger">*</span></label>
-                <input id="province" v-model="formData.profile.province" type="text" class="form-control"
-                  placeholder="e.g., DKI Jakarta" />
+                <label for="province" class="form-label fw-semibold text-dark small">Provinsi <span class="text-danger">*</span></label>
+                <input id="province" v-model="formData.profile.province" type="text" class="form-control rounded-3 py-2"
+                  placeholder="Contoh: DKI Jakarta" style="border-color: #E2E8F0;" />
               </div>
 
               <div class="col-12">
-                <label for="educationLevel" class="form-label">Education Level <span
+                <label for="educationLevel" class="form-label fw-semibold text-dark small">Tingkat Pendidikan Terakhir <span
                     class="text-danger">*</span></label>
-                <select id="educationLevel" v-model="formData.profile.educationLevel" class="form-select">
-                  <option value="">Select education level</option>
-                  <option value="sd">SD (Elementary School)</option>
-                  <option value="smp">SMP (Junior High School)</option>
-                  <option value="sma">SMA (Senior High School)</option>
+                <select id="educationLevel" v-model="formData.profile.educationLevel" class="form-select rounded-3 py-2" style="border-color: #E2E8F0;">
+                  <option value="">Pilih Tingkat Pendidikan</option>
+                  <option value="sd">SD (Sekolah Dasar)</option>
+                  <option value="smp">SMP (Sekolah Menengah Pertama)</option>
+                  <option value="sma">SMA / SMK (Sekolah Menengah Atas)</option>
                   <option value="d3">D3 (Diploma)</option>
-                  <option value="s1">S1 (Bachelor's Degree)</option>
-                  <option value="s2">S2 (Master's Degree)</option>
-                  <option value="s3">S3 (Doctoral Degree)</option>
+                  <option value="s1">S1 (Sarjana)</option>
+                  <option value="s2">S2 (Magister)</option>
+                  <option value="s3">S3 (Doktoral)</option>
                 </select>
               </div>
             </div>
 
             <div class="mt-3">
-              <small class="text-muted"><span class="text-danger">*</span> Required fields for verification</small>
+              <small class="text-muted"><span class="text-danger">*</span> Bidang wajib diisi untuk verifikasi akun responden.</small>
             </div>
           </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="d-flex gap-2 flex-wrap">
-          <button @click="handleUpdate" class="btn btn-primary btn-lg" :disabled="updating">
-            <span v-if="updating" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            {{ updating ? 'Saving...' : 'Save Changes' }}
+          <button @click="handleUpdate" class="btn text-white px-4 py-2.5 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2" style="background-color: #0E3B43;" :disabled="updating">
+            <span v-if="updating" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <i v-else class="bi bi-check2-circle"></i>
+            <span>{{ updating ? 'Menyimpan...' : 'Simpan Perubahan' }}</span>
           </button>
-          <NuxtLink to="/dashboard" class="btn btn-outline-secondary btn-lg">Back to Dashboard</NuxtLink>
+          <NuxtLink to="/dashboard" class="btn btn-outline-secondary px-4 py-2.5 rounded-3">Kembali ke Dashboard</NuxtLink>
         </div>
       </div>
     </div>
@@ -361,20 +360,25 @@ const handleUpdate = async () => {
 </script>
 
 <style scoped>
-.list-group-item.active {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+.hero-section-clean {
+  padding: 0.25rem 0 0.5rem 0;
+}
+
+.nav-hover {
+  transition: all 0.18s ease;
+}
+
+.nav-hover:hover {
+  background-color: #F8FAFA;
+  color: #0E3B43 !important;
 }
 
 .card {
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
 }
 
 .card:hover {
   transform: translateY(-2px);
-}
-
-.input-group-text.bg-warning {
-  background-color: #ffc107 !important;
+  box-shadow: 0 8px 24px rgba(14, 59, 67, 0.05) !important;
 }
 </style>

@@ -39,12 +39,13 @@ npm run dev
 9. [Menjalankan Aplikasi](#menjalankan-aplikasi)
 10. [Panduan Penggunaan per Role](#panduan-penggunaan-per-role)
 11. [API & Endpoint Utama](#api--endpoint-utama)
-12. [Testing](#testing)
-13. [Troubleshooting](#troubleshooting)
-14. [Arsitektur & Database](#arsitektur--database)
-15. [Keamanan & Production](#keamanan--production)
-16. [Struktur Folder](#struktur-folder)
-17. [Lisensi](#lisensi)
+12. [Troubleshooting](#troubleshooting)
+13. [Arsitektur & Database](#arsitektur--database)
+14. [Keamanan & Production](#keamanan--production)
+15. [Struktur Folder](#struktur-folder)
+16. [Penggunaan AI](#penggunaan-ai)
+17. [Credit](#credit)
+18. [Lisensi](#lisensi)
 
 ---
 
@@ -1183,6 +1184,15 @@ qwizhub/
 ├── tsconfig.json                 # TypeScript configuration
 └── README.md                     # This file
 ```
+
+---
+
+## Penggunaan AI
+
+Proyek ini dikembangkan dengan bantuan *Artificial Intelligence* (AI) untuk mengoptimalkan proses *development*:
+
+- **Claude 4.5 Sonnet:** Berperan dalam inisialisasi *prototype*, perancangan arsitektur sistem, serta membantu implementasi kode dan fitur secara berkala.
+- **Gemini Pro (Antigravity):** Berfokus pada sisi visual dan interaksi, bertugas untuk memperindah *User Interface* (UI) serta mengoptimalkan *User Experience* (UX).
 
 ---
 

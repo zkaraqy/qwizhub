@@ -9,11 +9,64 @@
         </span>
       </NuxtLink>
       
-      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <div class="d-flex align-items-center gap-2 gap-lg-3 order-lg-3">
+        <button class="navbar-toggler border-0 shadow-none p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- User Dropdown (always visible in header) -->
+        <template v-if="user">
+          <div class="dropdown">
+            <a 
+              class="nav-link dropdown-toggle d-flex align-items-center gap-1 py-1 px-2 rounded-3 text-decoration-none" 
+              href="#" 
+              id="navbarDropdown" 
+              role="button" 
+              data-bs-toggle="dropdown"
+              style="color: #17212B;"
+            >
+              <img 
+                v-if="user.image" 
+                :src="user.image" 
+                class="rounded-circle border" 
+                width="32" 
+                height="32" 
+                alt="Profile"
+                style="border-color: #E2E8F0; object-fit: cover;"
+              >
+              <div 
+                v-else 
+                class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                style="width: 32px; height: 32px; font-size: 0.8rem; background-color: #0E3B43;"
+              >
+                {{ (user.name || 'U').charAt(0).toUpperCase() }}
+              </div>
+              <span class="fw-semibold small d-none d-sm-inline" style="color: #17212B;">{{ user.name }}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border p-1 position-absolute" style="border-color: #E2E8F0; min-width: 220px; z-index: 1021 !important;">
+              <li class="px-3 py-2 border-bottom mb-1 bg-light rounded-top">
+                <div class="fw-bold text-dark small text-truncate">{{ user.name }}</div>
+                <div class="text-secondary" style="font-size: 0.75rem;">{{ user.email || (user.role === 'peneliti' ? 'Peneliti' : 'Responden') }}</div>
+              </li>
+              <li>
+                <NuxtLink to="/profile" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
+                  <i class="bi bi-person text-secondary"></i>
+                  <span>Profile</span>
+                </NuxtLink>
+              </li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li>
+                <a class="dropdown-item text-danger py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small" href="#" @click.prevent="handleLogout">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </template>
+      </div>
       
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse order-lg-2" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center gap-1 gap-lg-2">
           <!-- Public Navigation -->
           <template v-if="variant === 'public' && !user">
@@ -28,6 +81,11 @@
           <!-- Private Navigation -->
           <template v-if="variant === 'private' && user">
             <!-- Mobile Navigation Links -->
+            <li class="nav-item d-lg-none w-100">
+              <NuxtLink to="/dashboard" class="nav-link py-2 text-secondary fw-semibold">
+                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+              </NuxtLink>
+            </li>
             <li v-if="user.role === 'responden'" class="nav-item d-lg-none w-100">
               <NuxtLink to="/questionnaires" class="nav-link py-2 text-secondary fw-semibold">
                 <i class="bi bi-clipboard-check me-2"></i>My Surveys
@@ -40,13 +98,20 @@
                 </NuxtLink>
               </li>
               <li class="nav-item d-lg-none w-100">
-                <NuxtLink to="/payments" class="nav-link py-2 text-secondary fw-semibold">
-                  <i class="bi bi-coin me-2"></i>Top Up Token AI
+                <NuxtLink to="/payments" class="nav-link py-2 text-secondary fw-semibold d-flex justify-content-between align-items-center">
+                  <div>
+                    <i class="bi bi-coin me-2"></i>Top Up Token AI
+                  </div>
+                  <div class="ai-token-badge rounded-pill px-2 py-1 d-flex align-items-center gap-1" :class="isLowBalance ? 'token-badge-low' : 'token-badge-ok'" style="font-size: 0.7rem;">
+                    <span>🪙</span>
+                    <span class="fw-bold">{{ tokenLoading ? '...' : tokenBalance }}</span>
+                    <span v-if="isLowBalance" class="ms-1 pulse-dot" style="width: 4px; height: 4px;"></span>
+                  </div>
                 </NuxtLink>
               </li>
               
               <!-- Desktop Token Pill -->
-              <li class="nav-item me-2">
+              <li class="nav-item me-2 d-none d-lg-block">
                 <NuxtLink
                   to="/payments"
                   class="ai-token-badge d-flex align-items-center gap-1.5 text-decoration-none rounded-pill px-3 py-1.5"
@@ -57,87 +122,18 @@
                   <span class="token-balance-text fw-bold">
                     {{ tokenLoading ? '...' : tokenBalance }}
                   </span>
-                  <span class="token-label">token</span>
+                  <span class="token-label">&nbsp;Token</span>
                   <span v-if="isLowBalance" class="ms-1 pulse-dot"></span>
                 </NuxtLink>
               </li>
             </template>
-          </template>
-
-          <!-- User Dropdown (both public when logged in and private) -->
-          <template v-if="user">
-            <li class="nav-item dropdown">
-              <a 
-                class="nav-link dropdown-toggle d-flex align-items-center gap-2 py-1 px-2 rounded-3 text-decoration-none" 
-                href="#" 
-                id="navbarDropdown" 
-                role="button" 
-                data-bs-toggle="dropdown"
-                style="color: #17212B;"
-              >
-                <img 
-                  v-if="user.image" 
-                  :src="user.image" 
-                  class="rounded-circle border" 
-                  width="32" 
-                  height="32" 
-                  alt="Profile"
-                  style="border-color: #E2E8F0; object-fit: cover;"
-                >
-                <div 
-                  v-else 
-                  class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
-                  style="width: 32px; height: 32px; font-size: 0.8rem; background-color: #0E3B43;"
-                >
-                  {{ (user.name || 'U').charAt(0).toUpperCase() }}
-                </div>
-                <span class="fw-semibold small d-none d-sm-inline" style="color: #17212B;">{{ user.name }}</span>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border p-1" style="border-color: #E2E8F0; min-width: 220px;z-index:9999 !important;">
-                <li class="px-3 py-2 border-bottom mb-1 bg-light rounded-top">
-                  <div class="fw-bold text-dark small text-truncate">{{ user.name }}</div>
-                  <div class="text-secondary" style="font-size: 0.75rem;">{{ user.email || (user.role === 'peneliti' ? 'Peneliti' : 'Responden') }}</div>
-                </li>
-                <li>
-                  <NuxtLink to="/dashboard" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
-                    <i class="bi bi-speedometer2 text-secondary"></i>
-                    <span>Dashboard</span>
-                  </NuxtLink>
-                </li>
-                <li v-if="user.role === 'peneliti'">
-                  <NuxtLink to="/projects" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
-                    <i class="bi bi-folder text-secondary"></i>
-                    <span>My Projects</span>
-                  </NuxtLink>
-                </li>
-                <li v-if="user.role === 'peneliti'">
-                  <NuxtLink to="/payments" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
-                    <i class="bi bi-coin text-secondary"></i>
-                    <span>Top Up Token AI</span>
-                  </NuxtLink>
-                </li>
-                <li>
-                  <NuxtLink to="/profile" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
-                    <i class="bi bi-person text-secondary"></i>
-                    <span>Profile</span>
-                  </NuxtLink>
-                </li>
-                <li v-if="variant === 'private'">
-                  <NuxtLink to="/" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
-                    <i class="bi bi-globe text-secondary"></i>
-                    <span>Beranda Publik</span>
-                  </NuxtLink>
-                </li>
-                <li><hr class="dropdown-divider my-1"></li>
-                <li>
-                  <a class="dropdown-item text-danger py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small" href="#" @click.prevent="handleLogout">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Logout</span>
-                  </a>
-                </li>
-              </ul>
+            <li class="nav-item d-lg-none w-100">
+              <NuxtLink to="/" class="nav-link py-2 text-secondary fw-semibold">
+                <i class="bi bi-globe me-2"></i>Beranda Publik
+              </NuxtLink>
             </li>
           </template>
+
         </ul>
       </div>
     </div>

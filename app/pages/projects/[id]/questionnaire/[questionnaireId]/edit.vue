@@ -11,12 +11,12 @@
     </div>
 
     <div v-else>
-      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+      <div class="d-flex justify-content-between align-items-center mb-4 gap-2">
         <div>
           <h2 class="fw-bold mb-1">Edit Kuesioner</h2>
-          <p class="text-muted mb-0">Project: {{ questionnaire?.project?.project?.title || 'Unknown' }}</p>
+          <p class="d-flex flex-wrap text-muted mb-0">Project: {{ questionnaire?.project?.project?.title || 'Unknown' }}</p>
         </div>
-        <div class="d-flex flex-wrap gap-2">
+        <div class="d-flex gap-2">
           <button class="btn btn-outline-secondary fw-semibold" @click="handleBack">
             Kembali
           </button>

@@ -31,23 +31,24 @@
     <div v-if="!loading && projects.length > 0" class="card border rounded-4 shadow-sm bg-white p-3 mb-4 fade-in" style="border-color: #E2E8F0;">
       <div class="row g-2 align-items-center">
         <div class="col-md-8 col-lg-9">
-          <div class="input-group input-group-sm">
-            <span class="input-group-text bg-transparent border-end-0 text-muted">
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0 text-muted" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">
               <i class="bi bi-search" style="color: #137A7F;"></i>
             </span>
             <input
               v-model="searchQuery"
               type="text"
-              class="form-control form-control-sm border-start-0 rounded-end-3"
+              class="form-control border-start-0 border-end-0"
+              :style="!searchQuery ? 'border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem; border-right: 1px solid #dee2e6 !important;' : ''"
               placeholder="Cari judul proyek atau deskripsi penelitian..."
             />
-            <button v-if="searchQuery" class="btn btn-outline-secondary btn-sm" type="button" @click="searchQuery = ''">
+            <button v-if="searchQuery" class="btn btn-outline-secondary border-start-0" style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem; border-color: #dee2e6;" type="button" @click="searchQuery = ''">
               <i class="bi bi-x"></i>
             </button>
           </div>
         </div>
         <div class="col-md-4 col-lg-3">
-          <select v-model="selectedStatus" class="form-select form-select-sm rounded-3">
+          <select v-model="selectedStatus" class="form-select rounded-3">
             <option value="all">Semua Status ({{ projects.length }})</option>
             <option value="draft">Draft</option>
             <option value="published">Aktif / Published</option>

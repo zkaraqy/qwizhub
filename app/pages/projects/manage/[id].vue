@@ -49,33 +49,37 @@
           </thead>
           <tbody>
             <tr v-for="q in questionnaires" :key="q.id">
-              <td class="ps-4 py-4">
+              <td class="ps-4 py-4 align-middle">
                 <div class="d-flex align-items-center">
-                  <div class="stat-icon primary me-3" style="width: 36px; height: 36px; font-size: 1rem;">
+                  <div class="d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem; border-radius: 12px; background-color: #EBF5F3; color: #0E3B43;">
                     <i class="bi bi-file-earmark-text"></i>
                   </div>
-                  <span class="fw-semibold">{{ q.topic }}</span>
+                  <span v-if="q.topic" class="fw-semibold">{{ q.topic }}</span>
+                  <span v-else class="text-muted fst-italic small">-</span>
                 </div>
               </td>
-              <td class="py-4">
-                <div class="text-truncate" style="max-width: 300px;" :title="q.researchObjective">
+              <td class="py-4 align-middle">
+                <div v-if="q.researchObjective" class="text-truncate" style="max-width: 300px;" :title="q.researchObjective">
                   {{ q.researchObjective }}
                 </div>
+                <div v-else class="text-muted fst-italic small">
+                  -
+                </div>
               </td>
-              <td class="py-4">
+              <td class="py-4 align-middle">
                 <span :class="statusBadgeClass(q.status)">
                   {{ statusLabel(q.status) }}
                 </span>
               </td>
-              <td class="py-4 text-muted">
+              <td class="py-4 text-muted align-middle">
                 {{ formatDate(q.createdAt) }}
               </td>
-              <td class="pe-4 py-4 text-end">
+              <td class="pe-4 py-4 text-end align-middle">
                 <div class="d-flex gap-2 justify-content-end">
-                  <button class="btn btn-sm btn-primary" @click="editQuestionnaire(q.id)" title="Edit">
-                    <i class="bi bi-pencil me-1"></i>Edit
+                  <button class="btn btn-sm btn-outline-secondary action-btn" @click="editQuestionnaire(q.id)" title="Edit">
+                    <i class="bi bi-pencil"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-danger" @click="deleteQuestionnaire(q.id)" title="Delete">
+                  <button class="btn btn-sm btn-outline-danger action-btn" @click="deleteQuestionnaire(q.id)" title="Delete">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
@@ -269,6 +273,10 @@ const proceedPayment = async () => {
   }
 }
 
+const openAIGenerator = (questionnaireId: string) => {
+  router.push(`/projects/${projectId}/questionnaire/${questionnaireId}/edit?mode=ai`)
+}
+
 const editQuestionnaire = (questionnaireId: string) => {
   router.push(`/projects/${projectId}/questionnaire/${questionnaireId}/edit`)
 }
@@ -306,7 +314,9 @@ const deleteQuestionnaire = async (questionnaireId: string) => {
 }
 
 function statusBadgeClass(status: string) {
-  return status === 'published' ? 'badge badge-success-gradient' : 'badge bg-secondary'
+  return status === 'published' 
+    ? 'badge bg-success-subtle text-success border border-success-subtle px-2 py-1' 
+    : 'badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1'
 }
 
 function statusLabel(status: string) {
@@ -322,6 +332,30 @@ function formatDate(dateString: string) {
 }
 </script>
 <style scoped>
+/* Action Buttons */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
 /* Hero Section - Transparent Glass Effect */
 .hero-section-transparent {
   background: rgba(255, 255, 255, 0.7);

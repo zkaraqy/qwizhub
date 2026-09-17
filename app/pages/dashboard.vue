@@ -10,7 +10,7 @@
             </span>
           </div>
           <h2 class="fw-bold mb-1" style="color: #0E3B43; letter-spacing: -0.02em;">
-            Selamat Datang Kembali, {{ userProfile?.name || 'User' }} 👋
+            Selamat Datang Kembali, {{ userProfile?.name || 'User' }}
           </h2>
           <p v-if="userProfile?.role === 'peneliti'" class="mb-0 text-secondary small">
             Pusat analitik, evaluasi AI, dan pemantauan respons penelitian Anda secara real-time.
@@ -49,7 +49,7 @@
             <label class="filter-label text-muted small fw-semibold mb-1 d-block">
               <i class="bi bi-ui-checks-grid me-1" style="color: #137A7F;"></i>Filter Kuesioner
             </label>
-            <select v-model="selectedQuestionnaireFilter" class="form-select form-select-sm rounded-3" @change="onFilterChange">
+            <select v-model="selectedQuestionnaireFilter" class="form-select rounded-3" @change="onFilterChange">
               <option value="all">Semua Kuesioner ({{ researcherQuestionnaires.length }})</option>
               <option v-for="q in researcherQuestionnaires" :key="q.id" :value="q.id">
                 {{ q.topic.length > 30 ? q.topic.substring(0, 30) + '...' : q.topic }}
@@ -62,7 +62,7 @@
             <label class="filter-label text-muted small fw-semibold mb-1 d-block">
               <i class="bi bi-funnel me-1" style="color: #137A7F;"></i>Status
             </label>
-            <select v-model="selectedStatusFilter" class="form-select form-select-sm rounded-3" @change="onFilterChange">
+            <select v-model="selectedStatusFilter" class="form-select rounded-3" @change="onFilterChange">
               <option value="all">Semua Status</option>
               <option value="active">🟢 Aktif (Published)</option>
               <option value="closed">🔵 Selesai / Ditutup</option>
@@ -75,7 +75,7 @@
             <label class="filter-label text-muted small fw-semibold mb-1 d-block">
               <i class="bi bi-calendar3 me-1" style="color: #137A7F;"></i>Rentang Waktu
             </label>
-            <select v-model="selectedDateRangeFilter" class="form-select form-select-sm rounded-3" @change="onFilterChange">
+            <select v-model="selectedDateRangeFilter" class="form-select rounded-3" @change="onFilterChange">
               <option value="all">Semua Waktu</option>
               <option value="7d">7 Hari Terakhir</option>
               <option value="30d">30 Hari Terakhir</option>
@@ -87,15 +87,17 @@
             <label class="filter-label text-muted small fw-semibold mb-1 d-block">
               <i class="bi bi-search me-1" style="color: #137A7F;"></i>Cari Kuesioner / Respons
             </label>
-            <div class="input-group input-group-sm">
+            <div class="input-group">
               <input
                 v-model="searchFilter"
                 type="text"
-                class="form-control rounded-3"
+                class="form-control border-end-0"
+                style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;"
+                :style="!searchFilter ? 'border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem; border-right: 1px solid #dee2e6 !important;' : ''"
                 placeholder="Ketik topik atau tujuan..."
                 @input="onSearchInput"
               />
-              <button v-if="searchFilter" class="btn btn-outline-secondary" type="button" @click="clearSearch">
+              <button v-if="searchFilter" class="btn btn-outline-secondary border-start-0" style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem; border-color: #dee2e6;" type="button" @click="clearSearch">
                 <i class="bi bi-x"></i>
               </button>
             </div>
@@ -107,8 +109,8 @@
               <label class="filter-label text-muted small fw-semibold mb-1 d-block d-none d-lg-block">&nbsp;</label>
               <div class="dropdown w-100">
                 <button
-                  class="btn btn-sm text-white w-100 dropdown-toggle rounded-3 d-flex align-items-center justify-content-center gap-1 shadow-sm"
-                  style="background-color: #0E3B43;"
+                  class="btn text-white w-100 dropdown-toggle d-flex align-items-center justify-content-center gap-1 shadow-sm"
+                  style="background-color: #0E3B43; border-radius: 0.5rem;"
                   type="button"
                   data-bs-toggle="dropdown"
                   :disabled="globalExporting || !hasResponses"
@@ -171,7 +173,7 @@
             <div class="stat-sublabel text-muted text-uppercase">Kuesioner Aktif</div>
             <h3 class="fw-bold mb-0 text-success">{{ researcherStats?.summary?.activeQuestionnaires ?? stats.published }}</h3>
             <div class="stat-footnote text-success mt-1">
-              <small><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Sedang dibuka</small>
+              <small><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i>&nbsp;&nbsp;Sedang dibuka</small>
             </div>
           </div>
         </div>
@@ -303,13 +305,13 @@
                       </td>
                       <td>
                         <span v-if="q.computedStatus === 'active'" class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
-                          🟢 Aktif
+                          Aktif
                         </span>
                         <span v-else-if="q.computedStatus === 'closed'" class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">
-                          🔵 Selesai
+                          Selesai
                         </span>
                         <span v-else class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1">
-                          ⚪ Draft
+                          Draft
                         </span>
                       </td>
                       <td>
@@ -419,7 +421,7 @@
                       <small class="text-muted">{{ r.answersCount }} pertanyaan terisi</small>
                     </td>
                     <td>
-                      <span v-if="r.status === 'completed'" class="badge rounded-pill px-2.5 py-1" style="background-color: #DEF7EC; color: #0E9F6E;">
+                      <span v-if="r.status === 'completed'" class="badge badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="background-color: #DEF7EC; color: #0E9F6E;">
                         Selesai
                       </span>
                       <span v-else class="badge rounded-pill px-2.5 py-1" style="background-color: #FEF3C7; color: #D97706;">
@@ -995,5 +997,18 @@ onMounted(async () => {
 
 .dropdown-item:active {
   background-color: #0E3B43;
+}
+
+@media (max-width: 575.98px) {
+  .stat-card {
+    text-align: center;
+  }
+  .stat-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 1.6rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 </style>

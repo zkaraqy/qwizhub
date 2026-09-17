@@ -7,11 +7,69 @@
           <span>QwizHub</span>
         </NuxtLink>
         
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" id="navbar-toggler">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="d-flex align-items-center gap-2 gap-lg-3 order-lg-3">
+          <button class="navbar-toggler border-0 shadow-none p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" id="navbar-toggler">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <template v-if="data">
+            <div class="dropdown">
+              <a 
+                class="nav-link dropdown-toggle d-flex align-items-center gap-2 py-1 px-2 rounded-3 text-decoration-none" 
+                href="#" 
+                id="navbarDropdown" 
+                role="button" 
+                data-bs-toggle="dropdown"
+                style="color: #17212B;"
+              >
+                <img 
+                  v-if="data?.user?.image" 
+                  :src="data?.user.image" 
+                  class="rounded-circle border" 
+                  width="32" 
+                  height="32" 
+                  alt="Profile"
+                  style="border-color: #E2E8F0; object-fit: cover;"
+                >
+                <div 
+                  v-else 
+                  class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                  style="width: 32px; height: 32px; font-size: 0.8rem; background-color: #0E3B43;"
+                >
+                  {{ (data?.user?.name || 'U').charAt(0).toUpperCase() }}
+                </div>
+                <span class="fw-semibold small d-none d-sm-inline" style="color: #17212B;">{{ data?.user?.name }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border p-1 position-absolute" style="border-color: #E2E8F0; min-width: 220px; z-index: 1021 !important;">
+                <li class="px-3 py-2 border-bottom mb-1 bg-light rounded-top">
+                  <div class="fw-bold text-dark small text-truncate">{{ data?.user?.name }}</div>
+                  <div class="text-secondary" style="font-size: 0.75rem;">{{ data?.user?.email || 'User' }}</div>
+                </li>
+                <li>
+                  <NuxtLink to="/dashboard" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
+                    <i class="bi bi-speedometer2 text-secondary"></i>
+                    <span>Dashboard</span>
+                  </NuxtLink>
+                </li>
+                <li>
+                  <NuxtLink to="/profile" class="dropdown-item py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small">
+                    <i class="bi bi-person text-secondary"></i>
+                    <span>Profile</span>
+                  </NuxtLink>
+                </li>
+                <li><hr class="dropdown-divider my-1"></li>
+                <li>
+                  <a class="dropdown-item text-danger py-1.5 px-3 rounded-2 d-flex align-items-center gap-2 small" href="#" @click.prevent="handleSignOut">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </template>
+        </div>
         
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse navbar-collapse order-lg-2" id="navbarNav">
           <ul class="navbar-nav mx-auto gap-1 gap-lg-3 my-2 my-lg-0">
             <li class="nav-item">
               <a href="#how-it-works" class="nav-link text-secondary fw-semibold px-2">How It Works</a>
@@ -31,33 +89,6 @@
             <template v-if="!data">
               <NuxtLink to="/login" class="btn btn-outline-secondary px-4 py-2 fw-semibold rounded-3 bg-white" style="border-color: #D1D9D6; color: #17212B;" id="btn-signin">Sign In</NuxtLink>
               <NuxtLink to="/register" class="btn text-white px-4 py-2 fw-semibold rounded-3 shadow-sm" style="background-color: #0E3B43;" id="btn-getstarted">Get Started</NuxtLink>
-            </template>
-            <template v-else>
-              <div class="nav-item dropdown list-unstyled">
-                <a 
-                class="nav-link dropdown-toggle d-flex align-items-center" 
-                href="#" 
-                id="navbarDropdown" 
-                role="button" 
-                data-bs-toggle="dropdown"
-              >
-                <img 
-                  v-if="data?.user?.image" 
-                  :src="data?.user.image" 
-                  class="rounded-circle me-2" 
-                  width="32" 
-                  height="32" 
-                  alt="Profile"
-                >
-                <span>{{ data?.user?.name }}</span>
-              </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border">
-                  <li><NuxtLink to="/dashboard" class="dropdown-item py-2"><i class="bi bi-speedometer2 me-2"></i>Dashboard</NuxtLink></li>
-                  <li><NuxtLink to="/profile" class="dropdown-item py-2"><i class="bi bi-person me-2"></i>Profile</NuxtLink></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item text-danger py-2" href="#" @click.prevent="handleSignOut"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                </ul>
-              </div>
             </template>
           </div>
         </div>

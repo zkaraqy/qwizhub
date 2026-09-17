@@ -413,8 +413,7 @@ onMounted(async () => {
 <style scoped>
 /* ── Page Layout ─────────────────────────────────────────── */
 .topup-page {
-  max-width: 1140px;
-  margin: 0 auto;
+  /* Match dashboard layout by spanning full width of app-main-pane */
 }
 
 .hero-section-clean {

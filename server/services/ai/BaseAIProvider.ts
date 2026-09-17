@@ -313,20 +313,120 @@ PENTING:
     }
 
     /**
-     * Sanitize JSON string to fix common issues
+     * Comprehensive JSON repair with multiple strategies
      */
-    protected sanitizeJSON(jsonString: string): string {
-        let sanitized = jsonString
+    protected repairJSON(jsonString: string): string {
+        let repaired = jsonString
         
-        // Fix common escape issues in strings
-        // This is a simple fix - for production you might want a more robust solution
-        try {
-            // Try to find problematic unescaped quotes and newlines within JSON strings
-            // Note: This is a basic approach and might not catch all cases
-            return sanitized
-        } catch (error) {
-            return sanitized
+        // Strategy 1: Remove trailing commas
+        repaired = repaired.replace(/,(\s*[}\]])/g, '$1')
+        
+        // Strategy 2: Fix truncated strings (incomplete quotes)
+        // Count quotes to see if we have an odd number (unclosed string)
+        const quoteCount = (repaired.match(/(?<!\\)"/g) || []).length
+        if (quoteCount % 2 !== 0) {
+            console.log('[BaseAIProvider] Detected unclosed string')
+            // Find the last quote and truncate before it
+            const lastQuoteIndex = repaired.lastIndexOf('"')
+            if (lastQuoteIndex > 0) {
+                // Find the last complete object before this quote
+                let truncateAt = lastQuoteIndex
+                for (let i = lastQuoteIndex - 1; i >= 0; i--) {
+                    if (repaired[i] === '}') {
+                        truncateAt = i + 1
+                        break
+                    }
+                }
+                repaired = repaired.substring(0, truncateAt)
+            }
         }
+        
+        // Strategy 3: Fix truncated arrays/objects - close any unclosed structures
+        let openBrackets = 0
+        let openBraces = 0
+        let inString = false
+        let escapeNext = false
+        
+        for (let i = 0; i < repaired.length; i++) {
+            const char = repaired[i]
+            
+            if (escapeNext) {
+                escapeNext = false
+                continue
+            }
+            
+            if (char === '\\') {
+                escapeNext = true
+                continue
+            }
+            
+            if (char === '"') {
+                inString = !inString
+            }
+            
+            if (!inString) {
+                if (char === '[') openBrackets++
+                if (char === ']') openBrackets--
+                if (char === '{') openBraces++
+                if (char === '}') openBraces--
+            }
+        }
+        
+        // Close any unclosed structures
+        if (openBrackets > 0 || openBraces > 0) {
+            console.log(`[BaseAIProvider] Detected unclosed structures: ${openBrackets} brackets, ${openBraces} braces`)
+            
+            // Remove any trailing incomplete content after the last complete object
+            const lastCompleteObject = repaired.lastIndexOf('}')
+            if (lastCompleteObject > 0) {
+                repaired = repaired.substring(0, lastCompleteObject + 1)
+                
+                // Recount after truncation
+                openBrackets = 0
+                openBraces = 0
+                inString = false
+                escapeNext = false
+                
+                for (let i = 0; i < repaired.length; i++) {
+                    const char = repaired[i]
+                    
+                    if (escapeNext) {
+                        escapeNext = false
+                        continue
+                    }
+                    
+                    if (char === '\\') {
+                        escapeNext = true
+                        continue
+                    }
+                    
+                    if (char === '"') {
+                        inString = !inString
+                    }
+                    
+                    if (!inString) {
+                        if (char === '[') openBrackets++
+                        if (char === ']') openBrackets--
+                        if (char === '{') openBraces++
+                        if (char === '}') openBraces--
+                    }
+                }
+            }
+            
+            // Add closing brackets/braces
+            while (openBrackets > 0) {
+                repaired += ']'
+                openBrackets--
+            }
+            while (openBraces > 0) {
+                repaired += '}'
+                openBraces--
+            }
+            
+            console.log('[BaseAIProvider] Added closing structures')
+        }
+        
+        return repaired
     }
 
     /**
@@ -373,16 +473,41 @@ PENTING:
                     console.error('[BaseAIProvider] Context around error:', cleaned.substring(start, end))
                 }
                 
-                // Attempt to repair common JSON issues
-                console.log('[BaseAIProvider] Attempting to repair JSON...')
+                // Attempt to repair JSON with comprehensive strategies
+                console.log('[BaseAIProvider] Attempting to repair JSON with multiple strategies...')
                 try {
-                    // Try removing trailing commas
-                    let repaired = cleaned.replace(/,(\s*[}\]])/g, '$1')
+                    // Use comprehensive repair method
+                    const repaired = this.repairJSON(cleaned)
+                    console.log('[BaseAIProvider] Repaired JSON (first 500 chars):', repaired.substring(0, 500) + '...')
                     parsed = JSON.parse(repaired)
-                    console.log('[BaseAIProvider] Successfully repaired JSON by removing trailing commas')
-                } catch (repairError) {
-                    // If repair fails, throw the original error with more context
-                    throw new Error(`${parseError.message}\n\nThis usually happens when the AI returns malformed JSON. Please try again.`)
+                    console.log('[BaseAIProvider] Successfully repaired and parsed JSON')
+                } catch (repairError: any) {
+                    console.error('[BaseAIProvider] Repair failed:', repairError.message)
+                    
+                    // Last resort: try to extract partial valid JSON
+                    console.log('[BaseAIProvider] Attempting to extract partial valid JSON...')
+                    try {
+                        // Find the last complete question object
+                        const questionsMatch = cleaned.match(/"questions"\s*:\s*\[([\s\S]*)\]/)
+                        if (questionsMatch) {
+                            const questionsContent = questionsMatch[1]
+                            const lastCompleteObject = questionsContent.lastIndexOf('}')
+                            
+                            if (lastCompleteObject > 0) {
+                                // Extract up to last complete object
+                                const truncatedQuestions = questionsContent?.substring(0, lastCompleteObject + 1)
+                                const partialJSON = `{"questions":[${truncatedQuestions}]}`
+                                
+                                // Try to repair this partial JSON
+                                const repairedPartial = this.repairJSON(partialJSON)
+                                parsed = JSON.parse(repairedPartial)
+                                console.log('[BaseAIProvider] Successfully extracted partial JSON with', parsed.questions?.length || 0, 'questions')
+                            }
+                        }
+                    } catch (partialError) {
+                        // If all repair attempts fail, throw the original error with more context
+                        throw new Error(`${parseError.message}\n\nThis usually happens when the AI returns malformed JSON. Please try again.`)
+                    }
                 }
             }
 

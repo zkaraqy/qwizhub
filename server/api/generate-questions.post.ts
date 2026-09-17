@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
         const sanitizedTopic = sanitizePromptInput(body.topic)
         const sanitizedObjective = sanitizePromptInput(body.objective)
         const sanitizedVariables = Array.isArray(variables) 
-            ? variables.map((v: ResearchVariable) => `${sanitizePromptInput(v.variableName)} | Tipe Variabel: ${v.variableType || 'unknown'} | Indikator: ${v.indicators?.map(ind => sanitizePromptInput(ind.indicatorText)).join(', ') || 'none'}`).filter(v => v.length > 0)
+            ? variables.map((v: ResearchVariable) => `${sanitizePromptInput(v.variableName)} | Tipe Variabel: ${v.variableType || 'unknown'} ${(v.indicators?.length ?? 0) > 0 ? `| Indikator: ${v.indicators?.map(ind => sanitizePromptInput(ind.indicatorText)).join(', ')}` : ''}`).filter(v => v.length > 0)
             : []
 
 

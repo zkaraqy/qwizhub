@@ -594,11 +594,15 @@ async function generateByAI() {
 
     await fetchQuestionnaire()
     Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'AI berhasil men-generate pertanyaan', showConfirmButton: false, timer: 3000 })
-  } catch (err) {
-    Swal.fire('Error', 'Gagal generate AI.', 'error')
-  } finally {
-    generatingAI.value = false
-  }
+    } catch (err) {
+      Swal.fire(
+        'Info',
+        'Mohon maaf, terjadi kegagalan dalam menghasilkan pertanyaan AI. Silakan coba kembali dengan menyesuaikan kembali topik, tujuan penelitian, serta variabel dan indikatornya.',
+        'info'
+      )
+    } finally {
+      generatingAI.value = false
+    }
 }
 
 // Helper function to check if question has options

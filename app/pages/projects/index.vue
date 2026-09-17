@@ -130,7 +130,7 @@
             </p>
             
             <div class="d-flex align-items-center gap-3 text-secondary small mb-4 pt-3 border-top" style="border-color: #F0F4F4; font-size: 0.8rem;">
-              <span class="d-flex align-items-center gap-1.5">
+              <span class="d-flex gap-2 align-items-center gap-1.5">
                 <i class="bi bi-calendar3" style="color: #137A7F;"></i>
                 <span>{{ formatDate(project.createdAt) }}</span>
               </span>
@@ -142,7 +142,7 @@
 
             <div class="d-flex gap-2 mt-auto">
               <button 
-                class="btn text-white btn-sm flex-grow-1 py-2 fw-semibold rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-1.5" 
+                class="btn text-white btn-sm flex-grow-1 gap-2 py-2 fw-semibold rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-1.5" 
                 style="background-color: #0E3B43;"
                 @click="router.push(`/projects/manage/${project.id}`)"
               >

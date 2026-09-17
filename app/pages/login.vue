@@ -128,9 +128,9 @@ const signInWithCredentials = async () => {
               <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <label for="password" class="form-label small fw-semibold text-dark mb-0">Kata Sandi</label>
-                  <NuxtLink to="/forgot-password" class="text-decoration-none small" style="color: #137A7F; font-size: 0.8rem;">
+                  <!-- <NuxtLink to="/forgot-password" class="text-decoration-none small" style="color: #137A7F; font-size: 0.8rem;">
                     Lupa password?
-                  </NuxtLink>
+                  </NuxtLink> -->
                 </div>
                 <input 
                   v-model="password"

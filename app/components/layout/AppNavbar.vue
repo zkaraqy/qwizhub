@@ -93,7 +93,7 @@
                 </div>
                 <span class="fw-semibold small d-none d-sm-inline" style="color: #17212B;">{{ user.name }}</span>
               </a>
-              <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border p-1" style="border-color: #E2E8F0; min-width: 220px;">
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3 border p-1" style="border-color: #E2E8F0; min-width: 220px;z-index:9999 !important;">
                 <li class="px-3 py-2 border-bottom mb-1 bg-light rounded-top">
                   <div class="fw-bold text-dark small text-truncate">{{ user.name }}</div>
                   <div class="text-secondary" style="font-size: 0.75rem;">{{ user.email || (user.role === 'peneliti' ? 'Peneliti' : 'Responden') }}</div>

@@ -936,7 +936,7 @@ onMounted(async () => {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
-  z-index: 1050;
+  z-index: 999;
 }
 
 .filter-toolbar .dropdown-menu {

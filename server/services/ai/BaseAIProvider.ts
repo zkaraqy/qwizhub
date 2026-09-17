@@ -100,7 +100,7 @@ export abstract class BaseAIProvider {
      */
     protected buildPrompt(input: AIGenerationInput): string {
         const objective = input.objective || input.researchObjective || ''
-        
+        console.log('[BaseAIProvider] Building prompt for input:', {input})
         return `Anda adalah asisten AI yang membantu peneliti membuat kuesioner penelitian yang valid dan tidak bias.
 
 TUGAS: Buatlah draf pertanyaan kuesioner berdasarkan informasi berikut:
@@ -109,10 +109,10 @@ TOPIK PENELITIAN:
 ${input.topic}
 
 TUJUAN PENELITIAN:
-${objective}
+${objective || 'Tidak ada tujuan penelitian yang diberikan'}
 
 VARIABEL YANG AKAN DIUKUR:
-${input.variables.map((v, i) => `${i + 1}. ${v}`).join('\n')}
+${input.variables.length > 0 ? input.variables.map((v, i) => `${i + 1}. ${v}`).join('\n') : 'Tidak ada variabel yang diberikan'}
 
 PENTING - PAHAMI TIPE SKALA DAN PENGGUNAANNYA:
 

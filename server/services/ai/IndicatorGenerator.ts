@@ -72,7 +72,7 @@ export class IndicatorGenerator {
 
     private buildPrompt(input: IndicatorGenerationInput): string {
         const variableTypeLabel = this.getVariableTypeLabel(input.variableType)
-        
+        console.log('[IndicatorGenerator] Building prompt for variable:', {input})
         return `Anda adalah asisten AI yang membantu peneliti mengidentifikasi indikator pengukuran untuk variabel penelitian.
 
 KONTEKS PENELITIAN:

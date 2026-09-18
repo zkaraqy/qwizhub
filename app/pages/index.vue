@@ -149,194 +149,141 @@
             </div>
           </div>
 
-          <!-- Right: Browser Mockup matching reference image -->
+          <!-- Right: Realistic Dashboard Mockup -->
           <div class="col-lg-7">
-            <div class="card shadow-lg border rounded-4 overflow-hidden bg-white" style="border-color: #E2E8F0;">
-              <!-- Browser Titlebar -->
-              <div class="bg-white border-bottom d-flex align-items-center justify-content-between py-2 px-3" style="border-color: #EEF2F6;">
-                <div class="d-flex gap-1.5 align-items-center">
-                  <span class="rounded-circle d-inline-block" style="width: 9px; height: 9px; background-color: #EF4444;"></span>
-                  <span class="rounded-circle d-inline-block mx-1" style="width: 9px; height: 9px; background-color: #F59E0B;"></span>
-                  <span class="rounded-circle d-inline-block" style="width: 9px; height: 9px; background-color: #10B981;"></span>
+            <div class="dashboard-mockup card shadow-lg border-0 rounded-4 overflow-hidden bg-white" style="border: 1px solid #E4E9E7;">
+              <!-- Browser Chrome Bar -->
+              <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom" style="background:#F8FAFA; border-color:#E4E9E7;">
+                <div class="d-flex gap-1 align-items-center">
+                  <span class="rounded-circle d-inline-block" style="width:9px;height:9px;background:#EF4444;"></span>
+                  <span class="rounded-circle d-inline-block mx-1" style="width:9px;height:9px;background:#F59E0B;"></span>
+                  <span class="rounded-circle d-inline-block" style="width:9px;height:9px;background:#10B981;"></span>
                 </div>
-                
-                <!-- Search bar in center -->
-                <div class="bg-light border rounded-pill px-3 py-1 text-muted d-flex align-items-center gap-2 flex-grow-1 mx-3" style="max-width: 320px; font-size: 0.775rem; border-color: #E2E8F0;">
-                  <i class="bi bi-search text-muted"></i>
-                  <span>Search research, questions, etc...</span>
+                <div class="d-flex align-items-center gap-2 px-3 py-1 rounded-pill border text-muted" style="font-size:0.72rem; background:#fff; border-color:#E4E9E7; max-width:240px;">
+                  <i class="bi bi-lock-fill" style="font-size:0.6rem; color:#2A7F79;"></i>
+                  <span>qwizhub.app/dashboard</span>
                 </div>
-                
-                <!-- User Profile on right -->
-                <div class="d-flex align-items-center gap-2 small">
-                  <span class="rounded-circle text-white d-inline-flex align-items-center justify-content-center fw-bold" style="width: 26px; height: 26px; font-size: 0.75rem; background-color: #137A7F;">N</span>
-                  <div class="d-none d-sm-block text-start lh-1">
-                    <div class="fw-bold text-dark" style="font-size: 0.75rem;">Nadia Putri</div>
-                    <div class="text-muted" style="font-size: 0.65rem;">Researcher</div>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold" style="width:26px;height:26px;font-size:0.72rem;background:#183153;">A</div>
+                  <div class="d-none d-sm-block lh-1">
+                    <div class="fw-semibold text-dark" style="font-size:0.72rem;">Ahmad Fauzi</div>
+                    <div class="text-muted" style="font-size:0.62rem;">Peneliti</div>
                   </div>
-                  <i class="bi bi-chevron-down text-muted" style="font-size: 0.65rem;"></i>
                 </div>
               </div>
 
-              <!-- Window Inner Body -->
-              <div class="card-body p-0">
-                <div class="row g-0">
-                  <!-- Sidebar -->
-                  <div class="col-md-4 border-end p-3 d-none d-md-flex flex-column justify-content-between" style="background-color: #FAFBFA; border-color: #EEF2F6;">
-                    <div>
-                      <div class="fw-bold fs-6 mb-3 d-flex align-items-center gap-1" style="color: #0E3B43;">
-                        <span>QwizHub</span>
-                      </div>
-                      
-                      <!-- Sidebar Nav List -->
-                      <div class="d-flex flex-column gap-1" style="font-size: 0.8rem;">
-                        <div class="d-flex align-items-center gap-2 px-2 py-1.5 rounded-2 text-secondary">
-                          <i class="bi bi-file-earmark-text"></i>
-                          <span>Research Setup</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2 px-2 py-1.5 rounded-2 fw-semibold position-relative" style="background-color: #EBF5F3; color: #137A7F;">
-                          <span class="position-absolute start-0 top-0 bottom-0 rounded-start" style="width: 3px; background-color: #137A7F;"></span>
-                          <i class="bi bi-sliders"></i>
-                          <span>Variables</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2 px-2 py-1.5 rounded-2 text-secondary">
-                          <i class="bi bi-chat-square-text"></i>
-                          <span>Questions</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2 px-2 py-1.5 rounded-2 text-secondary">
-                          <i class="bi bi-stars"></i>
-                          <span>AI Review</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2 px-2 py-1.5 rounded-2 text-secondary">
-                          <i class="bi bi-people"></i>
-                          <span>Respondents</span>
-                        </div>
-                      </div>
-                    </div>
+              <!-- Dashboard Body -->
+              <div class="p-3 p-md-3" style="background:#FAFBFA;">
 
-                    <!-- Bottom Widget in Sidebar -->
-                    <div class="card border rounded-3 p-2 bg-white mt-4" style="border-color: #E2E8F0; font-size: 0.75rem;">
-                      <div class="text-muted" style="font-size: 0.7rem;">Your Research</div>
-                      <div class="fw-bold text-dark mt-0.5">3/5 <span class="text-muted fw-normal" style="font-size: 0.7rem;">instrument</span></div>
-                      <a href="#" class="text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 mt-2" style="color: #137A7F; font-size: 0.75rem;">
-                        <i class="bi bi-file-earmark-arrow-up"></i>
-                        <span>Upgrade Plan &rarr;</span>
-                      </a>
+                <!-- Hero Header -->
+                <div class="mb-3">
+                  <div class="fw-bold mb-0" style="color:#183153; font-size:0.95rem;">Selamat Datang, Ahmad 👋</div>
+                  <div class="text-muted" style="font-size:0.72rem;">Pantau kemajuan riset dan kelola kuesioner Anda.</div>
+                </div>
+
+                <!-- Stat Cards Row -->
+                <div class="row g-2 mb-3">
+                  <div class="col-4">
+                    <div class="rounded-3 p-2 bg-white border" style="border-color:#E4E9E7;">
+                      <div class="d-flex align-items-center justify-content-center rounded-2 mb-1" style="width:28px;height:28px;background:rgba(24,49,83,0.1);">
+                        <i class="bi bi-folder2-open" style="font-size:0.75rem;color:#183153;"></i>
+                      </div>
+                      <div style="font-size:0.62rem;color:#66727C;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Proyek</div>
+                      <div class="fw-bold" style="font-size:1.1rem;color:#183153;line-height:1.2;">3</div>
+                      <div style="font-size:0.6rem;color:#66727C;">Aktif</div>
                     </div>
                   </div>
-
-                  <!-- Main Content Area -->
-                  <div class="col-md-8 p-3 p-md-3.5 bg-white">
-                    <!-- Top Status -->
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <span class="fw-bold text-dark" style="font-size: 0.85rem;">Instrument Builder</span>
-                      <span class="d-inline-flex align-items-center gap-1 text-muted" style="font-size: 0.7rem;">
-                        <i class="bi bi-check-circle-fill" style="color: #10B981;"></i>
-                        <span>Auto-saved 2 minutes ago</span>
-                      </span>
-                    </div>
-
-                    <!-- Project Title Bar -->
-                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-                      <span class="fw-bold text-dark text-truncate" style="font-size: 0.8rem;">Pengaruh Kemudahan Penggunaan Aplikasi terhadap Kepuasan Pengguna</span>
-                      <i class="bi bi-three-dots text-muted ms-2"></i>
-                    </div>
-
-                    <!-- Secondary Tabs Bar -->
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                      <button class="btn btn-sm btn-light border fw-semibold py-0.5 px-2.5 rounded-pill text-dark" style="font-size: 0.75rem;">Variables</button>
-                      <button class="btn btn-sm btn-outline-secondary py-0.5 px-2 rounded-pill text-muted" style="font-size: 0.75rem;">+ Add Variable</button>
-                    </div>
-
-                    <!-- Split Area: Variable Tree (Left) & Indicator Pane (Right) -->
-                    <div class="row g-2">
-                      <!-- Mini Tree Column -->
-                      <div class="col-4 border-end pe-2" style="font-size: 0.75rem;">
-                        <div class="mb-2">
-                          <div class="fw-semibold text-dark d-flex align-items-center gap-1 mb-1">
-                            <i class="bi bi-caret-down-fill text-muted" style="font-size: 0.65rem;"></i>
-                            <span>Ease of Use</span>
-                          </div>
-                          <div class="ps-3 d-flex flex-column gap-1 text-muted">
-                            <div>• Easy to Learn</div>
-                            <div class="fw-semibold px-1 rounded position-relative" style="color: #137A7F; background-color: #EBF5F3;">
-                              <span class="position-absolute start-0 top-0 bottom-0" style="width: 2px; background-color: #137A7F;"></span>
-                              • Easy to Use
-                            </div>
-                          </div>
-                        </div>
-                        <div class="fw-semibold text-dark d-flex align-items-center gap-1">
-                          <i class="bi bi-caret-right-fill text-muted" style="font-size: 0.65rem;"></i>
-                          <span>Satisfaction</span>
-                        </div>
+                  <div class="col-4">
+                    <div class="rounded-3 p-2 bg-white border" style="border-color:#E4E9E7;">
+                      <div class="d-flex align-items-center justify-content-center rounded-2 mb-1" style="width:28px;height:28px;background:rgba(42,127,121,0.1);">
+                        <i class="bi bi-clipboard-check" style="font-size:0.75rem;color:#2A7F79;"></i>
                       </div>
-
-                      <!-- Detail & Question Cards Column -->
-                      <div class="col-8 ps-2">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                          <div>
-                            <div class="text-muted" style="font-size: 0.65rem;">Indicator</div>
-                            <div class="fw-bold text-dark" style="font-size: 0.8rem;">Easy to Use</div>
-                          </div>
-                          <span class="badge border rounded-pill d-inline-flex align-items-center gap-1 px-2 py-1" style="color: #137A7F; background-color: #EBF5F3; border-color: #A7F3D0; font-size: 0.7rem;">
-                            <i class="bi bi-stars"></i> AI
-                          </span>
-                        </div>
-                        <p class="text-muted mb-2" style="font-size: 0.7rem;">Item pertanyaan untuk mengukur kemudahan penggunaan aplikasi.</p>
-
-                        <!-- Question 1 Card -->
-                        <div class="border rounded-2 p-2 mb-2 bg-white" style="border-color: #E2E8F0;">
-                          <div class="d-flex justify-content-between align-items-start mb-1">
-                            <div class="d-flex align-items-center gap-1.5">
-                              <span class="badge rounded-1" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.65rem;">Q1</span>
-                              <span class="text-dark fw-medium" style="font-size: 0.75rem;">Saya merasa aplikasi Shopee mudah digunakan.</span>
-                            </div>
-                            <i class="bi bi-three-dots text-muted" style="font-size: 0.7rem;"></i>
-                          </div>
-                          <div class="d-flex align-items-center gap-2 pt-1">
-                            <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.65rem;">Likert 1-5</span>
-                            <span class="badge rounded-pill text-white fw-medium d-inline-flex align-items-center gap-1" style="background-color: #10B981; font-size: 0.65rem;">
-                              <i class="bi bi-check-circle-fill"></i> All Check: Good
-                            </span>
-                          </div>
-                        </div>
-
-                        <!-- Question 2 Card with Warning Callout -->
-                        <div class="border rounded-2 p-2 bg-white" style="border-color: #E2E8F0;">
-                          <div class="d-flex justify-content-between align-items-start mb-1">
-                            <div class="d-flex align-items-center gap-1.5">
-                              <span class="badge rounded-1" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.65rem;">Q2</span>
-                              <span class="text-dark fw-medium" style="font-size: 0.725rem;">Saya merasa aplikasi Shopee mudah digunakan dan fiturnya sangat lengkap.</span>
-                            </div>
-                            <i class="bi bi-three-dots text-muted" style="font-size: 0.7rem;"></i>
-                          </div>
-                          <div class="mb-1.5">
-                            <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.65rem;">Likert 1-5</span>
-                          </div>
-
-                          <!-- Embedded Red AI Review Callout -->
-                          <div class="rounded-2 p-2" style="background-color: #FEF2F2; border: 1px solid #FECACA;">
-                            <div class="d-flex align-items-center gap-1 fw-bold text-danger mb-1" style="font-size: 0.7rem;">
-                              <i class="bi bi-exclamation-triangle-fill"></i>
-                              <span>AI Review</span>
-                            </div>
-                            <p class="text-danger mb-1" style="font-size: 0.675rem;">Pertanyaan ini mengukur dua hal sekaligus.</p>
-                            <div class="text-secondary fw-semibold" style="font-size: 0.65rem;">Saran perbaikan:</div>
-                            <div class="text-dark fw-medium mb-2" style="font-size: 0.675rem;">"Saya merasa aplikasi Shopee mudah digunakan."</div>
-                            <div class="d-flex gap-1.5">
-                              <button class="btn btn-sm text-white py-0.5 px-2 fw-semibold rounded-1" style="background-color: #137A7F; font-size: 0.65rem;">Apply Suggestion</button>
-                              <button class="btn btn-sm btn-light border py-0.5 px-2 text-secondary rounded-1" style="font-size: 0.65rem;">Edit Manual</button>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
+                      <div style="font-size:0.62rem;color:#66727C;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Kuesioner</div>
+                      <div class="fw-bold" style="font-size:1.1rem;color:#2A7F79;line-height:1.2;">7</div>
+                      <div style="font-size:0.6rem;color:#66727C;">Dipublikasi</div>
                     </div>
-
+                  </div>
+                  <div class="col-4">
+                    <div class="rounded-3 p-2 bg-white border" style="border-color:#E4E9E7;">
+                      <div class="d-flex align-items-center justify-content-center rounded-2 mb-1" style="width:28px;height:28px;background:rgba(33,138,97,0.12);">
+                        <i class="bi bi-people" style="font-size:0.75rem;color:#218A61;"></i>
+                      </div>
+                      <div style="font-size:0.62rem;color:#66727C;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Responden</div>
+                      <div class="fw-bold" style="font-size:1.1rem;color:#218A61;line-height:1.2;">142</div>
+                      <div style="font-size:0.6rem;color:#66727C;">Terkumpul</div>
+                    </div>
                   </div>
                 </div>
+
+                <!-- Table Card -->
+                <div class="rounded-3 bg-white border overflow-hidden" style="border-color:#E4E9E7;">
+                  <!-- Table Header + Filter -->
+                  <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom" style="border-color:#E4E9E7;">
+                    <div class="fw-semibold" style="font-size:0.78rem;color:#183153;">
+                      <i class="bi bi-list-ul me-1" style="color:#2A7F79;"></i>Daftar Kuesioner
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <div class="border rounded-2 px-2 py-1 text-muted d-flex align-items-center gap-1" style="font-size:0.62rem;border-color:#E4E9E7;background:#FAFBFA;">
+                        <i class="bi bi-search" style="font-size:0.6rem;"></i>
+                        <span>Cari...</span>
+                      </div>
+                      <div class="border rounded-2 px-2 py-1 text-muted" style="font-size:0.62rem;border-color:#E4E9E7;background:#FAFBFA;">Semua Status ▾</div>
+                    </div>
+                  </div>
+                  <!-- Table Rows -->
+                  <div>
+                    <!-- Row 1 - Published -->
+                    <div class="d-flex align-items-center px-3 py-2 border-bottom" style="border-color:#F0F4F2;gap:8px;">
+                      <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0" style="width:28px;height:28px;background:#EAF5F3;">
+                        <i class="bi bi-file-earmark-text" style="font-size:0.75rem;color:#2A7F79;"></i>
+                      </div>
+                      <div class="flex-grow-1 overflow-hidden">
+                        <div class="fw-semibold text-truncate" style="font-size:0.72rem;color:#17212B;">Pengaruh Machine Learning thd Efektivitas Belajar</div>
+                        <div class="text-muted" style="font-size:0.6rem;">Proyek: Machine Learning — 45/100 responden</div>
+                      </div>
+                      <div class="flex-shrink-0 d-flex align-items-center gap-1">
+                        <div class="progress flex-shrink-0" style="width:36px;height:5px;background:#E4E9E7;">
+                          <div class="progress-bar" style="width:45%;background:#2A7F79;"></div>
+                        </div>
+                        <span class="badge rounded-pill fw-medium" style="background:#EAF5F3;color:#2A7F79;font-size:0.6rem;padding:2px 7px;">Aktif</span>
+                      </div>
+                    </div>
+                    <!-- Row 2 - Active (higher %) -->
+                    <div class="d-flex align-items-center px-3 py-2 border-bottom" style="border-color:#F0F4F2;gap:8px;">
+                      <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0" style="width:28px;height:28px;background:#EAF5F3;">
+                        <i class="bi bi-file-earmark-text" style="font-size:0.75rem;color:#2A7F79;"></i>
+                      </div>
+                      <div class="flex-grow-1 overflow-hidden">
+                        <div class="fw-semibold text-truncate" style="font-size:0.72rem;color:#17212B;">Kepuasan Pengguna Aplikasi E-Commerce</div>
+                        <div class="text-muted" style="font-size:0.6rem;">Proyek: UX Research — 80/80 responden</div>
+                      </div>
+                      <div class="flex-shrink-0 d-flex align-items-center gap-1">
+                        <div class="progress flex-shrink-0" style="width:36px;height:5px;background:#E4E9E7;">
+                          <div class="progress-bar" style="width:100%;background:#218A61;"></div>
+                        </div>
+                        <span class="badge rounded-pill fw-medium" style="background:rgba(33,138,97,0.12);color:#218A61;font-size:0.6rem;padding:2px 7px;">Selesai</span>
+                      </div>
+                    </div>
+                    <!-- Row 3 - Draft -->
+                    <div class="d-flex align-items-center px-3 py-2" style="gap:8px;">
+                      <div class="d-flex align-items-center justify-content-center rounded-2 flex-shrink-0" style="width:28px;height:28px;background:#F0F4F2;">
+                        <i class="bi bi-file-earmark-text" style="font-size:0.75rem;color:#66727C;"></i>
+                      </div>
+                      <div class="flex-grow-1 overflow-hidden">
+                        <div class="fw-semibold text-truncate" style="font-size:0.72rem;color:#17212B;">Analisis Motivasi Belajar Mahasiswa</div>
+                        <div class="text-muted" style="font-size:0.6rem;">Proyek: Edukasi — 0/50 responden</div>
+                      </div>
+                      <div class="flex-shrink-0">
+                        <span class="badge rounded-pill fw-medium" style="background:#F0F4F2;color:#66727C;font-size:0.6rem;padding:2px 7px;">Draft</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -577,61 +524,59 @@
               </div>
             </div>
 
-            <!-- Right: Mini Preview Card echoing Instrument Builder UI -->
+            <!-- Right: Mini Preview Card -->
             <div class="col-lg-5 mt-4 mt-lg-0">
-              <div class="card border rounded-4 p-3.5 p-lg-4 bg-white shadow-sm" style="border-color: #E2E8F0;">
+              <div class="card border-0 rounded-4 p-4 bg-white" style="box-shadow: 0 4px 32px rgba(24,49,83,0.09); border: 1px solid #E8ECEB !important;">
                 <!-- Window Chrome Dots & Status -->
-                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom" style="border-color: #F1F5F9;">
-                  <div class="d-flex align-items-center gap-1.5">
-                    <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #EF4444;"></span>
-                    <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #F59E0B;"></span>
-                    <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: #10B981;"></span>
+                <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom" style="border-color: #EEF2F0;">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="rounded-circle d-inline-block" style="width: 12px; height: 12px; background-color: #EF4444;"></span>
+                    <span class="rounded-circle d-inline-block" style="width: 12px; height: 12px; background-color: #F59E0B;"></span>
+                    <span class="rounded-circle d-inline-block" style="width: 12px; height: 12px; background-color: #10B981;"></span>
                   </div>
-                  <span class="badge rounded-pill text-white fw-medium d-inline-flex align-items-center gap-1" style="background-color: #10B981; font-size: 0.65rem;">
+                  <span class="badge rounded-pill text-white fw-semibold d-inline-flex align-items-center gap-1 px-3 py-1" style="background-color: #2A7F79; font-size: 0.72rem;">
                     <i class="bi bi-check-circle-fill"></i> Instrument Ready
                   </span>
                 </div>
 
                 <!-- Instrument Title & Info -->
                 <div class="mb-3">
-                  <div class="text-secondary small" style="font-size: 0.7rem;">Contoh Riset Terstruktur</div>
-                  <div class="fw-bold text-dark" style="font-size: 0.875rem;">Pengaruh Kemudahan Penggunaan Aplikasi terhadap Kepuasan Pengguna</div>
-                  <div class="d-flex gap-2 text-secondary mt-1" style="font-size: 0.725rem;">
+                  <div class="text-secondary mb-1" style="font-size: 0.75rem; color: #66727C;">Contoh Riset Terstruktur</div>
+                  <div class="fw-bold text-dark mb-2" style="font-size: 1rem; line-height: 1.4; color: #17212B;">Pengaruh Kemudahan Penggunaan Aplikasi terhadap Kepuasan Pengguna</div>
+                  <div class="d-flex align-items-center gap-2" style="font-size: 0.78rem; color: #66727C;">
                     <span>3 Variabel</span>
-                    <span>•</span>
+                    <span style="color: #C4CED4;">•</span>
                     <span>8 Indikator</span>
-                    <span>•</span>
+                    <span style="color: #C4CED4;">•</span>
                     <span>Skala Likert</span>
                   </div>
                 </div>
 
-                <!-- Evaluated Question Snippet -->
-                <div class="border rounded-2 p-2.5 mb-2.5 bg-white" style="border-color: #E2E8F0;">
-                  <div class="d-flex justify-content-between align-items-start mb-1">
-                    <div class="d-flex align-items-center gap-1.5">
-                      <span class="badge rounded-1" style="background-color: #EBF5F3; color: #137A7F; font-size: 0.65rem;">Q1</span>
-                      <span class="text-dark fw-medium" style="font-size: 0.75rem;">Saya merasa aplikasi mudah digunakan.</span>
-                    </div>
+                <!-- Q1 Card -->
+                <div class="border rounded-3 p-3 mb-3 bg-white" style="border-color: #E4E9E7;">
+                  <div class="d-flex align-items-start gap-2 mb-2">
+                    <span class="badge rounded-2 fw-semibold flex-shrink-0" style="background-color: #EAF5F3; color: #2A7F79; font-size: 0.72rem; padding: 3px 8px;">Q1</span>
+                    <span class="text-dark fw-medium" style="font-size: 0.85rem; line-height: 1.4;">Saya merasa aplikasi mudah digunakan.</span>
                   </div>
-                  <div class="d-flex align-items-center gap-2 pt-1">
-                    <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.65rem;">Likert 1-5</span>
-                    <span class="badge rounded-pill text-white fw-medium d-inline-flex align-items-center gap-1" style="background-color: #10B981; font-size: 0.65rem;">
-                      <i class="bi bi-check-circle-fill"></i> All Check: Good
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge border fw-normal rounded-pill" style="background-color: #F8FAFA; color: #66727C; border-color: #E4E9E7 !important; font-size: 0.72rem; padding: 4px 10px;">Likert 1–5</span>
+                    <span class="badge rounded-pill text-white fw-semibold d-inline-flex align-items-center gap-1" style="background-color: #2A7F79; font-size: 0.72rem; padding: 4px 10px;">
+                      <i class="bi bi-check-circle-fill" style="font-size: 0.65rem;"></i> All Check: Good
                     </span>
                   </div>
                 </div>
 
-                <!-- Matching Responden Indicator -->
-                <div class="p-2.5 rounded-2" style="background-color: #F8FAFA; border: 1px solid #E2E8F0;">
-                  <div class="d-flex justify-content-between align-items-center mb-1.5" style="font-size: 0.75rem;">
-                    <span class="text-secondary d-flex align-items-center gap-1.5">
-                      <i class="bi bi-people-fill text-muted"></i>
+                <!-- Target Responden -->
+                <div class="rounded-3 p-3" style="background-color: #F8FAFA; border: 1px solid #E4E9E7;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="d-flex align-items-center gap-2" style="font-size: 0.8rem; color: #66727C;">
+                      <i class="bi bi-people-fill" style="color: #2A7F79;"></i>
                       <span>Target Responden: Mahasiswa</span>
                     </span>
-                    <span class="fw-bold" style="color: #137A7F;">150 / 150 Siap</span>
+                    <span class="fw-bold" style="color: #2A7F79; font-size: 0.82rem;">150 / 150 Siap</span>
                   </div>
-                  <div class="progress" style="height: 6px; background-color: #E2E8F0;">
-                    <div class="progress-bar rounded-pill" style="width: 100%; background-color: #137A7F;"></div>
+                  <div class="progress rounded-pill" style="height: 7px; background-color: #E4E9E7;">
+                    <div class="progress-bar rounded-pill" style="width: 100%; background-color: #2A7F79;"></div>
                   </div>
                 </div>
               </div>

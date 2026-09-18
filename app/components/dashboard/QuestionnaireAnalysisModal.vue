@@ -3,12 +3,12 @@
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content rounded-4 border-0 shadow-lg">
         <!-- Header -->
-        <div class="modal-header border-bottom px-4 py-3 bg-light d-flex justify-content-between">
-          <div class="d-flex align-items-center gap-3">
+        <div class="modal-header border-bottom px-4 py-3 bg-light d-flex flex-column flex-md-row justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3 w-100">
             <div class="analysis-icon bg-primary text-white rounded-3 p-2">
               <i class="bi bi-bar-chart-fill fs-5"></i>
             </div>
-            <div>
+            <div class="flex-grow-1">
               <div class="d-flex align-items-center gap-2">
                 <h5 class="modal-title fw-bold text-dark mb-0">
                   {{ analysisData?.questionnaire?.topic || 'Analisis Kuesioner' }}
@@ -19,35 +19,38 @@
                 Proyek: {{ analysisData?.questionnaire?.projectTitle || '-' }}
               </small>
             </div>
+            <button type="button" class="btn-close d-md-none" @click="$emit('close')"></button>
           </div>
 
           <!-- Quick Action Buttons inside Header -->
-          <div class="d-flex align-items-center gap-2">
-            <span v-if="analysisData?.questionnaire?.status" class="badge"
-                  :class="analysisData.questionnaire.status === 'published' ? 'bg-success' : 'bg-secondary'">
-                  {{ analysisData.questionnaire.status === 'published' ? 'Aktif' : 'Draft' }}
-                </span>
-            <div class="btn-group">
-              <button
-                class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
-                :disabled="exporting || !analysisData?.summary?.totalResponses"
-                @click="triggerExport('excel')"
-              >
-                <i class="bi bi-file-earmark-excel"></i>
-                <span v-if="exporting && exportFormat === 'excel'" class="spinner-border spinner-border-sm"></span>
-                <span v-else>Excel</span>
-              </button>
-              <button
-                class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
-                :disabled="exporting || !analysisData?.summary?.totalResponses"
-                @click="triggerExport('csv')"
-              >
-                <i class="bi bi-file-earmark-text"></i>
-                <span v-if="exporting && exportFormat === 'csv'" class="spinner-border spinner-border-sm"></span>
-                <span v-else>CSV</span>
-              </button>
+          <div class="d-flex align-items-center justify-content-between justify-content-md-end gap-2 w-100 w-md-auto">
+            <div class="d-flex align-items-center gap-2">
+              <span v-if="analysisData?.questionnaire?.status" class="badge"
+                    :class="analysisData.questionnaire.status === 'published' ? 'bg-success' : 'bg-secondary'">
+                    {{ analysisData.questionnaire.status === 'published' ? 'Aktif' : 'Draft' }}
+              </span>
+              <div class="btn-group">
+                <button
+                  class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
+                  :disabled="exporting || !analysisData?.summary?.totalResponses"
+                  @click="triggerExport('excel')"
+                >
+                  <i class="bi bi-file-earmark-excel"></i>
+                  <span v-if="exporting && exportFormat === 'excel'" class="spinner-border spinner-border-sm"></span>
+                  <span v-else>Excel</span>
+                </button>
+                <button
+                  class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+                  :disabled="exporting || !analysisData?.summary?.totalResponses"
+                  @click="triggerExport('csv')"
+                >
+                  <i class="bi bi-file-earmark-text"></i>
+                  <span v-if="exporting && exportFormat === 'csv'" class="spinner-border spinner-border-sm"></span>
+                  <span v-else>CSV</span>
+                </button>
+              </div>
             </div>
-            <button type="button" class="btn-close" @click="$emit('close')"></button>
+            <button type="button" class="btn-close d-none d-md-block" @click="$emit('close')"></button>
           </div>
         </div>
 

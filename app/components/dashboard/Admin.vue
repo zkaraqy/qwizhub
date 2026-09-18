@@ -10,43 +10,51 @@
 
     <div class="row mb-4">
       <div class="col-lg-3 col-md-6 mb-3">
-        <div class="stat-card p-4">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="text-muted mb-0">Pending</h6>
-            <div class="stat-icon warning"><i class="bi bi-clock-history"></i></div>
+        <div class="stat-card p-3">
+          <div class="stat-icon warning mb-2">
+            <i class="bi bi-clock-history"></i>
           </div>
-          <h2 class="display-5 fw-bold mb-0">{{ stats.pending }}</h2>
-          <small class="text-muted">Menunggu proses</small>
+          <div class="stat-sublabel text-muted text-uppercase">Pending</div>
+          <h3 class="fw-bold mb-0 text-dark">{{ stats.pending }}</h3>
+          <div class="stat-footnote text-muted mt-1">
+            <small>Menunggu proses</small>
+          </div>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 mb-3">
-        <div class="stat-card p-4">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="text-muted mb-0">Dibayar Hari Ini</h6>
-            <div class="stat-icon success"><i class="bi bi-check-circle"></i></div>
+        <div class="stat-card p-3">
+          <div class="stat-icon success mb-2">
+            <i class="bi bi-check-circle"></i>
           </div>
-          <h2 class="display-5 fw-bold mb-0">{{ stats.paidToday }}</h2>
-          <small class="text-muted">Transaksi hari ini</small>
+          <div class="stat-sublabel text-muted text-uppercase">Dibayar Hari Ini</div>
+          <h3 class="fw-bold mb-0" style="color: var(--qh-success);">{{ stats.paidToday }}</h3>
+          <div class="stat-footnote text-muted mt-1">
+            <small>Transaksi hari ini</small>
+          </div>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 mb-3">
-        <div class="stat-card p-4">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="text-muted mb-0">Total Pending</h6>
-            <div class="stat-icon info"><i class="bi bi-cash-stack"></i></div>
+        <div class="stat-card p-3">
+          <div class="stat-icon info mb-2">
+            <i class="bi bi-cash-stack"></i>
           </div>
-          <h2 class="display-6 fw-bold mb-0">Rp {{ formatCurrency(stats.pendingAmount) }}</h2>
-          <small class="text-muted">Total nominal pending</small>
+          <div class="stat-sublabel text-muted text-uppercase">Total Pending</div>
+          <h3 class="fw-bold mb-0 text-teal">Rp {{ formatCurrency(stats.pendingAmount) }}</h3>
+          <div class="stat-footnote text-muted mt-1">
+            <small>Total nominal pending</small>
+          </div>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 mb-3">
-        <div class="stat-card p-4">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="text-muted mb-0">Total Dibayar</h6>
-            <div class="stat-icon primary"><i class="bi bi-graph-up"></i></div>
+        <div class="stat-card p-3">
+          <div class="stat-icon primary mb-2">
+            <i class="bi bi-graph-up"></i>
           </div>
-          <h2 class="display-5 fw-bold mb-0">{{ stats.paid }}</h2>
-          <small class="text-muted">Total transaksi paid</small>
+          <div class="stat-sublabel text-muted text-uppercase">Total Dibayar</div>
+          <h3 class="fw-bold mb-0 text-dark">{{ stats.paid }}</h3>
+          <div class="stat-footnote text-muted mt-1">
+            <small>Total transaksi paid</small>
+          </div>
         </div>
       </div>
     </div>
@@ -368,6 +376,17 @@ onUnmounted(() => {
   box-shadow: 0 8px 24px rgba(24, 49, 83, 0.08);
 }
 
+.stat-sublabel {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--qh-text-secondary, #66727C);
+}
+
+.stat-footnote {
+  font-size: 0.75rem;
+}
+
 .stat-icon {
   width: 38px;
   height: 38px;
@@ -382,6 +401,8 @@ onUnmounted(() => {
 .stat-icon.success { background: rgba(33, 138, 97, 0.12); color: #218A61; }
 .stat-icon.info { background: #EAF5F3; color: #2A7F79; }
 .stat-icon.warning { background: rgba(200, 138, 40, 0.12); color: #C88A28; }
+
+.text-teal { color: #2A7F79 !important; }
 
 .fade-in {
   animation: fadeIn 0.5s ease-in;

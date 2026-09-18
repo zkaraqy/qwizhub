@@ -11,19 +11,19 @@
     </div>
 
     <div v-else>
-      <div class="d-flex justify-content-between align-items-center mb-4 gap-2">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div>
           <h2 class="fw-bold mb-1">Edit Kuesioner</h2>
           <p class="d-flex flex-wrap text-muted mb-0">Project: {{ questionnaire?.project?.project?.title || 'Unknown' }}</p>
         </div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-outline-secondary fw-semibold" @click="handleBack">
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-outline-secondary fw-semibold flex-grow-1 flex-md-grow-0" @click="handleBack">
             Kembali
           </button>
-          <button class="btn btn-primary fw-semibold" @click="saveChanges" :disabled="savingChanges">
+          <button class="btn btn-primary fw-semibold flex-grow-1 flex-md-grow-0" @click="saveChanges" :disabled="savingChanges">
             {{ savingChanges ? 'Menyimpan...' : 'Simpan' }}
           </button>
-          <button class="btn btn-success fw-semibold" @click="showPublishModal = true"
+          <button class="btn btn-success fw-semibold flex-grow-1 flex-md-grow-0" @click="showPublishModal = true"
             :disabled="questionnaire.status !== 'draft' || questions.length === 0">
             Publikasikan
           </button>
@@ -87,7 +87,7 @@
             <div class="d-flex gap-2">
               <button class="btn btn-outline-primary" @click="generateByAI"
                 :disabled="generatingAI || questionnaire.status !== 'draft'">
-                <i class="bi bi-robot me-2"></i>{{ generatingAI ? 'Generating...' : '⚡ Generate by AI (5 Token)' }}
+                <i class="bi bi-stars me-2"></i>{{ generatingAI ? 'Generating...' : 'Generate by AI (5 Token)' }}
               </button>
               <button class="btn btn-primary" @click="showAddModal = true" :disabled="questionnaire.status !== 'draft'">
                 <i class="bi bi-plus-lg me-2"></i>Tambah Pertanyaan

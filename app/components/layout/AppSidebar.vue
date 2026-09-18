@@ -18,7 +18,7 @@
         <span>Dashboard</span>
       </NuxtLink>
 
-      <div class="nav-section-label mt-3">RISET & DATA</div>
+      <div v-if="user?.role !== 'admin'" class="nav-section-label mt-3">RISET & DATA</div>
 
       <!-- My Projects (Peneliti) -->
       <NuxtLink
@@ -122,7 +122,7 @@ interface User {
   id?: string
   name?: string
   email?: string
-  role?: 'peneliti' | 'responden'
+  role?: 'peneliti' | 'responden' | 'admin'
 }
 
 interface Props {

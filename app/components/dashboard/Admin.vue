@@ -1,9 +1,13 @@
 <template>
-      <div class="hero-section fade-in mb-4">
-      <div class="position-relative d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div class="hero-section-clean fade-in mb-4">
+      <div class="d-flex justify-content-between align-items-start align-items-md-center flex-wrap gap-3">
         <div>
-          <h1 class="display-6 fw-bold mb-2">Admin Panel</h1>
-          <p class="lead mb-0 text-white opacity-90">Kelola pengajuan pencairan honor responden</p>
+          <h2 class="fw-bold mb-1" style="color: #0E3B43; letter-spacing: -0.02em;">
+            Admin Panel
+          </h2>
+          <p class="mb-0 text-secondary small">
+            Kelola pengajuan pencairan honor responden
+          </p>
         </div>
       </div>
     </div>

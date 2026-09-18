@@ -1,62 +1,81 @@
 <template>
   <LayoutPrivateLayout :user="userProfile" active-item="honor" @logout="handleSignOut">
-    <div class="hero-section fade-in mb-4">
-      <div class="position-relative d-flex justify-content-between align-items-center flex-wrap gap-3">
-        <div>
-          <h1 class="display-6 fw-bold mb-2">Pencairan Honor 💰</h1>
-          <p class="lead mb-0 text-white opacity-90">Cairkan honor yang Anda dapatkan ke akun GoPay Anda</p>
+    <!-- Hero Section - Flat SaaS Header -->
+    <div class="hero-section-clean fade-in mb-4">
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <span class="text-uppercase fw-bold small" style="color: var(--qh-accent); letter-spacing: 0.08em; font-size: 0.72rem;">
+          PENCAIRAN HONOR
+        </span>
+      </div>
+      <h2 class="fw-bold mb-1" style="color: var(--qh-primary); letter-spacing: -0.02em;">
+        Pencairan Honor 💰
+      </h2>
+      <p class="text-secondary small mb-0">
+        Cairkan honor yang Anda dapatkan dari mengisi kuesioner ke akun GoPay Anda.
+      </p>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-4 col-md-6 fade-in stagger-1">
+        <div class="stat-card p-3">
+          <div class="stat-icon success mb-2">
+            <i class="bi bi-wallet2"></i>
+          </div>
+          <div class="stat-sublabel text-muted text-uppercase">Saldo Tersedia</div>
+          <h3 class="fw-bold mb-0" style="color: var(--qh-success);">Rp {{ formatCurrency(balance.availableBalance) }}</h3>
+          <div class="stat-footnote text-muted mt-1">
+            <small>Dapat dicairkan</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 fade-in stagger-2">
+        <div class="stat-card p-3">
+          <div class="stat-icon teal mb-2">
+            <i class="bi bi-cash-stack"></i>
+          </div>
+          <div class="stat-sublabel text-muted text-uppercase">Total Diterima</div>
+          <h3 class="fw-bold mb-0 text-teal">Rp {{ formatCurrency(balance.totalEarned) }}</h3>
+          <div class="stat-footnote text-muted mt-1">
+            <small>Akumulasi seluruh honor</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 fade-in stagger-3">
+        <div class="stat-card p-3">
+          <div class="stat-icon warning mb-2">
+            <i class="bi bi-arrow-up-circle"></i>
+          </div>
+          <div class="stat-sublabel text-muted text-uppercase">Total Dicairkan</div>
+          <h3 class="fw-bold mb-0" style="color: var(--qh-warning);">Rp {{ formatCurrency(balance.totalWithdrawn) }}</h3>
+          <div class="stat-footnote text-muted mt-1">
+            <small>Sudah dibayar</small>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="row mb-4">
-      <div class="col-lg-4 col-md-6 mb-3">
-        <div class="stat-card p-4">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="text-muted mb-0">Saldo Tersedia</h6>
-            <div class="stat-icon success"><i class="bi bi-wallet2"></i></div>
-          </div>
-          <h2 class="display-5 fw-bold mb-0">Rp {{ formatCurrency(balance.availableBalance) }}</h2>
-          <small class="text-muted">Dapat dicairkan</small>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 mb-3">
-        <div class="stat-card p-4">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="text-muted mb-0">Total Diterima</h6>
-            <div class="stat-icon info"><i class="bi bi-cash-stack"></i></div>
-          </div>
-          <h2 class="display-5 fw-bold mb-0">Rp {{ formatCurrency(balance.totalEarned) }}</h2>
-          <small class="text-muted">Total honor</small>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 mb-3">
-        <div class="stat-card p-4">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="text-muted mb-0">Total Dicairkan</h6>
-            <div class="stat-icon warning"><i class="bi bi-arrow-up-circle"></i></div>
-          </div>
-          <h2 class="display-5 fw-bold mb-0">Rp {{ formatCurrency(balance.totalWithdrawn) }}</h2>
-          <small class="text-muted">Sudah dibayar</small>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="hasPending" class="alert alert-warning d-flex align-items-center justify-content-between mb-4">
+    <!-- Pending Alert -->
+    <div v-if="hasPending" class="alert alert-warning d-flex align-items-center justify-content-between mb-4 rounded-3">
       <div>
         <i class="bi bi-exclamation-triangle-fill me-2"></i>
         <strong>Pengajuan Sedang Diproses</strong>
         <p class="mb-0 mt-1">Anda memiliki pengajuan pencairan sebesar <strong>Rp {{ formatCurrency(balance.pendingAmount) }}</strong> yang sedang diproses.</p>
       </div>
-      <button @click="handleCancelPending" class="btn btn-outline-danger btn-sm">
+      <button @click="handleCancelPending" class="btn btn-outline-danger btn-sm rounded-pill px-3">
         <i class="bi bi-x-circle me-1"></i>Batal
       </button>
     </div>
 
-    <div v-if="!hasPending" class="card shadow-sm mb-4">
+    <!-- Form Ajukan Pencairan -->
+    <div v-if="!hasPending" class="card border rounded-4 shadow-sm bg-white overflow-hidden mb-4 fade-in stagger-2" style="border-color: var(--qh-border);">
+      <div class="card-header bg-white border-bottom d-flex align-items-center p-3.5 p-md-4" style="border-color: var(--qh-border);">
+        <h5 class="fw-bold mb-0 text-dark">
+          <i class="bi bi-send-fill me-2" style="color: var(--qh-accent);"></i>Ajukan Pencairan Honor
+        </h5>
+      </div>
       <div class="card-body p-4">
-        <h4 class="card-title mb-3"><i class="bi bi-send-fill me-2"></i>Ajukan Pencairan Honor</h4>
-        <div v-if="!userPhone" class="alert alert-danger">
+        <div v-if="!userPhone" class="alert alert-danger rounded-3">
           <i class="bi bi-exclamation-circle me-2"></i>
           Nomor telepon (GoPay) belum terdaftar. Silakan lengkapi profil Anda di halaman 
           <NuxtLink to="/profile" class="alert-link">Profil</NuxtLink> terlebih dahulu.
@@ -98,43 +117,66 @@
       </div>
     </div>
 
-
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h4 class="card-title mb-4"><i class="bi bi-clock-history me-2"></i>Riwayat Pengajuan</h4>
+    <!-- Riwayat Pengajuan -->
+    <div class="card border rounded-4 shadow-sm bg-white overflow-hidden fade-in stagger-3" style="border-color: var(--qh-border);">
+      <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center p-3.5 p-md-4" style="border-color: var(--qh-border);">
+        <div>
+          <h5 class="fw-bold mb-1 text-dark">
+            <i class="bi bi-clock-history me-2" style="color: var(--qh-accent);"></i>Riwayat Pengajuan
+          </h5>
+          <p class="text-muted small mb-0">Histori seluruh pengajuan pencairan honor Anda</p>
+        </div>
+        <span v-if="withdrawals.length > 0" class="badge rounded-pill px-2.5 py-1 fw-medium" style="background-color: var(--qh-accent-light); color: var(--qh-accent); font-size: 0.75rem;">
+          {{ withdrawals.length }} pengajuan
+        </span>
+      </div>
+      <div class="card-body p-0">
+        <!-- Loading -->
         <div v-if="loading" class="text-center py-5">
-          <div class="spinner-border text-primary"></div>
+          <div class="spinner-border text-primary spinner-border-sm me-2"></div>
+          Memuat riwayat pengajuan...
         </div>
+
+        <!-- Empty State -->
         <div v-else-if="withdrawals.length === 0" class="text-center py-5">
-          <i class="bi bi-inbox display-1 text-muted"></i>
-          <p class="text-muted mt-3">Belum ada riwayat pengajuan pencairan</p>
+          <i class="bi bi-inbox fs-1 text-muted opacity-50 mb-2"></i>
+          <h6 class="fw-bold text-dark">Belum ada riwayat pengajuan</h6>
+          <p class="text-muted small mb-0">Pengajuan pencairan honor Anda akan tampil di sini.</p>
         </div>
+
+        <!-- Table -->
         <div v-else class="table-responsive">
-          <table class="table table-hover">
-            <thead>
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
               <tr>
                 <th>Tanggal</th>
                 <th>Jumlah</th>
                 <th>No. GoPay</th>
                 <th>Status</th>
                 <th>Dibayar</th>
-                <th>Aksi</th>
+                <th class="text-end pe-4">Aksi</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="w in withdrawals" :key="w.id">
-                <td>{{ formatDateTime(w.createdAt) }}</td>
-                <td class="fw-semibold">Rp {{ formatCurrency(w.amount) }}</td>
-                <td>{{ w.phoneNumber }}</td>
+                <td><small class="text-muted">{{ formatDateTime(w.createdAt) }}</small></td>
                 <td>
-                  <span class="badge" :class="statusBadgeClass(w.status)">
-                    <i :class="statusIcon(w.status)" class="me-1"></i>
-                    {{ statusText(w.status) }}
+                  <span class="badge rounded-pill px-2.5 py-1 fw-medium" style="background-color: var(--qh-accent-light); color: var(--qh-accent);">
+                    Rp {{ formatCurrency(w.amount) }}
                   </span>
                 </td>
-                <td>{{ w.processedAt ? formatDate(w.processedAt) : '-' }}</td>
+                <td><small class="text-muted">{{ w.phoneNumber }}</small></td>
                 <td>
-                  <button v-if="w.status === 'sent'" @click="handleCancel(w.id)" class="btn btn-sm btn-outline-danger">
+                  <span v-if="w.status === 'sent'" class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1">
+                    <i class="bi bi-clock-fill me-1"></i>Terkirim
+                  </span>
+                  <span v-else class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                    <i class="bi bi-check-circle-fill me-1"></i>Dibayar
+                  </span>
+                </td>
+                <td><small class="text-muted">{{ w.processedAt ? formatDate(w.processedAt) : '-' }}</small></td>
+                <td class="text-end pe-4">
+                  <button v-if="w.status === 'sent'" @click="handleCancel(w.id)" class="btn btn-sm btn-outline-danger rounded-pill px-3">
                     <i class="bi bi-x-circle me-1"></i>Batal
                   </button>
                   <span v-else class="text-success"><i class="bi bi-check-circle-fill"></i></span>
@@ -304,9 +346,6 @@ const formatDateTime = (dateString: string) => {
   if (!dateString) return '-'
   return new Date(dateString).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
-const statusBadgeClass = (status: string) => status === 'sent' ? 'bg-warning' : 'bg-success'
-const statusIcon = (status: string) => status === 'sent' ? 'bi bi-clock-fill' : 'bi bi-check-circle-fill'
-const statusText = (status: string) => status === 'sent' ? 'Terkirim' : 'Dibayar'
 
 onMounted(() => {
   loadData()
@@ -314,45 +353,63 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.hero-section {
-  background: linear-gradient(135deg, #0E3B43 0%, #17a2b8 100%);
-  padding: 2rem;
-  border-radius: 16px;
-  color: white;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+.hero-section-clean {
+  padding: 0.25rem 0 0.5rem 0;
 }
 
 .stat-card {
-  background: #ffffff;
+  background: var(--qh-surface, #ffffff);
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--qh-border, #E4E9E7);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   height: 100%;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(24, 49, 83, 0.06);
+  border-color: rgba(42, 127, 121, 0.3);
+}
+
+.stat-sublabel {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--qh-text-secondary, #66727C);
+}
+
+.stat-footnote {
+  font-size: 0.75rem;
 }
 
 .stat-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
 }
 
-.stat-icon.success { background: rgba(40, 167, 69, 0.12); color: #28a745; }
-.stat-icon.info { background: rgba(23, 162, 184, 0.12); color: #17a2b8; }
-.stat-icon.warning { background: rgba(253, 126, 20, 0.12); color: #fd7e14; }
+.stat-icon.success { background: rgba(33, 138, 97, 0.12); color: var(--qh-success, #218A61); }
+.stat-icon.teal { background: var(--qh-accent-light, #EAF5F3); color: var(--qh-accent, #2A7F79); }
+.stat-icon.warning { background: rgba(200, 138, 40, 0.12); color: var(--qh-warning, #C88A28); }
+
+.text-teal { color: var(--qh-accent, #2A7F79) !important; }
+
+.table-responsive {
+  min-height: 120px;
+}
 
 .fade-in {
   animation: fadeIn 0.5s ease-in;
 }
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
 
 @keyframes fadeIn {
   from {
@@ -362,6 +419,19 @@ onMounted(() => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .stat-card {
+    text-align: center;
+  }
+  .stat-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 1.6rem;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 </style>

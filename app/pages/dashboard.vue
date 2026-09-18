@@ -5,11 +5,11 @@
       <div class="d-flex justify-content-between align-items-start align-items-md-center flex-wrap gap-3">
         <div>
           <div class="d-flex align-items-center gap-2 mb-1">
-            <span class="text-uppercase fw-bold small" style="color: #137A7F; letter-spacing: 0.08em; font-size: 0.72rem;">
+            <span class="text-uppercase fw-bold small" style="color: var(--qh-accent); letter-spacing: 0.08em; font-size: 0.72rem;">
               PANEL KONTROL {{ userProfile?.role === 'peneliti' ? 'PENELITI' : 'RESPONDEN' }}
             </span>
           </div>
-          <h2 class="fw-bold mb-1" style="color: #0E3B43; letter-spacing: -0.02em;">
+          <h2 class="fw-bold mb-1" style="color: var(--qh-primary); letter-spacing: -0.02em;">
             Selamat Datang Kembali, {{ userProfile?.name || 'User' }}
           </h2>
           <p v-if="userProfile?.role === 'peneliti'" class="mb-0 text-secondary small">
@@ -23,7 +23,7 @@
         <div v-if="userProfile?.role === 'peneliti'" class="d-flex gap-2">
           <button 
             class="btn text-white px-3.5 py-2 fw-semibold rounded-3 shadow-sm d-inline-flex align-items-center gap-2" 
-            style="background-color: #0E3B43;"
+            style="background-color: var(--qh-primary);"
             @click="handleCreateSurvey"
           >
             <i class="bi bi-plus-lg"></i>
@@ -455,32 +455,130 @@
     <!-- ========================================================================= -->
     <template v-else-if="userProfile?.role === 'responden'">
       <!-- Stats Cards -->
-      <div class="row g-4 mb-4">
-        <div class="col-md-6 col-sm-12 fade-in stagger-1">
-          <div class="card border rounded-4 shadow-sm bg-white p-4" style="border-color: #E2E8F0;">
-            <div class="d-flex align-items-center gap-3">
-              <div class="stat-icon teal">
-                <i class="bi bi-card-checklist"></i>
-              </div>
-              <div>
-                <div class="stat-sublabel text-muted text-uppercase mb-1">Total Kuesioner Diisi</div>
-                <h2 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.02em;">{{ stats.totalQuestionnairesAnswered }}</h2>
-              </div>
+      <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6 col-sm-6 fade-in stagger-1">
+          <div class="stat-card p-3">
+            <div class="stat-icon primary mb-2">
+              <i class="bi bi-card-checklist"></i>
+            </div>
+            <div class="stat-sublabel text-muted text-uppercase">Total Kuesioner Diisi</div>
+            <h3 class="fw-bold mb-0 text-dark">{{ stats.totalQuestionnairesAnswered }}</h3>
+            <div class="stat-footnote text-muted mt-1">
+              <small>Dari seluruh kuesioner</small>
             </div>
           </div>
         </div>
 
-        <div class="col-md-6 col-sm-12 fade-in stagger-1">
-          <div class="card border rounded-4 shadow-sm bg-white p-4" style="border-color: #E2E8F0;">
-            <div class="d-flex align-items-center gap-3">
-              <div class="stat-icon success">
-                <i class="bi bi-cash-stack"></i>
-              </div>
-              <div>
-                <div class="stat-sublabel text-muted text-uppercase mb-1">Total Honor Diperoleh</div>
-                <h2 class="fw-bold mb-0 text-success" style="letter-spacing: -0.02em;">Rp {{ formatCurrency(stats.totalHonorEarned) }}</h2>
-              </div>
+        <div class="col-xl-3 col-md-6 col-sm-6 fade-in stagger-2">
+          <div class="stat-card p-3">
+            <div class="stat-icon success mb-2">
+              <i class="bi bi-check2-all"></i>
             </div>
+            <div class="stat-sublabel text-muted text-uppercase">Selesai Dikerjakan</div>
+            <h3 class="fw-bold mb-0" style="color: var(--qh-success);">{{ stats.totalQuestionnairesAnswered }}</h3>
+            <div class="stat-footnote mt-1" style="color: var(--qh-success);">
+              <small><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i>&nbsp;&nbsp;Semua selesai</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 col-sm-6 fade-in stagger-3">
+          <div class="stat-card p-3">
+            <div class="stat-icon teal mb-2">
+              <i class="bi bi-cash-stack"></i>
+            </div>
+            <div class="stat-sublabel text-muted text-uppercase">Total Honor</div>
+            <h3 class="fw-bold mb-0 text-teal">Rp {{ formatCurrency(stats.totalHonorEarned) }}</h3>
+            <div class="stat-footnote text-muted mt-1">
+              <small>Akumulasi seluruh honor</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 col-sm-6 fade-in stagger-4">
+          <div class="stat-card p-3">
+            <div class="stat-icon warning mb-2">
+              <i class="bi bi-wallet2"></i>
+            </div>
+            <div class="stat-sublabel text-muted text-uppercase">Honor Tersedia</div>
+            <h3 class="fw-bold mb-0" style="color: var(--qh-warning);">Rp {{ formatCurrency(stats.totalHonorEarned) }}</h3>
+            <div class="stat-footnote text-muted mt-1">
+              <small>Siap dicairkan</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Filter Toolbar -->
+      <div class="filter-toolbar card border rounded-4 shadow-sm p-3 mb-4 fade-in stagger-1" style="border-color: var(--qh-border);">
+        <div class="row g-2 align-items-center">
+          <!-- Search Box -->
+          <div class="col-lg-4 col-md-6">
+            <label class="filter-label text-muted small fw-semibold mb-1 d-block">
+              <i class="bi bi-search me-1" style="color: var(--qh-accent);"></i>Cari Kuesioner
+            </label>
+            <div class="input-group">
+              <input
+                v-model="searchQuery"
+                type="text"
+                class="form-control border-end-0"
+                style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;"
+                :style="!searchQuery ? 'border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem; border-right: 1px solid #dee2e6 !important;' : ''"
+                placeholder="Ketik topik atau tujuan..."
+                @input="debouncedSearchQuestionnaires"
+              />
+              <button v-if="searchQuery" class="btn btn-outline-secondary border-start-0" style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem; border-color: #dee2e6;" type="button" @click="searchQuery = ''; loadQuestionnairesList()">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Status -->
+          <div class="col-lg-2 col-md-6 col-6">
+            <label class="filter-label text-muted small fw-semibold mb-1 d-block">
+              <i class="bi bi-funnel me-1" style="color: var(--qh-accent);"></i>Status
+            </label>
+            <select v-model="statusFilter" class="form-select rounded-3" @change="loadQuestionnairesList">
+              <option value="all">Semua Status</option>
+              <option value="available">🟢 Tersedia</option>
+              <option value="full">🔵 Penuh</option>
+              <option value="completed">✅ Sudah Dikerjakan</option>
+            </select>
+          </div>
+
+          <!-- Sort -->
+          <div class="col-lg-2 col-md-6 col-6">
+            <label class="filter-label text-muted small fw-semibold mb-1 d-block">
+              <i class="bi bi-sort-down me-1" style="color: var(--qh-accent);"></i>Urutkan
+            </label>
+            <select v-model="sortBy" class="form-select rounded-3" @change="loadQuestionnairesList">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="honor">Honor Tertinggi</option>
+            </select>
+          </div>
+
+          <!-- Filter Specialization -->
+          <div class="col-lg-4 col-md-6">
+            <label class="filter-label text-muted small fw-semibold mb-1 d-block">
+              <i class="bi bi-mortarboard me-1" style="color: var(--qh-accent);"></i>Spesialisasi
+            </label>
+            <select
+              class="form-select rounded-3"
+              :value="specializationFilter"
+              @change="setSpecializationFilter(($event.target as HTMLSelectElement).value)"
+            >
+              <option value="all">
+                🎓 Semua Spesialisasi
+              </option>
+              <option
+                v-for="spec in SPECIALIZATIONS"
+                :key="spec.value"
+                :value="spec.value"
+              >
+                {{ spec.label }}{{ userProfileSpecialization === spec.value ? ' ★' : '' }}
+              </option>
+            </select>
           </div>
         </div>
       </div>
@@ -488,142 +586,129 @@
       <!-- Kuesioner Tersedia (Responden Only) -->
       <div class="row mb-4 fade-in stagger-2">
         <div class="col-12">
-          <div class="card border rounded-4 shadow-sm bg-white p-4" style="border-color: #E2E8F0;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h5 class="fw-bold mb-0 text-dark">
-                <i class="bi bi-clipboard-check me-2" style="color: #137A7F;"></i>Kuesioner Tersedia
-              </h5>
-              <NuxtLink to="/questionnaires" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-                Lihat Semua
+          <div class="card border rounded-4 shadow-sm bg-white overflow-hidden" style="border-color: var(--qh-border);">
+            <!-- Header -->
+            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center p-3.5 p-md-4" style="border-color: var(--qh-border);">
+              <div>
+                <h5 class="fw-bold mb-1 text-dark">
+                  <i class="bi bi-clipboard-data-fill me-2" style="color: var(--qh-accent);"></i>Kuesioner Tersedia
+                </h5>
+                <p class="text-muted small mb-0">Temukan kuesioner yang sesuai dan kerjakan untuk mendapatkan honor</p>
+              </div>
+              <NuxtLink to="/questionnaires" class="btn btn-sm btn-outline-secondary rounded-pill px-3 d-flex align-items-center gap-1.5">
+                <i class="bi bi-arrow-right"></i>
+                <span>Lihat Semua</span>
               </NuxtLink>
             </div>
 
-            <!-- Search and Filter -->
-            <div class="row mb-3 g-2">
-              <div class="col-md-6">
-                <input v-model="searchQuery" type="text" class="form-control" placeholder="Cari kuesioner..."
-                  @input="debouncedSearchQuestionnaires" />
+            <!-- Body / Table -->
+            <div class="card-body p-0">
+              <!-- Loading State -->
+              <div v-if="loadingQuestionnaires" class="text-center py-5">
+                <div class="spinner-border text-primary spinner-border-sm me-2"></div>
+                Memuat daftar kuesioner...
               </div>
-              <div class="col-md-2">
-                <select v-model="statusFilter" class="form-select" @change="loadQuestionnairesList">
-                  <option value="all">Semua Status</option>
-                  <option value="available">Tersedia</option>
-                  <option value="full">Penuh</option>
-                  <option value="completed">Sudah Dikerjakan</option>
-                </select>
-              </div>
-              <div class="col-md-2">
-                <select v-model="sortBy" class="form-select" @change="loadQuestionnairesList">
-                  <option value="newest">Terbaru</option>
-                  <option value="oldest">Terlama</option>
-                  <option value="honor">Honor Tertinggi</option>
-                </select>
-              </div>
-              <!-- Filter Specialization -->
-              <div class="col-md-2">
-                <select
-                  class="form-select"
-                  :value="specializationFilter"
-                  @change="setSpecializationFilter(($event.target as HTMLSelectElement).value)"
-                >
-                  <option value="all">
-                    🎓 Semua Spesialisasi
-                  </option>
-                  <option
-                    v-for="spec in SPECIALIZATIONS"
-                    :key="spec.value"
-                    :value="spec.value"
-                  >
-                    {{ spec.label }}{{ userProfileSpecialization === spec.value ? ' ★' : '' }}
-                  </option>
-                </select>
-              </div>
-            </div>
 
-            <!-- Loading State -->
-            <div v-if="loadingQuestionnaires" class="text-center py-4">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+              <!-- Table -->
+              <div v-else-if="questionnairesList.length > 0" class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th style="width: 5%;">No</th>
+                      <th style="width: 25%;">Judul Kuesioner</th>
+                      <th style="width: 15%;">Peneliti</th>
+                      <th style="width: 12%;">Capaian Respons</th>
+                      <th style="width: 12%;">Honor</th>
+                      <th style="width: 13%;">Tanggal</th>
+                      <th style="width: 10%;">Status</th>
+                      <th style="width: 8%;" class="text-end pe-4">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(q, index) in questionnairesList" :key="q.id">
+                      <td>{{ (currentPageQuestionnaires - 1) * limitQuestionnaires + index + 1 }}</td>
+                      <td>
+                        <div class="fw-bold text-dark">{{ q.topic }}</div>
+                        <small class="text-muted d-block">{{ truncateText(q.researchObjective, 45) }}</small>
+                      </td>
+                      <td>
+                        <small class="text-muted">{{ q.project?.peneliti?.name || '-' }}</small>
+                      </td>
+                      <td>
+                        <div class="d-flex justify-content-between align-items-center mb-1 small">
+                          <span class="fw-semibold">{{ q.currentResponses }} <span class="text-muted">/ {{ q.targetRespondents }}</span></span>
+                        </div>
+                        <div class="progress rounded-pill" style="height: 6px;">
+                          <div
+                            class="progress-bar"
+                            style="background-color: var(--qh-accent);"
+                            :style="{ width: `${q.targetRespondents ? Math.min(100, Math.round((q.currentResponses / q.targetRespondents) * 100)) : (q.currentResponses ? 100 : 0)}%` }"
+                          ></div>
+                        </div>
+                      </td>
+                      <td>
+                        <span class="badge rounded-pill px-2.5 py-1 fw-medium" style="background-color: var(--qh-accent-light); color: var(--qh-accent);">
+                          💰 Rp {{ formatCurrency(q.honorariumPerRespondent) }}
+                        </span>
+                      </td>
+                      <td>
+                        <small class="text-muted">{{ formatDateShort(q.publishedAt) }}</small>
+                      </td>
+                      <td>
+                        <span v-if="q.hasResponded" class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                          Selesai
+                        </span>
+                        <span v-else-if="!q.isAvailable" class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1">
+                          Penuh
+                        </span>
+                        <span v-else class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">
+                          Tersedia
+                        </span>
+                      </td>
+                      <td class="text-end pe-4">
+                        <NuxtLink :to="`/questionnaires/${q.id}/detail`" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1">
+                          <i class="bi bi-eye"></i>
+                          <span class="d-none d-md-inline">Detail</span>
+                        </NuxtLink>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            </div>
 
-            <!-- Table -->
-            <div v-else-if="questionnairesList.length > 0" class="table-responsive">
-              <table class="table table-hover align-middle">
-                <thead class="table-light">
-                  <tr>
-                    <th style="width: 5%;">No</th>
-                    <th style="width: 25%;">Topic</th>
-                    <th style="width: 15%;">Peneliti</th>
-                    <th style="width: 10%;">Target</th>
-                    <th style="width: 12%;">Honor</th>
-                    <th style="width: 13%;">Tanggal</th>
-                    <th style="width: 10%;">Status</th>
-                    <th style="width: 10%;">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(q, index) in questionnairesList" :key="q.id">
-                    <td>{{ (currentPageQuestionnaires - 1) * limitQuestionnaires + index + 1 }}</td>
-                    <td>
-                      <div class="fw-semibold">{{ q.topic }}</div>
-                      <small class="text-muted">{{ truncateText(q.researchObjective, 50) }}</small>
-                    </td>
-                    <td>
-                      <small>{{ q.project?.peneliti?.name || '-' }}</small>
-                    </td>
-                    <td>
-                      <small>{{ q.currentResponses }}/{{ q.targetRespondents }}</small>
-                    </td>
-                    <td>
-                      <span class="badge bg-success">Rp {{ formatCurrency(q.honorariumPerRespondent) }}</span>
-                    </td>
-                    <td>
-                      <small>{{ formatDateShort(q.publishedAt) }}</small>
-                    </td>
-                    <td>
-                      <span v-if="q.hasResponded" class="badge bg-info">Selesai</span>
-                      <span v-else-if="!q.isAvailable" class="badge bg-secondary">Penuh</span>
-                      <span v-else class="badge bg-primary">Tersedia</span>
-                    </td>
-                    <td>
-                      <NuxtLink :to="`/questionnaires/${q.id}/detail`" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-eye"></i>
-                      </NuxtLink>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+              <!-- Empty State -->
+              <div v-else class="text-center py-5">
+                <i class="bi bi-inbox fs-1 text-muted opacity-50 mb-2"></i>
+                <h6 class="fw-bold text-dark">Tidak ada kuesioner tersedia</h6>
+                <p class="text-muted small mb-3">Belum ada kuesioner yang sesuai dengan filter Anda saat ini.</p>
+                <NuxtLink to="/questionnaires" class="btn btn-sm btn-outline-primary rounded-pill px-4">
+                  <i class="bi bi-search me-1"></i>Jelajahi Kuesioner
+                </NuxtLink>
+              </div>
 
-            <!-- Empty State -->
-            <div v-else class="text-center py-4">
-              <i class="bi bi-inbox display-4 text-muted"></i>
-              <p class="text-muted mt-2">Tidak ada kuesioner tersedia</p>
-            </div>
-
-            <!-- Pagination -->
-            <div v-if="totalPagesQuestionnaires > 1" class="d-flex justify-content-center mt-3">
-              <nav>
-                <ul class="pagination mb-0">
-                  <li class="page-item" :class="{ disabled: currentPageQuestionnaires === 1 }">
-                    <a class="page-link" href="#"
-                      @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires - 1)">
-                      <i class="bi bi-chevron-left"></i>
-                    </a>
-                  </li>
-                  <li v-for="page in totalPagesQuestionnaires" :key="page" class="page-item"
-                    :class="{ active: page === currentPageQuestionnaires }">
-                    <a class="page-link" href="#" @click.prevent="changeQuestionnaireePage(page)">{{ page }}</a>
-                  </li>
-                  <li class="page-item" :class="{ disabled: currentPageQuestionnaires === totalPagesQuestionnaires }">
-                    <a class="page-link" href="#"
-                      @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires + 1)">
-                      <i class="bi bi-chevron-right"></i>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
+              <!-- Pagination -->
+              <div v-if="totalPagesQuestionnaires > 1" class="d-flex justify-content-center py-3 border-top" style="border-color: var(--qh-border);">
+                <nav>
+                  <ul class="pagination mb-0">
+                    <li class="page-item" :class="{ disabled: currentPageQuestionnaires === 1 }">
+                      <a class="page-link" href="#"
+                        @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires - 1)">
+                        <i class="bi bi-chevron-left"></i>
+                      </a>
+                    </li>
+                    <li v-for="page in totalPagesQuestionnaires" :key="page" class="page-item"
+                      :class="{ active: page === currentPageQuestionnaires }">
+                      <a class="page-link" href="#" @click.prevent="changeQuestionnaireePage(page)">{{ page }}</a>
+                    </li>
+                    <li class="page-item" :class="{ disabled: currentPageQuestionnaires === totalPagesQuestionnaires }">
+                      <a class="page-link" href="#"
+                        @click.prevent="changeQuestionnaireePage(currentPageQuestionnaires + 1)">
+                        <i class="bi bi-chevron-right"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>
@@ -935,8 +1020,8 @@ onMounted(async () => {
 .filter-toolbar {
   position: relative;
   border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.07);
+  background: var(--qh-surface, #ffffff);
+  border: 1px solid var(--qh-border, rgba(0, 0, 0, 0.07));
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
   z-index: 999;
 }
@@ -945,14 +1030,19 @@ onMounted(async () => {
   z-index: 1060 !important;
 }
 
+.filter-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
 .table-responsive {
   min-height: 160px;
 }
 
 .stat-card {
-  background: #ffffff;
+  background: var(--qh-surface, #ffffff);
   border-radius: 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--qh-border, #E4E9E7);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   height: 100%;
@@ -960,15 +1050,15 @@ onMounted(async () => {
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(14, 59, 67, 0.06);
-  border-color: rgba(19, 122, 127, 0.3);
+  box-shadow: 0 8px 24px rgba(24, 49, 83, 0.06);
+  border-color: rgba(42, 127, 121, 0.3);
 }
 
 .stat-sublabel {
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   font-weight: 700;
-  color: #66727C;
+  color: var(--qh-text-secondary, #66727C);
 }
 
 .stat-footnote {
@@ -985,18 +1075,52 @@ onMounted(async () => {
   font-size: 1.25rem;
 }
 
-.stat-icon.primary { background: #EBF5F3; color: #0E3B43; }
-.stat-icon.success { background: #DEF7EC; color: #0E9F6E; }
-.stat-icon.info { background: #EBF5F3; color: #137A7F; }
-.stat-icon.warning { background: #FEF3C7; color: #D97706; }
+.stat-icon.primary { background: rgba(24, 49, 83, 0.1); color: var(--qh-primary, #183153); }
+.stat-icon.success { background: rgba(33, 138, 97, 0.12); color: var(--qh-success, #218A61); }
+.stat-icon.info { background: var(--qh-accent-light, #EAF5F3); color: var(--qh-accent, #2A7F79); }
+.stat-icon.warning { background: rgba(200, 138, 40, 0.12); color: var(--qh-warning, #C88A28); }
 .stat-icon.purple { background: #EDE9FE; color: #6D28D9; }
-.stat-icon.teal { background: #EBF5F3; color: #137A7F; }
+.stat-icon.teal { background: var(--qh-accent-light, #EAF5F3); color: var(--qh-accent, #2A7F79); }
 
 .text-purple { color: #6D28D9 !important; }
-.text-teal { color: #137A7F !important; }
+.text-teal { color: var(--qh-accent, #2A7F79) !important; }
 
 .dropdown-item:active {
-  background-color: #0E3B43;
+  background-color: var(--qh-primary, #183153);
+}
+
+/* Pagination Navy + Teal */
+.pagination .page-link {
+  color: var(--qh-text-secondary, #66727C);
+  border-color: var(--qh-border, #E4E9E7);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin: 0 2px;
+  transition: all 0.18s ease;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--qh-primary, #183153);
+  border-color: var(--qh-primary, #183153);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(24, 49, 83, 0.2);
+}
+
+.pagination .page-link:hover {
+  background-color: var(--qh-accent-light, #EAF5F3);
+  color: var(--qh-accent, #2A7F79);
+  border-color: var(--qh-accent-light, #EAF5F3);
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #c4ccd4;
+  background-color: transparent;
+}
+
+/* Progress bar teal accent */
+.progress {
+  background-color: rgba(42, 127, 121, 0.08);
 }
 
 @media (max-width: 575.98px) {

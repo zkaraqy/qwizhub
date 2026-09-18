@@ -3,11 +3,11 @@
     <!-- Page Header - Standardized SaaS Header -->
     <div class="hero-section-clean mb-4 fade-in">
       <div class="d-flex align-items-center gap-2 mb-1">
-        <span class="text-uppercase fw-bold small" style="color: #137A7F; letter-spacing: 0.08em; font-size: 0.72rem;">
+        <span class="text-uppercase fw-bold small" style="color: var(--qh-accent); letter-spacing: 0.08em; font-size: 0.72rem;">
           PENGATURAN AKUN
         </span>
       </div>
-      <h2 class="fw-bold mb-1" style="color: #0E3B43; letter-spacing: -0.02em;">Profil Pengguna</h2>
+      <h2 class="fw-bold mb-1" style="color: var(--qh-primary); letter-spacing: -0.02em;">Profil Pengguna</h2>
       <p class="text-secondary small mb-0">Kelola informasi data pribadi, preferensi akun, dan status verifikasi Anda.</p>
     </div>
 

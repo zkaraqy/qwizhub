@@ -42,10 +42,11 @@ npm run dev
 12. [Troubleshooting](#troubleshooting)
 13. [Arsitektur & Database](#arsitektur--database)
 14. [Keamanan & Production](#keamanan--production)
-15. [Struktur Folder](#struktur-folder)
-16. [Penggunaan AI](#penggunaan-ai)
-17. [Credit](#credit)
-18. [Lisensi](#lisensi)
+15. [Penyimpanan dan Penggunaan Data](#penyimpanan-dan-penggunaan-data)
+16. [Struktur Folder](#struktur-folder)
+17. [Penggunaan AI](#penggunaan-ai)
+18. [Credit](#credit)
+19. [Lisensi](#lisensi)
 
 ---
 
@@ -87,7 +88,7 @@ Platform ini mengintegrasikan tiga komponen inti:
 - 🎯 **AI Review**: Otomatis evaluasi kualitas setiap pertanyaan
 
 **Sistem AI Token**
-- Gratis 100 token saat registrasi peneliti
+- Gratis 30 token saat registrasi peneliti
 - Top-up paket: 100, 500, 1000 token via Midtrans
 - Track riwayat penggunaan token
 - Rate limiting: 5 request AI per 60 menit
@@ -156,7 +157,7 @@ Platform ini mengintegrasikan tiga komponen inti:
 
 ### Backend & Services
 - **AI Provider**: OpenRouter (via openai SDK) - support multiple LLM models
-  - Default: deepseek/deepseek-chat
+  - Default: anthropic/claude-sonnet-5
   - Alternatives: Claude, GPT, Gemini, Llama
 - **Payment Gateway**: Midtrans Snap (midtrans-client)
 - **Email**: Nodemailer
@@ -1122,7 +1123,265 @@ GOOGLE_CLIENT_SECRET=<production-oauth-secret>
 
 ---
 
+## Penyimpanan dan Penggunaan Data
 
+### Ringkasan
+
+Dokumentasi ini menjelaskan bagaimana QwizHub menyimpan dan menggunakan data pengguna, serta implementasi keamanan yang sudah diterapkan dalam sistem.
+
+### A. Jenis Data yang Dikumpulkan
+
+#### 1. Data Akun Pengguna
+- Email (untuk autentikasi)
+- Password (di-hash dengan bcrypt)
+- Nama lengkap
+- Role (admin/peneliti/responden)
+- Timestamps (createdAt, updatedAt)
+
+#### 2. Data Profil Responden
+- Usia, jenis kelamin
+- Tingkat pendidikan
+- Pekerjaan
+- Domisili
+- Penghasilan bulanan
+
+#### 3. Data Penelitian
+- Judul dan deskripsi proyek
+- Kuisioner dan pertanyaan
+- Variabel dan indikator penelitian
+- Respons pengguna (jawaban kuisioner)
+
+#### 4. Data Transaksi
+- Transaksi honor responden
+- Transaksi AI token peneliti
+- Payment gateway transactions (Midtrans)
+- Withdrawal requests dan status
+
+#### 5. Data Sistem
+- Session tokens (JWT)
+- OAuth accounts (jika menggunakan Google Login)
+- Verification tokens untuk email
+- API rate limiting records
+
+### B. Implementasi Keamanan yang Sudah Diterapkan
+
+#### 1. Keamanan Password
+
+**Teknologi:** bcrypt (cost factor 10)
+
+**Implementasi:**
+- Password di-hash sebelum disimpan ke database
+- Tidak ada plaintext password tersimpan
+- Hash verification saat login
+- Lokasi implementasi: `server/api/auth/[...].ts`
+
+**Contoh:**
+```typescript
+import bcrypt from 'bcrypt'
+
+// Saat registrasi
+const hashedPassword = await bcrypt.hash(password, 10)
+
+// Saat login
+const isValid = await bcrypt.compare(password, user.password)
+```
+
+#### 2. Input Sanitization
+
+**Teknologi:** DOMPurify + custom sanitizer
+
+**Implementasi:**
+- Semua input user di-sanitize sebelum disimpan
+- Mencegah XSS (Cross-Site Scripting)
+- Mencegah SQL Injection melalui ORM (Sequelize)
+- Lokasi: `server/utils/sanitize.ts`
+
+**Fungsi:**
+```typescript
+// sanitizeInput() - membersihkan HTML tags berbahaya
+// sanitizeObject() - sanitize recursive untuk nested objects
+```
+
+**Digunakan di:**
+- Semua form input (kuisioner, pertanyaan, profil)
+- Data penelitian dan responses
+- User-generated content
+
+#### 3. Authentication & Session Management
+
+**Teknologi:** NextAuth.js + JWT
+
+**Implementasi:**
+- JWT-based session dengan NEXTAUTH_SECRET encryption
+- Session expiry otomatis
+- Secure cookie configuration
+- CSRF protection built-in NextAuth
+- Lokasi: `server/api/auth/[...].ts`
+
+**Konfigurasi:**
+```typescript
+session: {
+  strategy: "jwt",
+  maxAge: 30 * 24 * 60 * 60 // 30 hari
+}
+```
+
+#### 4. Authorization & Access Control
+
+**Teknologi:** Role-Based Access Control (RBAC)
+
+**Implementasi:**
+- Middleware cek role per endpoint
+- Peneliti hanya akses data proyek sendiri
+- Responden hanya akses kuisioner published
+- Admin akses semua data sistem
+- Lokasi: `server/api/` (various endpoints)
+
+**Contoh:**
+```typescript
+// Middleware authorization
+if (session.user.role !== 'peneliti') {
+  throw createError({ statusCode: 403, message: 'Forbidden' })
+}
+
+// Data isolation
+const projects = await Project.findAll({
+  where: { userId: session.user.id }
+})
+```
+
+#### 5. API Rate Limiting
+
+**Teknologi:** Custom rate limiter
+
+**Implementasi:**
+- AI endpoints: 5 requests per 60 menit per user
+- Mencegah abuse API
+- In-memory tracking dengan TTL
+- Lokasi: AI service layer
+
+**Konfigurasi:**
+```typescript
+AI_RATE_LIMIT_REQUESTS=5
+AI_RATE_LIMIT_WINDOW_MINUTES=60
+```
+
+#### 6. Database Security
+
+**Teknologi:** Sequelize ORM + PostgreSQL
+
+**Implementasi:**
+- Parameterized queries (mencegah SQL Injection)
+- Connection pooling untuk performa
+- Environment-based credentials
+- Database tidak exposed langsung ke public
+
+**Sequelize Protection:**
+```typescript
+// Otomatis menggunakan prepared statements
+await User.findOne({ where: { email: userInput } })
+// Tidak rentan SQL injection
+```
+
+#### 7. Payment Security
+
+**Teknologi:** Midtrans Payment Gateway
+
+**Implementasi:**
+- Server-side signature verification
+- Webhook validation dari Midtrans
+- Status tracking untuk transaksi
+- Tidak menyimpan credit card data
+- Lokasi: `server/api/webhooks/midtrans.post.ts`
+
+**Validasi:**
+```typescript
+// Verify signature dari Midtrans
+const serverKey = process.env.MIDTRANS_SERVER_KEY
+const signatureKey = crypto
+  .createHash('sha512')
+  .update(`${orderId}${statusCode}${grossAmount}${serverKey}`)
+  .digest('hex')
+```
+
+#### 8. Environment Variables Protection
+
+**Implementasi:**
+- Semua credentials di `.env` file
+- `.env` di-ignore dari git (`.gitignore`)
+- `.env.example` sebagai template (tanpa nilai sensitif)
+- Production menggunakan secret management
+
+**Sensitive Variables:**
+- `NEXTAUTH_SECRET`
+- `DB_PASSWORD`
+- `OPENROUTER_API_KEY`
+- `MIDTRANS_SERVER_KEY`
+- `GOOGLE_CLIENT_SECRET`
+
+### C. Penggunaan Data
+
+#### 1. Tujuan Penggunaan Data
+- **Data Akun**: Autentikasi dan otorisasi akses sistem
+- **Data Profil**: Filtering responden untuk penelitian
+- **Data Penelitian**: Penyimpanan kuisioner dan analisis
+- **Data Responses**: Pengumpulan hasil penelitian
+- **Data Transaksi**: Pembayaran honor dan AI token
+
+#### 2. Data Sharing
+- Data **tidak dibagikan** ke pihak ketiga kecuali:
+  - Payment gateway (Midtrans) untuk proses pembayaran
+  - AI Provider (OpenRouter) hanya menerima teks pertanyaan (tanpa PII)
+  
+#### 3. Data Retention
+- Data disimpan selama akun aktif
+- Saat ini **belum ada** fitur penghapusan otomatis
+- Database backup dilakukan berkala
+
+#### 4. Akses Data
+- **Peneliti**: Hanya akses data proyek sendiri dan responses-nya
+- **Responden**: Hanya akses profil sendiri dan responses sendiri
+- **Admin**: Akses monitoring dashboard dan withdrawal management
+
+
+#### 6. Tidak Ada Data Breach Response Plan
+- **Status**: Belum ada prosedur jika terjadi data breach
+- **Gap**: Tidak compliance dengan notifikasi 72 jam (GDPR)
+- **Rekomendasi**: Buat incident response plan dan notification procedure
+
+### D. Best Practices yang Sudah Diterapkan
+
+✅ **Password Hashing**: bcrypt dengan salt  
+✅ **Input Sanitization**: DOMPurify untuk XSS prevention  
+✅ **SQL Injection Prevention**: Sequelize ORM dengan parameterized queries  
+✅ **Authentication**: NextAuth.js dengan JWT  
+✅ **Authorization**: Role-Based Access Control (RBAC)  
+✅ **Rate Limiting**: AI endpoint protection  
+✅ **Payment Security**: Midtrans dengan signature verification  
+✅ **Environment Protection**: Credentials di .env (tidak di-commit)  
+✅ **HTTPS Ready**: Konfigurasi production dengan SSL/TLS  
+✅ **Session Security**: Secure cookies dengan expiry
+
+### E. Dokumentasi Teknis
+
+**Lokasi Implementasi Keamanan:**
+- Authentication: `server/api/auth/[...].ts`
+- Sanitization: `server/utils/sanitize.ts`
+- Models: `server/models/*.ts` (Sequelize dengan validation)
+- Middleware: Various API routes dengan session check
+- Payment: `server/api/webhooks/midtrans.post.ts`
+
+**Environment Variables Security:**
+- Template: `.env.example`
+- Production: Gunakan secret management service
+- Never commit `.env` ke repository
+
+**Database Schema:**
+- Migrations: `database/migrations/`
+- User data isolasi per role
+- Foreign key constraints untuk data integrity
+
+---
 
 ## Struktur Folder
 
